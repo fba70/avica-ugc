@@ -64,9 +64,6 @@ export const CreateSeenDropForm = ({
   })
 
   const generateAiImage = async (url: string, prompt: string, name: string) => {
-    // setOpen(true)
-    setGeneratingImage(true)
-
     // Generate image with Replicate
     const response = await fetch("/api/image-gen-2", {
       method: "POST",
