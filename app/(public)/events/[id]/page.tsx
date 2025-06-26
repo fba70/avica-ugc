@@ -51,7 +51,10 @@ export default function Event() {
     axios
       .get("/api/seendrops")
       .then((res) => {
-        setSeenDrops(res.data)
+        const filteredSeenDrops = res.data.filter(
+          (item: { eventId: string }) => item.eventId === id
+        )
+        setSeenDrops(filteredSeenDrops)
         setLoading(false)
       })
       .catch(() => {
@@ -130,12 +133,12 @@ export default function Event() {
 
   return (
     <div className="max-w-7xl flex flex-col items-center justify-center">
-      <div className="flex flex-row items-center justify-center gap-12 mb-12">
+      <div className="flex lg:flex-row flex-col items-center justify-center gap-6 mb-12">
         <div className="flex flex-col items-center justify-center mt-12 gap-6">
           <EventCard cardInfo={event} showButton={false} />
         </div>
 
-        <div className="flex flex-col items-center justify-center mt-22">
+        <div className="flex flex-col items-center justify-center lg:mt-22 mt-4">
           {event.qrcodeUrl && (
             <>
               <Image

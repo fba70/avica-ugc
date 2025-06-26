@@ -47,7 +47,7 @@ export default function Events() {
 
   return (
     <section className="max-w-7xl flex flex-col items-center justify-center">
-      <p className="mx-auto text-7xl font-medium text-white pt-16 pb-16">
+      <p className="mx-auto text-7xl font-medium text-white pt-16 pb-16 text-center">
         Ongoing SeenDrop Events
       </p>
 

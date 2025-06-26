@@ -13,7 +13,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="z-100 row-start-1 flex flex-row items-center justify-between pt-6 pb-4 gap-4 w-[1280px]">
+      <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between  bg-black p-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-6">
         <div className="flex flex-row items-center justify-center gap-6">
           <Link href="/">
             <Image
@@ -24,13 +24,7 @@ export default function Header() {
               priority
             />
           </Link>
-          <p className="text-4xl font-medium text-cyan-500">
-            SEENDROP DEMO APP
-          </p>
-        </div>
-
-        <div className="flex flex-row items-center justify-center gap-2">
-          <p className="text-2xl font-medium text-white"></p>
+          <p className="text-4xl font-medium text-white">SEENDROP DEMO APP</p>
         </div>
 
         <div className="flex flex-row items-center justify-center gap-6">
@@ -72,9 +66,11 @@ export default function Header() {
           </Link>
         </div>
 
-        <Button onClick={() => router.push("/account")}>SIGN IN</Button>
+        <div className="flex flex-row items-center justify-center gap-6">
+          <Button onClick={() => router.push("/account")}>SIGN IN</Button>
 
-        <ModeToggle />
+          <ModeToggle />
+        </div>
       </header>
     </>
   )

@@ -15,7 +15,7 @@ export default function Account() {
               alt="banner"
               width={200}
               height={200}
-              className="rounded-xl border-0 border-slate-800 shadow-xl bg-slate-800 p-4"
+              className="rounded-xl border-0 border-white shadow-xl bg-white p-4"
               priority
             />
           </div>
