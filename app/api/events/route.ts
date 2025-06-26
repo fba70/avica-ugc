@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(req: NextRequest) {
   const data = await req.json()
-  const id = data.id // or get from query param
+  const id = data.id
 
   if (!id) {
     return NextResponse.json({ error: "Event ID required" }, { status: 400 })
