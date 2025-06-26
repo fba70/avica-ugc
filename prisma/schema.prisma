@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id                  String          @id @default(cuid())
+  name                String?
+  brand               String?
+  imageUrl            String?
+  qrcodeUrl           String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  seenDrops SeenDrop[]
+}
+
+model SeenDrop {
+  id                  String          @id @default(cuid())
+  name                String?
+  message             String?
+  imageUrl            String?
+  eventId             String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event     Event   @relation(fields: [eventId], references: [id])
+}
