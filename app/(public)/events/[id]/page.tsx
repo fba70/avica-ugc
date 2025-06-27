@@ -94,7 +94,8 @@ export default function Event() {
 
   const generateQR = async () => {
     // 1. Generate QR code
-    const fullUrl = `${process.env.NEXT_PUBLIC_APP_URL}/events/${id}`
+    // const fullUrl = `${process.env.NEXT_PUBLIC_APP_URL}/events/${id}`
+    const fullUrl = `https://avica-ugc-demo.vercel.app//events/${id}`
 
     const qrCodeDataUrl = await QrCode.toDataURL(fullUrl, {
       width: imageSize,
@@ -126,7 +127,7 @@ export default function Event() {
   if (!event) {
     return (
       <div className="max-w-7xl flex flex-col items-center justify-center">
-        Ooops... Event not found
+        Please wait. Loading event data ...
       </div>
     )
   }

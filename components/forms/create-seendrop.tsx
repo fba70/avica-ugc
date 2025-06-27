@@ -24,20 +24,14 @@ import axios from "axios"
 import { toast } from "sonner"
 import { LoaderCircle } from "lucide-react"
 import { imageUploadCloudinary } from "@/actions/upload-image"
+import { TextLoop } from "@/components/motion-primitives/text-loop"
+// import { Spinner } from "@/components/ui/kibo-ui/spinner"
 
 interface CreateSeenDropFormProps {
   onSeenDropCreated?: () => void
   eventId: string
   eventImageUrl: string
 }
-
-/*
-interface UploadResults {
-  secure_url?: string
-  error?: string
-  //[key: string]: any
-}
-  */
 
 export const CreateSeenDropForm = ({
   onSeenDropCreated,
@@ -64,7 +58,9 @@ export const CreateSeenDropForm = ({
   })
 
   const generateAiImage = async (url: string, prompt: string, name: string) => {
-    // Generate image with Replicate
+    setGeneratingImage(true)
+
+    // 1. Generate image with Replicate AI
     const response = await fetch("/api/image-gen-2", {
       method: "POST",
       headers: {
@@ -87,10 +83,11 @@ export const CreateSeenDropForm = ({
 
     toast.success("Image generated successfully!")
 
-    // Upload the generated image to Cloudinary
+    // 2. Upload the generated image to Cloudinary
     const uploadResult = await imageUploadCloudinary(imageData.output)
 
     if (uploadResult.error) {
+      setError("Cloudinary upload error")
       console.error("Cloudinary upload error:", uploadResult.error)
     } else {
       setUploadedImage(uploadResult.secure_url || "")
@@ -109,7 +106,7 @@ export const CreateSeenDropForm = ({
       .post("/api/seendrops", data)
       .then(() => {
         setSuccess("Image upload is successful")
-
+        toast.success("Seendrop saved successfully!")
         if (onSeenDropCreated) onSeenDropCreated() // callback to refetch the data on main page
       })
       .catch((err) => {
@@ -117,13 +114,13 @@ export const CreateSeenDropForm = ({
         console.error(err)
       })
 
+    setGeneratingImage(false)
     setOpen(false)
   }
 
   const onSubmitEvent = (values: z.infer<typeof SeenDropSchema>) => {
     setError("")
     setSuccess("")
-    setGeneratingImage(true)
 
     // console.log(values)
 
@@ -142,8 +139,6 @@ export const CreateSeenDropForm = ({
         values.message ?? "",
         values.name ?? ""
       )
-
-      setGeneratingImage(false)
     })
   }
 
@@ -242,8 +237,19 @@ export const CreateSeenDropForm = ({
       )}
 
       {generatingImage && (
-        <LoaderCircle className="animate-spin w-12 h-12 text-green-500 mt-4 mb-4" />
+        <div className="flex flex-row items-center justify-center gap-6">
+          <LoaderCircle className="animate-spin w-12 h-12 text-green-500 mt-4 mb-4" />
+          <TextLoop className="text-sm text-white">
+            <span>Yes, yes, we already started ...</span>
+            <span>Everything works just fine ...</span>
+            <span>You know, takes a while ...</span>
+            <span>We are on schedule, no worries ...</span>
+            <span>Almost there ...</span>
+          </TextLoop>
+        </div>
       )}
     </>
   )
 }
+
+// <Spinner className="text-blue-500" size={64} variant={"ring"}/>
