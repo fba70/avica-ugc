@@ -3,22 +3,34 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { Input } from "@/components/ui/input"
 import EventCard from "@/components/blocks/event-card"
 import { EventItem } from "@/types/types"
 import { CreateEventForm } from "@/components/forms/create-event"
+import { Search } from "lucide-react"
 import axios from "axios"
 
 export default function Events() {
   const [events, setEvents] = useState<EventItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>("")
+  const [search, setSearch] = useState<string>("")
 
   const [page, setPage] = useState(1)
+
+  const filteredEvents = events.filter(
+    (event) =>
+      event.name.toLowerCase().includes(search.toLowerCase()) ||
+      event.brand.toLowerCase().includes(search.toLowerCase())
+  )
 
   const CARDS_PER_PAGE = 6
   const totalPages = Math.ceil(events.length / CARDS_PER_PAGE)
   const startIdx = (page - 1) * CARDS_PER_PAGE
-  const currentEvents = events.slice(startIdx, startIdx + CARDS_PER_PAGE)
+  const currentEvents = filteredEvents.slice(
+    startIdx,
+    startIdx + CARDS_PER_PAGE
+  )
 
   const fetchEvents = () => {
     setLoading(true)
@@ -54,6 +66,17 @@ export default function Events() {
       <CreateEventForm onEventCreated={handleEventCreated} />
 
       <Separator className="mt-12 mb-12" />
+
+      <div className="mb-8 flex flex-row items-center justify-center gap-4">
+        <Search />
+        <Input
+          type="text"
+          placeholder="Search by event name or brand"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border px-4 py-1 rounded w-[300px]"
+        />
+      </div>
 
       <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">
         {currentEvents.map((item) => (

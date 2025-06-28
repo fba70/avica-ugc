@@ -2,17 +2,20 @@
 
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { EventItem, SeenDropItem } from "@/types/types"
+import { Input } from "@/components/ui/input"
 import EventCard from "@/components/blocks/event-card"
 import SeenDropCard from "@/components/blocks/seendrop-card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { CreateSeenDropForm } from "@/components/forms/create-seendrop"
 import QrCode from "qrcode"
 import axios from "axios"
 import { imageUploadCloudinary } from "@/actions/upload-image"
+import { Image as SDImage, Search } from "lucide-react"
 import { toast } from "sonner"
+// import { v4 as uuidv4 } from "uuid"
 
 const imageSize: number = 800
 
@@ -23,14 +26,22 @@ interface UploadResults {
 }
 
 export default function Event() {
+  const router = useRouter()
+
   const [event, setEvent] = useState<EventItem>()
-  const [seenDrops, setSeenDrops] = useState<SeenDropItem>()
+  const [seenDrops, setSeenDrops] = useState<SeenDropItem[]>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [search, setSearch] = useState<string>("")
 
   const [page, setPage] = useState(1)
 
   const [qrCodeData, setQrCodeData] = useState<string | null>(null)
+
+  const safeSeenDrops = Array.isArray(seenDrops) ? seenDrops : []
+  const filteredSeenDrops = safeSeenDrops.filter((item) =>
+    (item.name ?? "").toLowerCase().includes((search ?? "").toLowerCase())
+  )
 
   const params = useParams()
   const id = params.id as string
@@ -38,10 +49,9 @@ export default function Event() {
   // const event: EventItem | undefined = events.find((item) => item.id === id)
 
   const CARDS_PER_PAGE = 6
-  const safeSeenDrops = Array.isArray(seenDrops) ? seenDrops : []
   const totalPages = Math.ceil(safeSeenDrops.length / CARDS_PER_PAGE)
   const startIdx = (page - 1) * CARDS_PER_PAGE
-  const currentSeenDrops = safeSeenDrops.slice(
+  const currentSeenDrops = filteredSeenDrops.slice(
     startIdx,
     startIdx + CARDS_PER_PAGE
   )
@@ -51,10 +61,10 @@ export default function Event() {
     axios
       .get("/api/seendrops")
       .then((res) => {
-        const filteredSeenDrops = res.data.filter(
+        const filteredSDs = res.data.filter(
           (item: { eventId: string }) => item.eventId === id
         )
-        setSeenDrops(filteredSeenDrops)
+        setSeenDrops(filteredSDs)
         setLoading(false)
       })
       .catch(() => {
@@ -85,8 +95,13 @@ export default function Event() {
     fetchEvents()
   }, [])
 
-  const handleSeenDropCreated = () => {
-    fetchSeenDrops()
+  const handleCreateSeenDrop = () => {
+    const imageUrl = event?.imageUrl
+    router.push(
+      `/seendrops?eventId=${id}&eventImageUrl=${encodeURIComponent(
+        imageUrl || ""
+      )}`
+    )
   }
 
   if (loading) return <div>Loading SeenDrops...</div>
@@ -104,8 +119,10 @@ export default function Event() {
     setQrCodeData(qrCodeDataUrl)
 
     // 2. Upload QR code to Cloudinary
+    const overlayFlag = false as boolean // Set to true if you want to overlay the QR code on an image
     const uploadResults: UploadResults = await imageUploadCloudinary(
-      qrCodeDataUrl
+      qrCodeDataUrl,
+      overlayFlag
     )
 
     if (!uploadResults.secure_url) {
@@ -192,13 +209,23 @@ export default function Event() {
         </div>
       </div>
 
-      <CreateSeenDropForm
-        onSeenDropCreated={handleSeenDropCreated}
-        eventId={event.id}
-        eventImageUrl={event.imageUrl}
-      />
+      <Button onClick={handleCreateSeenDrop}>
+        <SDImage />
+        Create new SeenDrop!
+      </Button>
 
       <Separator className="mt-12 mb-12" />
+
+      <div className="mb-8 flex flex-row items-center justify-center gap-4">
+        <Search />
+        <Input
+          type="text"
+          placeholder="Search by SeenDrop user name"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="border px-4 py-1 rounded w-[300px]"
+        />
+      </div>
 
       <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">
         {currentSeenDrops

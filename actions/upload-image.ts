@@ -18,9 +18,26 @@ const dataURLtoFile = (dataurl: string): File => {
 }
 
 export const imageUploadCloudinary = async (
-  image: string
+  image: string,
+  overlayFlag: boolean
 ): Promise<{ error?: string; secure_url?: string }> => {
   const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
+
+  // Transformation example for overlay - does not work for now
+  const image3 = "RD_hes6hz"
+  const image2 = "Image_bottom_cywcpt"
+  const image1 = "Image_top_nxvzqe"
+  const text = "John Doe"
+
+  const transformations = [
+    "w_1024,h_1024,c_fill,f_auto,q_auto",
+    `l_${image1},w_1024,h_100,g_north_west,x_0,y_0`,
+    `l_text:Arial_48:${encodeURIComponent(
+      text
+    )},w_928,h_68,g_north_west,x_48,y_16`,
+    `l_${image2},w_1024,h_160,g_north_west,x_0,y_864`,
+    `l_${image3},w_256,h_128,g_north_west,x_48,y_880`,
+  ].join(",")
 
   // Convert image/png;base64 into file
   const fileImage = dataURLtoFile(image)
@@ -35,6 +52,10 @@ export const imageUploadCloudinary = async (
   formData.append("upload_preset", preset)
   formData.append("api_key", secret)
   formData.append("public_id", uuidv4())
+
+  if (overlayFlag) {
+    formData.append("transformation", transformations)
+  }
 
   try {
     const response = await axios.post(url, formData, {

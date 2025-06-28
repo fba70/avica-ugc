@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { ShareSeenDrop } from "./share-seendrop"
+import { ShareSeenDrop } from "@/components/blocks/share-seendrop"
 import { SeenDropItem } from "@/types/types"
 
 export default function SeenDropCard({
@@ -13,7 +13,7 @@ export default function SeenDropCard({
     <div className="w-[350px]] flex flex-col items-center justify-center bg-gray-200">
       <div className="relative h-[350px] w-[350px]">
         <Image
-          src={seenDropInfo.imageUrl}
+          src={seenDropInfo.imageUrl || "/Avatar.jpg"}
           fill
           alt="Picture of the author"
           className="object-cover object-center"

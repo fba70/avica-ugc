@@ -19,7 +19,7 @@ export default function EventCard({
     <div className="w-[350px]] flex flex-col items-center justify-center bg-gray-600 pb-6">
       <div className="relative h-[250px] w-[350px]">
         <Image
-          src={cardInfo.imageUrl}
+          src={cardInfo.imageUrl || "/Avatar.jpg"}
           fill
           alt="Picture of the author"
           className="object-cover object-center"

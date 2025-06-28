@@ -1,6 +1,9 @@
 "use client"
 
 import { useTransition, useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -17,35 +20,41 @@ import { Input } from "@/components/ui/input"
 import { FormError } from "@/components/forms/form-error"
 import { FormSuccess } from "@/components/forms/form-success"
 import AvatarImageUpload from "@/components/blocks/avatar-image-upload"
-import { Image as SDImage, CircleX } from "lucide-react"
 import * as z from "zod"
 import { SeenDropSchema } from "@/schemas"
 import axios from "axios"
 import { toast } from "sonner"
-import { LoaderCircle } from "lucide-react"
+import { LoaderCircle, CircleArrowLeft, Download } from "lucide-react"
 import { imageUploadCloudinary } from "@/actions/upload-image"
 import { TextLoop } from "@/components/motion-primitives/text-loop"
-// import { Spinner } from "@/components/ui/kibo-ui/spinner"
+import { ShareSeenDrop } from "@/components/blocks/share-seendrop"
+import { createImageWithOverlays } from "@/lib/createImageWithOverlays"
+// import { CustomImageWithOverlays } from "@/components/blocks/image-overlays"
 
-interface CreateSeenDropFormProps {
-  onSeenDropCreated?: () => void
+interface SeenDropItem {
+  id: string
+  name: string
+  message: string
+  imageUrl: string
   eventId: string
-  eventImageUrl: string
 }
 
-export const CreateSeenDropForm = ({
-  onSeenDropCreated,
-  eventId,
-  eventImageUrl,
-}: CreateSeenDropFormProps) => {
-  const [open, setOpen] = useState(false)
+export default function SeenDrop() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const eventId = searchParams.get("eventId") || ""
+  const eventImageUrl = searchParams.get("eventImageUrl") || ""
+
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | undefined>("")
   const [success, setSuccess] = useState<string | undefined>("")
 
   const [generatingImage, setGeneratingImage] = useState(false)
-
   const [uploadedImage, setUploadedImage] = useState<string>("")
+  const [newSeenDrop, setNewSeenDrop] = useState<SeenDropItem>()
+
+  const [seenDropRefetched, setSeenDropRefetched] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const form = useForm<z.infer<typeof SeenDropSchema>>({
     resolver: zodResolver(SeenDropSchema),
@@ -83,18 +92,33 @@ export const CreateSeenDropForm = ({
 
     toast.success("Image generated successfully!")
 
-    // 2. Upload the generated image to Cloudinary
-    const uploadResult = await imageUploadCloudinary(imageData.output)
+    // 3. Add layout overlays to the generated image
+    const customImage = await createImageWithOverlays({
+      text: name,
+      baseImageUrl: imageData.output || "",
+      image1Url:
+        "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107072/Image_top_nxvzqe.jpg",
+      image2Url:
+        "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107084/Image_bottom_cywcpt.jpg",
+      image3Url:
+        "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107110/RD_hes6hz.png",
+    })
+
+    // 4. Upload the generated image to Cloudinary
+    const overlayFlag = false as boolean // Set false when overlay transformations are not used
+    const uploadResult = await imageUploadCloudinary(customImage, overlayFlag)
+    // imageData.output
 
     if (uploadResult.error) {
       setError("Cloudinary upload error")
       console.error("Cloudinary upload error:", uploadResult.error)
     } else {
       setUploadedImage(uploadResult.secure_url || "")
-      console.log("Uploaded image URL:", uploadResult.secure_url, uploadedImage)
+      console.log("Uploaded image URL:", uploadResult.secure_url)
       toast.success("Image uploaded successfully!")
     }
 
+    // 5. Save SeenDrop to DB
     const data = {
       name: name,
       message: prompt,
@@ -104,10 +128,11 @@ export const CreateSeenDropForm = ({
 
     axios
       .post("/api/seendrops", data)
-      .then(() => {
+      .then((res) => {
+        setNewSeenDrop(res.data)
         setSuccess("Image upload is successful")
         toast.success("Seendrop saved successfully!")
-        if (onSeenDropCreated) onSeenDropCreated() // callback to refetch the data on main page
+        console.log("New SeenDrop created:", res.data)
       })
       .catch((err) => {
         setError(`Error uploading the image`)
@@ -115,7 +140,21 @@ export const CreateSeenDropForm = ({
       })
 
     setGeneratingImage(false)
-    setOpen(false)
+
+    // 6. Refetch new SeenDrop from DB
+    setLoading(true)
+    axios
+      .get("/api/seendrops", { params: { id: newSeenDrop?.id } })
+      .then((res) => {
+        setNewSeenDrop(res.data)
+        setSeenDropRefetched(true)
+        setLoading(false)
+        console.log("Fetched new SeenDrop:", res.data)
+      })
+      .catch(() => {
+        setError("Failed to fetch events")
+        setLoading(false)
+      })
   }
 
   const onSubmitEvent = (values: z.infer<typeof SeenDropSchema>) => {
@@ -144,21 +183,7 @@ export const CreateSeenDropForm = ({
 
   return (
     <>
-      {!open && (
-        <Button onClick={() => setOpen(true)}>
-          <SDImage />
-          Create new SeenDrop!
-        </Button>
-      )}
-
-      {open && (
-        <Button onClick={() => setOpen(false)} className="mb-6">
-          <CircleX />
-          Close form
-        </Button>
-      )}
-
-      {open && (
+      {!seenDropRefetched && (
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmitEvent)}
@@ -230,7 +255,7 @@ export const CreateSeenDropForm = ({
             <FormSuccess message={success} />
 
             <Button disabled={isPending} type="submit" className="w-full">
-              Save to generate your SeenDrop!
+              Press to generate your SeenDrop!
             </Button>
           </form>
         </Form>
@@ -242,14 +267,60 @@ export const CreateSeenDropForm = ({
           <TextLoop className="text-sm text-white">
             <span>Yes, yes, we already started ...</span>
             <span>Everything works just fine ...</span>
-            <span>You know, takes a while ...</span>
+            <span>You know, it takes a while ...</span>
             <span>We are on schedule, no worries ...</span>
             <span>Almost there ...</span>
+            <span>Just 5 seconds ...</span>
+            <span>4 ...</span>
+            <span>3 ...</span>
+            <span>2 ...</span>
+            <span>1 ...</span>
+            <span>It is coming, I promise ...</span>
           </TextLoop>
         </div>
       )}
+
+      {loading && <p>Loading new SeenDrop. Please wait!</p>}
+
+      {seenDropRefetched && (
+        <>
+          <div className="flex flex-col items-center justify-center gap-6 mt-12 bg-gray-700 p-4 pb-6">
+            <p className="text-center">Your SeenDrop is ready!</p>
+            <div className="flex flex-row items-center justify-center relative h-[400px] w-[400px]">
+              <Image
+                src={uploadedImage || "/Avatar.jpg"}
+                fill
+                alt="SeenDrop image"
+                className="object-cover object-center"
+              />
+            </div>
+            <ShareSeenDrop url={uploadedImage} />
+            <div>
+              <a
+                download
+                href={uploadedImage}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-4 border border-gray-300 px-4 py-2 rounded-lg text-white text-sm"
+              >
+                <Download />
+                Download SeenDrop
+              </a>
+            </div>
+          </div>
+        </>
+      )}
+
+      <div className="flex flex-row items-center justify-center mt-12">
+        <Button
+          onClick={() => {
+            router.push(`/events/${eventId}`)
+          }}
+        >
+          <CircleArrowLeft />
+          Get back to the Event page!
+        </Button>
+      </div>
     </>
   )
 }
-
-// <Spinner className="text-blue-500" size={64} variant={"ring"}/>
