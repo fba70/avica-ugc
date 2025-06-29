@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams } from "next/navigation"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
+import { Suspense } from "react"
 import Image from "next/image"
 import { EventItem, SeenDropItem } from "@/types/types"
 import { Input } from "@/components/ui/input"
@@ -230,10 +230,12 @@ export default function Event() {
 
       <EditEventForm event={event} onSuccess={handleEventCreated} />
 
-      <Button onClick={handleCreateSeenDrop}>
-        <SDImage />
-        Create new SeenDrop!
-      </Button>
+      <Suspense>
+        <Button onClick={handleCreateSeenDrop}>
+          <SDImage />
+          Create new SeenDrop!
+        </Button>
+      </Suspense>
 
       <Separator className="mt-12 mb-12" />
 
