@@ -2,7 +2,6 @@ import { Suspense } from "react"
 import CreateSeenDrop from "@/components/blocks/create-seendrop"
 import { LoaderCircle } from "lucide-react"
 
-// The page component remains a Server Component by default
 export default function SeenDrop() {
   return (
     <Suspense
