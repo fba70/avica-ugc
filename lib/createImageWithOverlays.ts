@@ -49,7 +49,7 @@ export async function createImageWithOverlays({
   ctx.beginPath()
   ctx.rect(48, 16, 928, 68)
   ctx.clip()
-  ctx.fillText(text, 48, 16, 928)
+  ctx.fillText(text, 48, 24, 928)
   ctx.restore()
 
   // Draw 2nd overlay (bottom banner)

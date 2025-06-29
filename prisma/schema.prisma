@@ -15,10 +15,17 @@ model Event {
   imageUrl            String?
   qrcodeUrl           String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  brandLogoUrl        String?         @default("")
+  description         String?         @default("")
+  prompt              String?         @default("") 
 
-  seenDrops SeenDrop[]
+  startDate           DateTime?       @default(now())
+  endDate             DateTime?       @default(now())
+
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  seenDrops           SeenDrop[]
 }
 
 model SeenDrop {
@@ -28,8 +35,8 @@ model SeenDrop {
   imageUrl            String?
   eventId             String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 
   event     Event   @relation(fields: [eventId], references: [id])
 }

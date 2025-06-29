@@ -5,6 +5,23 @@ export const EventSchema = z.object({
   brand: z.string().optional(),
   imageUrl: z.string().optional(),
   qrcodeUrl: z.string().optional(),
+  brandLogoUrl: z.string().optional(),
+  description: z.string().optional(),
+  prompt: z.string().optional(),
+  startDate: z.preprocess(
+    (arg) =>
+      typeof arg === "string" || arg instanceof Date
+        ? new Date(arg)
+        : undefined,
+    z.date().optional()
+  ),
+  endDate: z.preprocess(
+    (arg) =>
+      typeof arg === "string" || arg instanceof Date
+        ? new Date(arg)
+        : undefined,
+    z.date().optional()
+  ),
 })
 
 export const SeenDropSchema = z.object({

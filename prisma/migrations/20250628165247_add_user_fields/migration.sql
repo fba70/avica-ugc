@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "brandLogoUrl" TEXT,
+ADD COLUMN     "description" TEXT,
+ADD COLUMN     "endDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "prompt" TEXT,
+ADD COLUMN     "startDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP;

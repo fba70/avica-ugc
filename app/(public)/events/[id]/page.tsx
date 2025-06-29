@@ -15,6 +15,7 @@ import axios from "axios"
 import { imageUploadCloudinary } from "@/actions/upload-image"
 import { Image as SDImage, Search } from "lucide-react"
 import { toast } from "sonner"
+import { EditEventForm } from "@/components/forms/edit-event"
 // import { v4 as uuidv4 } from "uuid"
 
 const imageSize: number = 800
@@ -39,7 +40,13 @@ export default function Event() {
   const [qrCodeData, setQrCodeData] = useState<string | null>(null)
 
   const safeSeenDrops = Array.isArray(seenDrops) ? seenDrops : []
-  const filteredSeenDrops = safeSeenDrops.filter((item) =>
+  const orderedSeenDrops = safeSeenDrops
+    .slice()
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+  const filteredSeenDrops = orderedSeenDrops.filter((item) =>
     (item.name ?? "").toLowerCase().includes((search ?? "").toLowerCase())
   )
 
@@ -95,6 +102,9 @@ export default function Event() {
     fetchEvents()
   }, [])
 
+  // console.log("SD:", seenDrops)
+
+  /*
   const handleCreateSeenDrop = () => {
     const imageUrl = event?.imageUrl
     router.push(
@@ -102,6 +112,11 @@ export default function Event() {
         imageUrl || ""
       )}`
     )
+  }
+    */
+
+  const handleCreateSeenDrop = () => {
+    router.push(`/seendrops?eventId=${id}`)
   }
 
   if (loading) return <div>Loading SeenDrops...</div>
@@ -134,11 +149,15 @@ export default function Event() {
 
     // 3. Save QR code to DB
     if (uploadResults) {
-      axios.patch("/api/events", {
+      axios.put("/api/events", {
         id: id,
         qrcodeUrl: uploadResults.secure_url,
       })
     }
+  }
+
+  const handleEventCreated = () => {
+    fetchEvents()
   }
 
   if (!event) {
@@ -209,6 +228,8 @@ export default function Event() {
         </div>
       </div>
 
+      <EditEventForm event={event} onSuccess={handleEventCreated} />
+
       <Button onClick={handleCreateSeenDrop}>
         <SDImage />
         Create new SeenDrop!
@@ -230,7 +251,12 @@ export default function Event() {
       <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">
         {currentSeenDrops
           .slice()
-          .reverse()
+          .sort((a, b) =>
+            "createdAt" in a && "createdAt" in b
+              ? new Date((b as SeenDropItem).createdAt).getTime() -
+                new Date((a as SeenDropItem).createdAt).getTime()
+              : 0
+          )
           .map((item) => (
             <SeenDropCard seenDropInfo={item} key={item.id} />
           ))}

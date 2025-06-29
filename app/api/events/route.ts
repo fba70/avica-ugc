@@ -54,7 +54,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PATCH(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   const data = await req.json()
   const id = data.id
 

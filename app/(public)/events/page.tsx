@@ -20,8 +20,8 @@ export default function Events() {
 
   const filteredEvents = events.filter(
     (event) =>
-      event.name.toLowerCase().includes(search.toLowerCase()) ||
-      event.brand.toLowerCase().includes(search.toLowerCase())
+      event.name?.toLowerCase().includes(search.toLowerCase()) ||
+      event.brand?.toLowerCase().includes(search.toLowerCase())
   )
 
   const CARDS_PER_PAGE = 6

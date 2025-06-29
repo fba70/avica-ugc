@@ -1,6 +1,6 @@
 "use client"
 
-import { useTransition, useState } from "react"
+import { useTransition, useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
@@ -29,6 +29,7 @@ import { imageUploadCloudinary } from "@/actions/upload-image"
 import { TextLoop } from "@/components/motion-primitives/text-loop"
 import { ShareSeenDrop } from "@/components/blocks/share-seendrop"
 import { createImageWithOverlays } from "@/lib/createImageWithOverlays"
+import { EventItem } from "@/types/types"
 // import { CustomImageWithOverlays } from "@/components/blocks/image-overlays"
 
 interface SeenDropItem {
@@ -43,8 +44,9 @@ export default function SeenDrop() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const eventId = searchParams.get("eventId") || ""
-  const eventImageUrl = searchParams.get("eventImageUrl") || ""
+  // const eventImageUrl = searchParams.get("eventImageUrl") || "" // Obsolete, can be replaced by event parameter
 
+  const [event, setEvent] = useState<EventItem>()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | undefined>("")
   const [success, setSuccess] = useState<string | undefined>("")
@@ -66,6 +68,21 @@ export default function SeenDrop() {
     },
   })
 
+  const fetchEvents = () => {
+    axios
+      .get(`/api/events?id=${eventId}`)
+      .then((res) => {
+        setEvent(res.data)
+      })
+      .catch(() => {
+        setError("Failed to fetch events")
+      })
+  }
+
+  useEffect(() => {
+    fetchEvents()
+  }, [])
+
   const generateAiImage = async (url: string, prompt: string, name: string) => {
     setGeneratingImage(true)
 
@@ -77,10 +94,15 @@ export default function SeenDrop() {
       },
       body: JSON.stringify({
         url1: url,
-        url2: eventImageUrl,
-        prompt: prompt,
+        url2: event?.imageUrl || "",
+        prompt: `${
+          event?.prompt || ""
+        }. Take into account the user message while generating the image: ${prompt}`,
       }),
     })
+
+    console.log("User prompt:", prompt)
+    console.log("Event prompt:", event?.prompt)
 
     const imageData = await response.json()
 
@@ -101,7 +123,7 @@ export default function SeenDrop() {
       image2Url:
         "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107084/Image_bottom_cywcpt.jpg",
       image3Url:
-        "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107110/RD_hes6hz.png",
+        "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107110/RD_hes6hz.png", // Replace with event brand logo
     })
 
     // 4. Upload the generated image to Cloudinary
@@ -220,7 +242,7 @@ export default function SeenDrop() {
                         value={field.value || ""}
                         placeholder="What do you want your SeenDrop to be?"
                         disabled={isPending}
-                        className="min-h-32"
+                        className="min-h-32 w-[380px]"
                       />
                     </FormControl>
                     <FormMessage />

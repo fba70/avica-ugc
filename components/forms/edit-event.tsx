@@ -31,11 +31,23 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-interface CreateEventFormProps {
-  onEventCreated?: () => void
+interface EditEventFormProps {
+  event: {
+    id: string
+    name?: string
+    brand?: string
+    imageUrl?: string
+    qrcodeUrl?: string
+    brandLogoUrl?: string
+    description?: string
+    prompt?: string
+    startDate?: string | Date
+    endDate?: string | Date
+  }
+  onSuccess?: () => void
 }
 
-export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
+export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | undefined>("")
@@ -46,15 +58,15 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
   const form = useForm({
     resolver: zodResolver(EventSchema),
     defaultValues: {
-      name: "",
-      brand: "",
-      imageUrl: "",
-      qrcodeUrl: "",
-      brandLogoUrl: "",
-      description: "",
-      prompt: "",
-      startDate: new Date() as Date,
-      endDate: new Date() as Date,
+      name: event.name || "",
+      brand: event.brand || "",
+      imageUrl: event.imageUrl || "",
+      qrcodeUrl: event.qrcodeUrl || "",
+      brandLogoUrl: event.brandLogoUrl || "",
+      description: event.description || "",
+      prompt: event.prompt || "",
+      startDate: event.startDate ? new Date(event.startDate) : undefined,
+      endDate: event.endDate ? new Date(event.endDate) : undefined,
     },
   })
 
@@ -81,6 +93,7 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
 
     startTransition(() => {
       const data = {
+        id: event.id,
         name: values.name,
         brand: values.brand,
         imageUrl: values.imageUrl,
@@ -97,13 +110,13 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
       }
 
       axios
-        .post("/api/events", data)
+        .put("/api/events", data)
         .then(() => {
           setSuccess("Event data is saved successfully")
           setLoading(false)
           setOpen(false)
 
-          if (onEventCreated) onEventCreated() // callback to refetch the data on main page
+          if (onSuccess) onSuccess() // callback to refetch the data on main page
         })
         .catch((err) => {
           setError("Error saving event data")
@@ -116,9 +129,9 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
   return (
     <>
       {!open && (
-        <Button onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)} className="mb-6 ">
           <LocationEdit />
-          Create new event!
+          Edit event data
         </Button>
       )}
 

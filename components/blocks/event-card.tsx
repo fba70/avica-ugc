@@ -35,6 +35,42 @@ export default function EventCard({
         {cardInfo.brand}
       </p>
 
+      <div className="relative h-[120px] w-[350px] ">
+        <Image
+          src={cardInfo.brandLogoUrl || "/Logo_SeenDrop.png"}
+          fill
+          alt="Picture of the author"
+          className="object-contain object-center pl-6 pr-6 pt-4"
+        />
+      </div>
+
+      <p className="mx-auto text-sm font-medium text-white mt-4 mb-4 pr-2 pl-2 w-[320px] text-center line-clamp-4">
+        <span className="text-gray-400 mr-2">Event description: </span>
+        {cardInfo.description}
+      </p>
+
+      <p className="mx-auto text-sm font-medium text-white mt-4 w-[320px] text-center line-clamp-4">
+        <span className="text-gray-400 mr-2">Start: </span>
+        {cardInfo.startDate
+          ? new Date(cardInfo.startDate).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : "Not specified"}
+      </p>
+
+      <p className="mx-auto text-sm font-medium text-white mt-4 mb-4 w-[320px] text-center line-clamp-4">
+        <span className="text-gray-400 mr-2">End: </span>
+        {cardInfo.endDate
+          ? new Date(cardInfo.endDate).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : "Not specified"}
+      </p>
+
       {showButton ? (
         <Button
           className="flex flex-row items-center justify-center gap-4 mt-4"
