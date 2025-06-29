@@ -9,6 +9,7 @@ export interface EventItem {
   prompt?: string
   startDate?: Date
   endDate?: Date
+  createdAt: Date
 }
 
 export interface SeenDropItem {

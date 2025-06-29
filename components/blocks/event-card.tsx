@@ -44,7 +44,7 @@ export default function EventCard({
         />
       </div>
 
-      <p className="mx-auto text-sm font-medium text-white mt-4 mb-4 pr-2 pl-2 w-[320px] text-center line-clamp-4">
+      <p className="mx-auto text-sm font-medium text-white mt-4 mb-4 pr-2 pl-2 w-[320px] h-[60px] text-center line-clamp-4">
         <span className="text-gray-400 mr-2">Event description: </span>
         {cardInfo.description}
       </p>

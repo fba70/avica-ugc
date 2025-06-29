@@ -18,7 +18,13 @@ export default function Events() {
 
   const [page, setPage] = useState(1)
 
-  const filteredEvents = events.filter(
+  const orderedEvents = events
+    .slice()
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    )
+  const filteredEvents = orderedEvents.filter(
     (event) =>
       event.name?.toLowerCase().includes(search.toLowerCase()) ||
       event.brand?.toLowerCase().includes(search.toLowerCase())
