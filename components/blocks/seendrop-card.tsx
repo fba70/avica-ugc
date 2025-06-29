@@ -29,7 +29,7 @@ export default function SeenDropCard({
       </p>
 
       <div className="mb-6 mt-6">
-        <ShareSeenDrop url={seenDropInfo.imageUrl} />
+        {seenDropInfo.imageUrl && <ShareSeenDrop url={seenDropInfo.imageUrl} />}
       </div>
     </div>
   )
