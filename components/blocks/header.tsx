@@ -11,6 +11,9 @@ export default function Header() {
   const path = usePathname()
   const router = useRouter()
 
+  // /Logo_SeenDrop.png
+  // /Logo_AVICA.png
+
   return (
     <>
       <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between  bg-black p-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-6">
@@ -24,7 +27,7 @@ export default function Header() {
               priority
             />
           </Link>
-          <p className="text-4xl font-medium text-white">SEENDROP DEMO APP</p>
+          <p className="text-4xl font-medium text-white">UGC DEMO APP</p>
         </div>
 
         <div className="flex flex-row items-center justify-center gap-6">

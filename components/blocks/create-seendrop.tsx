@@ -121,9 +121,10 @@ export default function CreateSeenDrop() {
         "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107072/Image_top_nxvzqe.jpg",
       image2Url:
         "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107084/Image_bottom_cywcpt.jpg",
-      image3Url:
-        "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107110/RD_hes6hz.png", // Replace with event brand logo
+      image3Url: event?.brandLogoUrl || "",
     })
+
+    // "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107110/RD_hes6hz.png", // Replace with event brand logo
 
     // 4. Upload the generated image to Cloudinary
     const overlayFlag = false as boolean // Set false when overlay transformations are not used

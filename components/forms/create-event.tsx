@@ -42,6 +42,9 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
   const [success, setSuccess] = useState<string | undefined>("")
   const [loading, setLoading] = useState(false)
 
+  const promptTemplate =
+    "Task: Create a visually appealing image for the event. Context: The base image of the scene is provided by the second image (input_image_2 parameter) image. The user image provided by the first image (input_image_1 parameter) should be put into the context of the event scene and style. Style: The image should capture the essence of the event, highlighting its key features and benefits for participants. Use vibrant colors and engaging elements to attract attention. The image should be suitable for social media sharing and promotional materials."
+
   // const form = useForm<z.infer<typeof EventSchema>>({
   const form = useForm({
     resolver: zodResolver(EventSchema),
@@ -52,17 +55,11 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
       qrcodeUrl: "",
       brandLogoUrl: "",
       description: "",
-      prompt: "",
+      prompt: promptTemplate || "",
       startDate: new Date() as Date,
       endDate: new Date() as Date,
     },
   })
-
-  const promptTemplate = `Task: Create a visually appealing image for the event "${form.watch(
-    "name"
-  )}" organized by "${form.watch(
-    "brand"
-  )}". Context: The base image of the scene is provided by the second image ("input_image_2" parameter) image. The user image provided by the first image ("input_image_1" parameter) should be put into the context of the event scene and style. Style: The image should capture the essence of the event, highlighting its key features and benefits for participants. Use vibrant colors and engaging elements to attract attention. The image should be suitable for social media sharing and promotional materials.`
 
   const onSubmitEvent = (values: z.infer<typeof EventSchema>) => {
     setError("")

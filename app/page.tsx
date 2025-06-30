@@ -1,16 +1,27 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-// import Image from "next/image"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { LocationEdit, Image as SDImage } from "lucide-react"
 
 export default function Home() {
   const router = useRouter()
 
+  // /Logo_SeenDrop.png
+  // /Logo_AVICA.png
+
   return (
-    <section className="max-w-7xl flex flex-col items-center justify-center">
-      <p className="mx-auto text-7xl font-medium text-white pb-16 mt-6 lg:mt-0">
+    <section className="max-w-7xl flex flex-col items-center justify-center gap-8">
+      <Image
+        src="/Logo_SeenDrop.png"
+        alt="Next.js logo"
+        width={320}
+        height={320}
+        priority
+      />
+
+      <p className="mx-auto text-7xl font-medium text-white pb-16 mt-8 lg:mt-0">
         SEENDROP
       </p>
       <p className="mx-auto text-5xl font-medium text-white pb-16 text-center">

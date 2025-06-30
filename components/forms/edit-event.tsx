@@ -70,12 +70,6 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
     },
   })
 
-  const promptTemplate = `Task: Create a visually appealing image for the event "${form.watch(
-    "name"
-  )}" organized by "${form.watch(
-    "brand"
-  )}". Context: The base image of the scene is provided by the second image ("input_image_2" parameter) image. The user image provided by the first image ("input_image_1" parameter) should be put into the context of the event scene and style. Style: The image should capture the essence of the event, highlighting its key features and benefits for participants. Use vibrant colors and engaging elements to attract attention. The image should be suitable for social media sharing and promotional materials.`
-
   const onSubmitEvent = (values: z.infer<typeof EventSchema>) => {
     setError("")
     setSuccess("")
@@ -106,7 +100,7 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
         endDate: values.endDate
           ? new Date(values.endDate).toISOString()
           : undefined,
-        qrcodeUrl: "",
+        qrcodeUrl: values.qrcodeUrl,
       }
 
       axios
@@ -146,7 +140,7 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmitEvent)}
-            className="space-y-6 bg-gray-700 p-6"
+            className="space-y-6 bg-gray-700 p-6 mb-6 "
           >
             <div className="flex flex-col space-y-4">
               <FormField
@@ -257,7 +251,6 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
                       <Textarea
                         {...field}
                         value={field.value || ""}
-                        placeholder={promptTemplate}
                         disabled={isPending}
                         className="min-h-64 w-[380px]"
                       />
