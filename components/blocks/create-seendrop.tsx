@@ -94,14 +94,12 @@ export default function CreateSeenDrop() {
       body: JSON.stringify({
         url1: url,
         url2: event?.imageUrl || "",
-        prompt: `${
-          event?.prompt || ""
-        }. Take into account the user message while generating the image: ${prompt}`,
+        prompt: `${event?.prompt || prompt}`, // removed user prompt adding for now
       }),
     })
 
-    console.log("User prompt:", prompt)
-    console.log("Event prompt:", event?.prompt)
+    // console.log("User prompt:", prompt)
+    // console.log("Event prompt:", event?.prompt)
 
     const imageData = await response.json()
 
@@ -124,7 +122,7 @@ export default function CreateSeenDrop() {
       image3Url: event?.brandLogoUrl || "",
     })
 
-    // "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107110/RD_hes6hz.png", // Replace with event brand logo
+    toast.success("Image prepared successfully!")
 
     // 4. Upload the generated image to Cloudinary
     const overlayFlag = false as boolean // Set false when overlay transformations are not used

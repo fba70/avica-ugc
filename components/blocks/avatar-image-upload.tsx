@@ -54,7 +54,7 @@ const AvatarImageUpload: React.FC<ImageUploadProps> = ({
           {value ? (
             <div className="relative h-[350px] w-[350px]">
               <Image
-                className="object-cover object-center"
+                className="object-contain object-center"
                 alt="Image"
                 src={value}
                 fill

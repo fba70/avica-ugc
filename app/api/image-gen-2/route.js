@@ -12,14 +12,16 @@ export async function POST(req) {
 
   const { url1, url2, prompt } = await req.json()
 
+  /*
   const composedPrompt =
     `Use the image_1 as an object which should be added to the scene defined by the image_2. Additional scene description is provided as: ${prompt}. Try to preserve the content and style of image_1 as much as possible merging them together`.trim()
+*/
 
   const prediction = await replicate.run(
     "flux-kontext-apps/multi-image-kontext-max",
     {
       input: {
-        prompt: composedPrompt,
+        prompt: prompt,
         aspect_ratio: "1:1",
         input_image_1: url1,
         input_image_2: url2,

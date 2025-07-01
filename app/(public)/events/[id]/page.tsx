@@ -176,7 +176,7 @@ export default function Event() {
 
   return (
     <div className="max-w-7xl flex flex-col items-center justify-center">
-      <div className="flex lg:flex-row flex-col items-center justify-center gap-6 mb-12">
+      <div className="flex lg:flex-row flex-col items-center justify-center gap-6 mb-8">
         {!flip && (
           <div className="flex flex-col items-center justify-center mt-12 gap-6">
             <EventCard cardInfo={event} showButton={false} />
@@ -241,9 +241,7 @@ export default function Event() {
         )}
       </div>
 
-      <div className="flex lg:flex-row flex-col items-center justify-center gap-6">
-        <EditEventForm event={event} onSuccess={handleEventCreated} />
-
+      <div className="flex flex-col items-center justify-center gap-6">
         <Button
           variant="secondary"
           onClick={() => setFlip(!flip)}
@@ -252,6 +250,8 @@ export default function Event() {
           <ArrowLeftRight />
           {!flip ? "QR code" : "Event card"}
         </Button>
+
+        <EditEventForm event={event} onSuccess={handleEventCreated} />
       </div>
 
       <Separator className="mt-10 mb-10 bg-gray-400" />
