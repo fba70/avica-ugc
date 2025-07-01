@@ -20,7 +20,7 @@ export default function Header() {
         <div className="flex flex-row items-center justify-center gap-6">
           <Link href="/">
             <Image
-              src="/Logo_SeenDrop.png"
+              src="/Logo_AVICA.png"
               alt="Next.js logo"
               width={80}
               height={80}
