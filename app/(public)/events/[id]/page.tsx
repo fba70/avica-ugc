@@ -12,7 +12,12 @@ import { Button } from "@/components/ui/button"
 import QrCode from "qrcode"
 import axios from "axios"
 import { imageUploadCloudinary } from "@/actions/upload-image"
-import { Image as SDImage, Search } from "lucide-react"
+import {
+  Image as SDImage,
+  Search,
+  Download,
+  ArrowLeftRight,
+} from "lucide-react"
 import { toast } from "sonner"
 import { EditEventForm } from "@/components/forms/edit-event"
 // import { v4 as uuidv4 } from "uuid"
@@ -37,6 +42,8 @@ export default function Event() {
   const [page, setPage] = useState(1)
 
   const [qrCodeData, setQrCodeData] = useState<string | null>(null)
+
+  const [flip, setFlip] = useState(false)
 
   const safeSeenDrops = Array.isArray(seenDrops) ? seenDrops : []
   const orderedSeenDrops = safeSeenDrops
@@ -170,81 +177,101 @@ export default function Event() {
   return (
     <div className="max-w-7xl flex flex-col items-center justify-center">
       <div className="flex lg:flex-row flex-col items-center justify-center gap-6 mb-12">
-        <div className="flex flex-col items-center justify-center mt-12 gap-6">
-          <EventCard cardInfo={event} showButton={false} />
-        </div>
+        {!flip && (
+          <div className="flex flex-col items-center justify-center mt-12 gap-6">
+            <EventCard cardInfo={event} showButton={false} />
+          </div>
+        )}
 
-        <div className="flex flex-col items-center justify-center lg:mt-22 mt-4">
-          {event.qrcodeUrl && (
-            <>
-              <Image
-                src={event.qrcodeUrl}
-                alt="Generated QR Code"
-                width={360}
-                height={360}
-              />
+        {flip && (
+          <div className="flex flex-col items-center justify-center lg:mt-22 mt-4">
+            {event.qrcodeUrl && (
+              <div className="flex flex-col items-center justify-center gap-4 w-[350px] bg-gray-600 pb-6 pt-4">
+                <p>Event QR code</p>
+                <Image
+                  src={event.qrcodeUrl}
+                  alt="Generated QR Code"
+                  width={320}
+                  height={320}
+                />
 
-              <div className="flex align-center justify-center gap-5 mt-2">
-                <a
-                  download
-                  href={event.qrcodeUrl}
-                  className="bg-black px-4 py-2 rounded-lg text-white text-sm"
-                >
-                  Download
-                </a>
+                <div className="flex align-center justify-center gap-5 mt-2">
+                  <a
+                    download
+                    href={event.qrcodeUrl}
+                    className="flex flex-row align-center justify-center gap-2 bg-gray-700 px-4 py-2 rounded-lg text-white text-sm"
+                  >
+                    <Download size={16} />
+                    Download
+                  </a>
+                </div>
               </div>
-            </>
-          )}
+            )}
 
-          {!event.qrcodeUrl && qrCodeData && (
-            <>
-              <Image
-                src={qrCodeData}
-                alt="Generated QR Code"
-                width={360}
-                height={360}
-              />
+            {!event.qrcodeUrl && qrCodeData && (
+              <div className="flex flex-col items-center justify-center gap-4 w-[350px] bg-gray-600 pb-6 pt-4">
+                <p>Event QR code</p>
+                <Image
+                  src={qrCodeData}
+                  alt="Generated QR Code"
+                  width={320}
+                  height={320}
+                />
 
-              <div className="flex align-center justify-center gap-5 mt-2">
-                <a
-                  download
-                  href={qrCodeData}
-                  className="bg-black px-4 py-2 rounded-lg text-white text-sm"
-                >
-                  Download
-                </a>
+                <div className="flex align-center justify-center gap-5">
+                  <a
+                    download
+                    href={qrCodeData}
+                    className="bg-gray-700 px-4 py-2 rounded-lg text-white text-sm"
+                  >
+                    Download
+                  </a>
+                </div>
               </div>
-            </>
-          )}
+            )}
 
-          {!event.qrcodeUrl && !qrCodeData && (
-            <div className="flex align-center justify-center">
-              <Button type="submit" onClick={generateQR}>
-                Generate QR code
-              </Button>
-            </div>
-          )}
-        </div>
+            {!event.qrcodeUrl && !qrCodeData && (
+              <div className="flex align-center justify-center">
+                <Button type="submit" onClick={generateQR}>
+                  Generate QR code
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      <EditEventForm event={event} onSuccess={handleEventCreated} />
+      <div className="flex lg:flex-row flex-col items-center justify-center gap-6">
+        <EditEventForm event={event} onSuccess={handleEventCreated} />
 
-      <Button onClick={handleCreateSeenDrop}>
-        <SDImage />
-        Create new SeenDrop!
-      </Button>
+        <Button
+          variant="secondary"
+          onClick={() => setFlip(!flip)}
+          className="w-[150px]"
+        >
+          <ArrowLeftRight />
+          {!flip ? "QR code" : "Event card"}
+        </Button>
+      </div>
 
-      <Separator className="mt-12 mb-12" />
+      <Separator className="mt-10 mb-10 bg-gray-400" />
 
-      <div className="mb-8 flex flex-row items-center justify-center gap-4">
-        <Search />
-        <Input
-          type="text"
-          placeholder="Search by SeenDrop user name"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-4 py-1 rounded w-[300px]"
-        />
+      <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-6">
+        <Button onClick={handleCreateSeenDrop}>
+          <SDImage />
+          Create new SeenDrop!
+        </Button>
+
+        <div className="flex flex-row items-center justify-center gap-4">
+          <Search />
+          <Input
+            type="text"
+            placeholder="Search by SeenDrop user name"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border px-4 py-1 rounded w-[300px]"
+          />
+        </div>
       </div>
 
       <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">

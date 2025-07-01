@@ -71,7 +71,7 @@ export default function Events() {
 
       <CreateEventForm onEventCreated={handleEventCreated} />
 
-      <Separator className="mt-12 mb-12" />
+      <Separator className="mt-12 mb-12 bg-gray-400" />
 
       <div className="mb-8 flex flex-row items-center justify-center gap-4">
         <Search />

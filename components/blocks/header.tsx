@@ -27,7 +27,7 @@ export default function Header() {
               priority
             />
           </Link>
-          <p className="text-4xl font-medium text-white">UGC DEMO APP</p>
+          <p className="text-4xl font-medium text-white">UGC DEMO</p>
         </div>
 
         <div className="flex flex-row items-center justify-center gap-6">

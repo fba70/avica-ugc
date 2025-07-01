@@ -113,7 +113,7 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
   return (
     <>
       {!open && (
-        <Button onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)} className="text-lg pl-4 pr-4">
           <LocationEdit />
           Create new event!
         </Button>

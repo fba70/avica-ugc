@@ -277,7 +277,7 @@ export default function CreateSeenDrop() {
             <FormSuccess message={success} />
 
             <Button disabled={isPending} type="submit" className="w-full">
-              Press to generate your SeenDrop!
+              Generate your SeenDrop!
             </Button>
           </form>
         </Form>

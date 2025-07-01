@@ -123,7 +123,7 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
   return (
     <>
       {!open && (
-        <Button onClick={() => setOpen(true)} className="mb-6 ">
+        <Button variant="secondary" onClick={() => setOpen(true)} className="">
           <LocationEdit />
           Edit event data
         </Button>
