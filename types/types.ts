@@ -20,3 +20,13 @@ export interface SeenDropItem {
   eventId: string
   createdAt: Date
 }
+
+export interface UserItem {
+  id: string
+  externalId: string
+  email: string
+  role: "user" | "partner"
+  firstName?: string
+  lastName?: string
+  createdAt: Date
+}

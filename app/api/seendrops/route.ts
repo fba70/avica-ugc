@@ -5,6 +5,7 @@ import { SeenDropSchema } from "@/schemas"
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const id = searchParams.get("id")
+  const userId = searchParams.get("userId")
 
   if (id) {
     // Return a single seendrop by id
@@ -13,6 +14,10 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Seendrop not found" }, { status: 404 })
     }
     return NextResponse.json(seendrop)
+  } else if (userId) {
+    // Return all seendrops for a specific userId
+    const seendrops = await db.seenDrop.findMany({ where: { userId } })
+    return NextResponse.json(seendrops)
   } else {
     // Return all seendrops
     const seendrops = await db.seenDrop.findMany()

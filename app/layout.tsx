@@ -4,6 +4,8 @@ import Header from "@/components/blocks/header"
 import Footer from "@/components/blocks/footer"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ClerkProvider } from "@clerk/nextjs"
+import { dark } from "@clerk/themes"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -27,29 +29,35 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-rows-[240px_1fr_80px] lg:grid-rows-[120px_1fr_80px] items-center justify-items-center min-h-screen gap-4 bg-[url(/BG_6.jpg)] bg-cover bg-no-repeat bg-center`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-rows-[240px_1fr_80px] lg:grid-rows-[120px_1fr_80px] items-center justify-items-center min-h-screen gap-4 bg-[url(/BG_6.jpg)] bg-cover bg-no-repeat bg-center`}
         >
-          <Toaster />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Toaster />
 
-          <section className="row-start-1">
-            <Header />
-          </section>
+            <section className="row-start-1">
+              <Header />
+            </section>
 
-          <section className="row-start-2">{children}</section>
+            <section className="row-start-2">{children}</section>
 
-          <section className="row-start-3">
-            <Footer />
-          </section>
-        </ThemeProvider>
-      </body>
-    </html>
+            <section className="row-start-3">
+              <Footer />
+            </section>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }

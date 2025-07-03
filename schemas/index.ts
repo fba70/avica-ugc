@@ -30,3 +30,11 @@ export const SeenDropSchema = z.object({
   imageUrl: z.string().optional(),
   eventId: z.string(),
 })
+
+export const UsersSchema = z.object({
+  firstlName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().email(),
+  role: z.enum(["user", "partner"]).default("user"),
+  externalId: z.string(),
+})
