@@ -120,7 +120,7 @@ export default function Account() {
         <div className="text-center">
           <div className="text-center">
             <div className="text-2xl font-bold text-white mb-12">
-              Here are you SeenDrops, {user.fullName}!
+              Here are your SeenDrops, {user.fullName}!
             </div>
           </div>
         </div>
