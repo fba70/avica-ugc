@@ -29,7 +29,7 @@ export default function Account() {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
   const filteredSeenDrops = orderedSeenDrops.filter((item) =>
-    (item.name ?? "").toLowerCase().includes((search ?? "").toLowerCase())
+    (item.message ?? "").toLowerCase().includes((search ?? "").toLowerCase())
   )
 
   const CARDS_PER_PAGE = 6

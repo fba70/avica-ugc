@@ -24,7 +24,7 @@ export default function SeenDropCard({
         {seenDropInfo.name}
       </p>
 
-      <p className="mx-auto text-lg font-medium text-black mt-4 w-[320px] h-[80px] text-center line-clamp-4">
+      <p className="mx-auto text-lg font-medium text-black mt-4 w-[320px] h-[60px] text-center line-clamp-2">
         {seenDropInfo.message}
       </p>
 
