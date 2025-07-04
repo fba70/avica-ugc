@@ -42,6 +42,7 @@ interface SeenDropItem {
   eventId: string
   userId: string
   claimToken: string
+  type: string
 }
 
 export default function CreateSeenDrop() {
@@ -66,6 +67,7 @@ export default function CreateSeenDrop() {
 
   const [generatingImage, setGeneratingImage] = useState(false)
   const [uploadedImage, setUploadedImage] = useState<string>("")
+  const [uploadedOriginalImage, setUploadedOriginalImage] = useState<string>("")
   const [newSeenDrop, setNewSeenDrop] = useState<SeenDropItem>()
 
   const [seenDropRefetched, setSeenDropRefetched] = useState(false)
@@ -127,6 +129,8 @@ export default function CreateSeenDrop() {
 
     const imageData = await response.json()
 
+    console.log("Image data format:", imageData.output)
+
     if (response.status !== 201) {
       setError("Image generation error")
       toast.error("Image generation failed!")
@@ -135,7 +139,7 @@ export default function CreateSeenDrop() {
 
     toast.success("Image generated successfully!")
 
-    // 3. Add layout overlays to the generated image
+    // 2. Add layout overlays to the generated image
     const customImage = await createImageWithOverlays({
       text: name,
       baseImageUrl: imageData.output || "",
@@ -148,28 +152,39 @@ export default function CreateSeenDrop() {
 
     toast.success("Image prepared successfully!")
 
-    // 4. Upload the generated image to Cloudinary
-    const overlayFlag = false as boolean // Set false when overlay transformations are not used
+    // 3. Upload the generated image to Cloudinary
+    const overlayFlag = false as boolean // Set false when Cloudinary overlay transformations are not used - it did not work
+
+    const uploadOriginalResult = await imageUploadCloudinary(
+      imageData.output,
+      overlayFlag
+    )
     const uploadResult = await imageUploadCloudinary(customImage, overlayFlag)
-    // imageData.output
 
     if (uploadResult.error) {
       setError("Cloudinary upload error")
       console.error("Cloudinary upload error:", uploadResult.error)
     } else {
       setUploadedImage(uploadResult.secure_url || "")
+      setUploadedOriginalImage(uploadOriginalResult.secure_url || "")
       console.log("Uploaded image URL:", uploadResult.secure_url)
+      console.log(
+        "Uploaded original image URL:",
+        uploadOriginalResult.secure_url
+      )
       toast.success("Image uploaded successfully!")
     }
 
-    // 5. Save SeenDrop to DB
+    // 4. Save SeenDrop to DB
     const data = {
       name: name,
       message: prompt,
-      imageUrl: uploadResult.secure_url || "",
+      imageUrl: uploadOriginalResult.secure_url || "", // <-- original image
+      imageOverlayedUrl: uploadResult.secure_url || "",
       eventId: eventId,
       userId: dbUser?.id || "",
       claimToken: claimToken || "",
+      type: "image",
     }
 
     axios
@@ -187,7 +202,7 @@ export default function CreateSeenDrop() {
 
     setGeneratingImage(false)
 
-    // 6. Refetch new SeenDrop from DB
+    // 5. Refetch new SeenDrop from DB
     setLoading(true)
     axios
       .get("/api/seendrops", { params: { id: newSeenDrop?.id } })
@@ -334,13 +349,16 @@ export default function CreateSeenDrop() {
             <p className="text-center">Your SeenDrop is ready!</p>
             <div className="flex flex-row items-center justify-center relative h-[400px] w-[400px]">
               <Image
-                src={uploadedImage || "/Avatar.jpg"}
+                src={uploadedOriginalImage || "/Avatar.jpg"}
                 fill
                 alt="SeenDrop image"
                 className="object-cover object-center"
               />
             </div>
             <ShareSeenDrop url={uploadedImage} />
+            <div className="hidden">
+              <ShareSeenDrop url={uploadedImage} />
+            </div>
             <div>
               <a
                 download

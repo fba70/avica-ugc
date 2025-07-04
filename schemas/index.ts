@@ -28,9 +28,12 @@ export const SeenDropSchema = z.object({
   name: z.string(),
   message: z.string().optional(),
   imageUrl: z.string().optional(),
+  imageOverlayedUrl: z.string().optional(),
+  videoUrl: z.string().optional(),
   eventId: z.string(),
   userId: z.string(),
-  claimToken: z.string(),
+  claimToken: z.string().optional(),
+  type: z.string().optional(),
 })
 
 export const UsersSchema = z.object({

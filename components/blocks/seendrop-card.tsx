@@ -3,6 +3,8 @@
 import Image from "next/image"
 import { ShareSeenDrop } from "@/components/blocks/share-seendrop"
 import { SeenDropItem } from "@/types/types"
+import { Button } from "../ui/button"
+import { SquarePlay } from "lucide-react"
 
 export default function SeenDropCard({
   seenDropInfo,
@@ -10,27 +12,36 @@ export default function SeenDropCard({
   seenDropInfo: SeenDropItem
 }) {
   return (
-    <div className="w-[350px]] flex flex-col items-center justify-center bg-gray-200">
+    <div className="w-[350px]] flex flex-col items-center justify-center bg-transparent">
       <div className="relative h-[350px] w-[350px]">
         <Image
-          src={seenDropInfo.imageUrl || "/Avatar.jpg"}
+          src={seenDropInfo.imageOverlayedUrl || "/Avatar.jpg"}
           fill
           alt="Picture of the author"
           className="object-cover object-center"
         />
       </div>
 
-      <p className="mx-auto text-xl font-medium text-black mt-4">
-        {seenDropInfo.name}
-      </p>
-
-      <p className="mx-auto text-lg font-medium text-black mt-4 w-[320px] h-[60px] text-center line-clamp-2">
-        {seenDropInfo.message}
-      </p>
-
-      <div className="mb-6 mt-6">
+      <div className="flex flex-row items-center gap-4 justify-center mb-4 mt-4">
         {seenDropInfo.imageUrl && <ShareSeenDrop url={seenDropInfo.imageUrl} />}
+        {seenDropInfo.imageUrl && (
+          <Button>
+            <SquarePlay />
+            ANIMATE!
+          </Button>
+        )}
       </div>
     </div>
   )
 }
+
+/*
+<p className="mx-auto text-xl font-medium text-black mt-2 mb-2">
+        {seenDropInfo.name}
+      </p>
+
+      <p className="mx-auto text-sm font-medium text-black w-[320px] h-[40px] text-center line-clamp-2">
+        {seenDropInfo.message}
+      </p>
+
+*/

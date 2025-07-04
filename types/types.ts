@@ -17,8 +17,11 @@ export interface SeenDropItem {
   name?: string
   message?: string
   imageUrl?: string
+  imageOverlayedUrl?: string
+  videoUrl?: string
   eventId: string
   createdAt: Date
+  type?: string
 }
 
 export interface UserItem {
