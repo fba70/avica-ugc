@@ -53,6 +53,8 @@ export async function PUT(req: NextRequest) {
   const data = await req.json()
   const id = data.id
 
+  // console.log("PUT /api/user received data:", data)
+
   if (!id) {
     return NextResponse.json({ error: "ID is required" }, { status: 400 })
   }

@@ -29,7 +29,9 @@ import { imageUploadCloudinary } from "@/actions/upload-image"
 import { TextLoop } from "@/components/motion-primitives/text-loop"
 import { ShareSeenDrop } from "@/components/blocks/share-seendrop"
 import { createImageWithOverlays } from "@/lib/createImageWithOverlays"
-import { EventItem } from "@/types/types"
+import { EventItem, UserItem } from "@/types/types"
+import { useUser } from "@clerk/nextjs"
+import { v4 as uuidv4 } from "uuid"
 // import { CustomImageWithOverlays } from "@/components/blocks/image-overlays"
 
 interface SeenDropItem {
@@ -38,12 +40,24 @@ interface SeenDropItem {
   message: string
   imageUrl: string
   eventId: string
+  userId: string
+  claimToken: string
 }
 
 export default function CreateSeenDrop() {
+  const { isSignedIn, user } = useUser()
+
+  // If there is no user, store claim token in local storage
+  const claimToken = uuidv4() as string
+  if (!user || !isSignedIn) {
+    localStorage.setItem("seendropClaimToken", claimToken)
+  }
+
   const router = useRouter()
   const searchParams = useSearchParams()
   const eventId = searchParams.get("eventId") || ""
+
+  const [dbUser, setDbUser] = useState<UserItem>()
 
   const [event, setEvent] = useState<EventItem>()
   const [isPending, startTransition] = useTransition()
@@ -64,6 +78,8 @@ export default function CreateSeenDrop() {
       message: "",
       imageUrl: "",
       eventId: eventId,
+      userId: dbUser?.id || "",
+      claimToken: claimToken || "",
     },
   })
 
@@ -81,6 +97,14 @@ export default function CreateSeenDrop() {
   useEffect(() => {
     fetchEvents()
   }, [])
+
+  useEffect(() => {
+    if (isSignedIn && user && user?.id) {
+      axios.get(`/api/user?externalId=${user.id}`).then((res) => {
+        setDbUser(res.data[0])
+      })
+    }
+  }, [user])
 
   const generateAiImage = async (url: string, prompt: string, name: string) => {
     setGeneratingImage(true)
@@ -144,6 +168,8 @@ export default function CreateSeenDrop() {
       message: prompt,
       imageUrl: uploadResult.secure_url || "",
       eventId: eventId,
+      userId: dbUser?.id || "",
+      claimToken: claimToken || "",
     }
 
     axios
