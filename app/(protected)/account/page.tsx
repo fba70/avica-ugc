@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useUser } from "@clerk/nextjs"
 import axios from "axios"
 import { SeenDropItem, UserItem } from "@/types/types"
@@ -34,11 +34,14 @@ export default function Account() {
 
   const safeSeenDrops = Array.isArray(mySeenDrops) ? mySeenDrops : []
   const orderedSeenDrops = safeSeenDrops
+  /*
     .slice()
     .sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
+*/
+
   const filteredSeenDrops = orderedSeenDrops.filter(
     (item) =>
       (item.message ?? "")
@@ -94,7 +97,8 @@ export default function Account() {
   }, [user])
 
   // Fetch seendrops of the user
-  const fetchMySeenDrops = () => {
+  // Fetch seendrops of the user
+  const fetchMySeenDrops = useCallback(() => {
     if (dbUser && dbUser.id) {
       setLoadingSeenDrops(true)
       axios
@@ -108,11 +112,11 @@ export default function Account() {
         })
         .finally(() => setLoadingSeenDrops(false))
     }
-  }
+  }, [dbUser])
 
   useEffect(() => {
     fetchMySeenDrops()
-  }, [dbUser])
+  }, [dbUser, fetchMySeenDrops])
 
   // Claim seendrops if there is claimToken in local Storage (newly signed up users)
   useEffect(() => {

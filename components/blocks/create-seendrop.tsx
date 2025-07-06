@@ -32,6 +32,7 @@ import { createImageWithOverlays } from "@/lib/createImageWithOverlays"
 import { EventItem, UserItem } from "@/types/types"
 import { useUser } from "@clerk/nextjs"
 import { v4 as uuidv4 } from "uuid"
+// import { SelfieCapture } from "./selfie-capture"
 // import { CustomImageWithOverlays } from "@/components/blocks/image-overlays"
 
 interface SeenDropItem {
@@ -39,6 +40,7 @@ interface SeenDropItem {
   name: string
   message: string
   imageUrl: string
+  selfieUrl: string
   eventId: string
   userId: string
   claimToken: string
@@ -235,8 +237,10 @@ export default function CreateSeenDrop() {
 
     startTransition(() => {
       // Generate SeenDrop image with gen AI, upload it to Cloudinary and save in DB
+      const selectedImageUrl = values.imageUrl || values.selfieUrl || ""
+
       generateAiImage(
-        values.imageUrl ?? "",
+        selectedImageUrl ?? "",
         values.message ?? "",
         values.name ?? ""
       )
@@ -389,3 +393,22 @@ export default function CreateSeenDrop() {
     </>
   )
 }
+
+/*
+<FormField
+                control={form.control}
+                name="selfieUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel></FormLabel>
+                    <FormControl>
+                      <SelfieCapture
+                        onCapture={field.onChange}
+                        disabled={isPending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+*/

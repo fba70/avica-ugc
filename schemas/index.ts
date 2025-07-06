@@ -29,6 +29,7 @@ export const SeenDropSchema = z.object({
   message: z.string().optional(),
   imageUrl: z.string().optional(),
   imageOverlayedUrl: z.string().optional(),
+  selfieUrl: z.string().optional(),
   videoUrl: z.string().optional(),
   eventId: z.string(),
   userId: z.string(),

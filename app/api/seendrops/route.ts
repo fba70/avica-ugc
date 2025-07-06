@@ -16,11 +16,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(seendrop)
   } else if (userId) {
     // Return all seendrops for a specific userId
-    const seendrops = await db.seenDrop.findMany({ where: { userId } })
+    const seendrops = await db.seenDrop.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    })
     return NextResponse.json(seendrops)
   } else {
     // Return all seendrops
-    const seendrops = await db.seenDrop.findMany()
+    const seendrops = await db.seenDrop.findMany({
+      orderBy: { createdAt: "desc" },
+    })
     return NextResponse.json(seendrops)
   }
 }

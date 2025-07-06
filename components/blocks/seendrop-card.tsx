@@ -226,7 +226,7 @@ export default function SeenDropCard({
         <div className="flex flex-row items-center justify-center gap-4">
           <LoaderCircle className="animate-spin w-12 h-12 text-green-500 mt-4 mb-4" />
           <p className="text-sm text-white">
-            Please wait! You video SeenDrop is generated
+            Please wait! Video SeenDrop is generated
           </p>
         </div>
       )}
