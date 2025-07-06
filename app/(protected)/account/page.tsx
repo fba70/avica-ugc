@@ -39,8 +39,12 @@ export default function Account() {
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
-  const filteredSeenDrops = orderedSeenDrops.filter((item) =>
-    (item.message ?? "").toLowerCase().includes((search ?? "").toLowerCase())
+  const filteredSeenDrops = orderedSeenDrops.filter(
+    (item) =>
+      (item.message ?? "")
+        .toLowerCase()
+        .includes((search ?? "").toLowerCase()) ||
+      (item.type ?? "").toLowerCase().includes((search ?? "").toLowerCase())
   )
 
   const CARDS_PER_PAGE = 6
@@ -90,21 +94,24 @@ export default function Account() {
   }, [user])
 
   // Fetch seendrops of the user
-  useEffect(() => {
+  const fetchMySeenDrops = () => {
     if (dbUser && dbUser.id) {
-      // console.log("Fetching SeenDrops for userId:", dbUser.id)
       setLoadingSeenDrops(true)
       axios
         .get(`/api/seendrops?userId=${dbUser.id}`)
         .then((res) => {
           setMySeenDrops(res.data)
-          // console.log("Fetched seen drops:", res.data)
+          setPage(1)
         })
         .catch(() => {
           console.error("Failed to fetch seen drops")
         })
         .finally(() => setLoadingSeenDrops(false))
     }
+  }
+
+  useEffect(() => {
+    fetchMySeenDrops()
   }, [dbUser])
 
   // Claim seendrops if there is claimToken in local Storage (newly signed up users)
@@ -254,7 +261,7 @@ export default function Account() {
             <Search />
             <Input
               type="text"
-              placeholder="Search by message"
+              placeholder="Search by content type or message"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="border px-4 py-1 rounded w-[300px]"
@@ -274,7 +281,11 @@ export default function Account() {
                     : 0
                 )
                 .map((item) => (
-                  <SeenDropCard seenDropInfo={item} key={item.id} />
+                  <SeenDropCard
+                    seenDropInfo={item}
+                    key={item.id}
+                    onSeenDropCreated={fetchMySeenDrops}
+                  />
                 ))}
             </div>
 

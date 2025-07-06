@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { useUser } from "@clerk/nextjs"
+import { SignUpButton } from "@clerk/nextjs"
 import Image from "next/image"
 import { EventItem, SeenDropItem } from "@/types/types"
 import { Input } from "@/components/ui/input"
@@ -20,6 +22,13 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { EditEventForm } from "@/components/forms/edit-event"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 // import { v4 as uuidv4 } from "uuid"
 
 const imageSize: number = 800
@@ -32,6 +41,7 @@ interface UploadResults {
 
 export default function Event() {
   const router = useRouter()
+  const { isSignedIn } = useUser()
 
   const [event, setEvent] = useState<EventItem>()
   const [seenDrops, setSeenDrops] = useState<SeenDropItem[]>()
@@ -45,6 +55,8 @@ export default function Event() {
 
   const [flip, setFlip] = useState(false)
 
+  const [openDialog, setOpenDialog] = useState(false)
+
   const safeSeenDrops = Array.isArray(seenDrops) ? seenDrops : []
   const orderedSeenDrops = safeSeenDrops
     .slice()
@@ -52,8 +64,10 @@ export default function Event() {
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
-  const filteredSeenDrops = orderedSeenDrops.filter((item) =>
-    (item.name ?? "").toLowerCase().includes((search ?? "").toLowerCase())
+  const filteredSeenDrops = orderedSeenDrops.filter(
+    (item) =>
+      (item.name ?? "").toLowerCase().includes((search ?? "").toLowerCase()) ||
+      (item.type ?? "").toLowerCase().includes((search ?? "").toLowerCase())
   )
 
   const params = useParams()
@@ -256,17 +270,41 @@ export default function Event() {
 
       <Separator className="mt-10 mb-10 bg-gray-400" />
 
-      <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-6">
+      <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-8">
         <Button onClick={handleCreateSeenDrop}>
           <SDImage />
           Create new SeenDrop!
         </Button>
 
+        {!isSignedIn && (
+          <>
+            <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+              <DialogTrigger asChild>
+                <Button onClick={() => setOpenDialog(true)}>
+                  Claim your SeenDrop!
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-[350px]">
+                <DialogHeader>
+                  <DialogTitle className="text-base text-center">
+                    Sign up to claim your SeenDrop
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col items-center justify-center py-4">
+                  <SignUpButton mode="modal">
+                    <Button variant="default">Sign Up / Sign In</Button>
+                  </SignUpButton>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </>
+        )}
+
         <div className="flex flex-row items-center justify-center gap-4">
           <Search />
           <Input
             type="text"
-            placeholder="Search by SeenDrop user name"
+            placeholder="Search by SeenDrop user name or type"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border px-4 py-1 rounded w-[300px]"
@@ -284,7 +322,11 @@ export default function Event() {
               : 0
           )
           .map((item) => (
-            <SeenDropCard seenDropInfo={item} key={item.id} />
+            <SeenDropCard
+              seenDropInfo={item}
+              key={item.id}
+              onSeenDropCreated={fetchSeenDrops}
+            />
           ))}
       </div>
 

@@ -50,6 +50,7 @@ export default function CreateSeenDrop() {
 
   // If there is no user, store claim token in local storage
   const claimToken = uuidv4() as string
+
   if (!user || !isSignedIn) {
     localStorage.setItem("seendropClaimToken", claimToken)
   }
@@ -76,7 +77,7 @@ export default function CreateSeenDrop() {
   const form = useForm<z.infer<typeof SeenDropSchema>>({
     resolver: zodResolver(SeenDropSchema),
     defaultValues: {
-      name: "",
+      name: dbUser?.firstName || "",
       message: "",
       imageUrl: "",
       eventId: eventId,

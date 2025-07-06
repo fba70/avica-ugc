@@ -1,47 +1,256 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { ShareSeenDrop } from "@/components/blocks/share-seendrop"
-import { SeenDropItem } from "@/types/types"
+import { SeenDropItem, UserItem, EventItem } from "@/types/types"
 import { Button } from "../ui/button"
-import { SquarePlay } from "lucide-react"
+import { SquarePlay, LoaderCircle } from "lucide-react"
+import axios from "axios"
+import { toast } from "sonner"
+import { videoUploadCloudinary } from "@/actions/upload-video"
+import { v4 as uuidv4 } from "uuid"
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { useUser } from "@clerk/nextjs"
+import { SignUpButton } from "@clerk/nextjs"
+
+interface UploadResults {
+  secure_url?: string
+  error?: string
+}
 
 export default function SeenDropCard({
   seenDropInfo,
+  onSeenDropCreated,
 }: {
   seenDropInfo: SeenDropItem
+  onSeenDropCreated: () => void
 }) {
+  const { isSignedIn, user } = useUser()
+
+  const claimToken = uuidv4() as string
+
+  const [dbUser, setDbUser] = useState<UserItem>()
+  const [event, setEvent] = useState<EventItem>()
+  const [loadingVideo, setLoadingVideo] = useState(false)
+  const [videoSeenDrop, setSetVideoSeenDrop] = useState<SeenDropItem>()
+  const [openDialog, setOpenDialog] = useState(false)
+
+  // Fetch user from DB based on clerk session
+  useEffect(() => {
+    if (isSignedIn && user?.id) {
+      axios
+        .get(`/api/user?externalId=${user.id}`)
+        .then((res) => setDbUser(res.data[0]))
+    }
+  }, [isSignedIn, user])
+
+  // Fetch event data - need event logos etc.
+  useEffect(() => {
+    if (seenDropInfo.eventId) {
+      axios
+        .get(`/api/events`, { params: { id: seenDropInfo.eventId } })
+        .then((res) => setEvent(res.data))
+        .catch((err) => {
+          console.error("Failed to fetch event:", err)
+        })
+    }
+  }, [seenDropInfo.eventId])
+
+  // console.log("DB user:", dbUser)
+  // console.log("SeenDrop info:", seenDropInfo)
+
+  const handleGenerateVideo = async () => {
+    setLoadingVideo(true)
+
+    // 1. Define the prompt for animation
+    const prompt = "Animate the image moving the human around" // Make prompt be Event dependent
+
+    // 2. Generate video with Replicate
+    const response = await fetch("/api/video-gen", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ugcUrl: seenDropInfo.imageUrl,
+        prompt: prompt,
+      }),
+    })
+
+    const videoData = await response.json()
+    // console.log("Generated video URL:", videoData.output)
+
+    if (response.status !== 201) {
+      console.log("Video generation error")
+      toast.error("Video generation failed!")
+      setLoadingVideo(false)
+      return
+    }
+
+    toast.success("Video generated successfully!")
+
+    // 3. Save video to Cloudinary
+    let uploaded: UploadResults = {}
+
+    try {
+      uploaded = await videoUploadCloudinary(videoData.output)
+      // console.log("Cloudinary upload result:", uploaded)
+
+      if (!uploaded || typeof uploaded.secure_url !== "string") {
+        console.log("Cloudinary upload failed")
+        toast.error("Cloudinary upload failed!")
+        return
+      }
+    } catch (err) {
+      toast.error("Video upload failed!")
+      console.error("Cloudinary upload error:", err)
+    }
+
+    // 4. Save videoURL to new DB SD
+    const videoDSData = {
+      name: dbUser?.firstName || "",
+      message: prompt,
+      imageUrl: "",
+      imageOverlayedUrl: "",
+      videoUrl: uploaded.secure_url || "",
+      eventId: seenDropInfo.eventId,
+      userId: dbUser?.id || "",
+      claimToken: claimToken || "",
+      type: "video",
+    }
+
+    axios
+      .post("/api/seendrops", videoDSData)
+      .then((res) => {
+        setSetVideoSeenDrop(res.data)
+        toast.success("Seendrop saved successfully!")
+        console.log("New SeenDrop created:", videoSeenDrop)
+      })
+      .catch((err) => {
+        toast.error("Seendrop can not be saved successfully!")
+        console.error(err)
+      })
+
+    setLoadingVideo(false)
+    onSeenDropCreated?.()
+  }
+
   return (
     <div className="w-[350px]] flex flex-col items-center justify-center bg-transparent">
-      <div className="relative h-[350px] w-[350px]">
-        <Image
-          src={seenDropInfo.imageOverlayedUrl || "/Avatar.jpg"}
-          fill
-          alt="Picture of the author"
-          className="object-cover object-center"
-        />
-      </div>
+      {seenDropInfo.type === "image" && (
+        <div className="relative h-[350px] w-[350px]">
+          <Image
+            src={seenDropInfo.imageOverlayedUrl || "/Avatar.jpg"}
+            fill
+            alt="Picture of the author"
+            className="object-cover object-center"
+          />
+        </div>
+      )}
+
+      {seenDropInfo.type === "video" && (
+        <div className="relative h-[350px] w-[350px] bg-purple-950">
+          <p className="px-4 py-1 text-lg">{dbUser?.firstName}</p>
+          <video controls autoPlay loop height={350} width={350} className="">
+            <source src={seenDropInfo.videoUrl} type="video/mp4" />
+          </video>
+          <div className="flex flex-row items-center justify-between px-4 mt-17">
+            <div className="relative h-[42px] w-[200px]">
+              <Image
+                src={event?.brandLogoUrl || "/Logo_AVICA.png"}
+                alt="Picture of the author"
+                className="object-contain object-center"
+                fill
+              />
+            </div>
+            <div className="relative h-[42px] w-[48px]">
+              <Image
+                src={"/Logo_SeenDrop.png"}
+                alt="Picture of the author"
+                className="object-contain object-center"
+                fill
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-row items-center gap-4 justify-center mb-4 mt-4">
-        {seenDropInfo.imageUrl && <ShareSeenDrop url={seenDropInfo.imageUrl} />}
+        {seenDropInfo.imageOverlayedUrl && (
+          <ShareSeenDrop url={seenDropInfo.imageOverlayedUrl} />
+        )}
+        {seenDropInfo.videoUrl && <ShareSeenDrop url={seenDropInfo.videoUrl} />}
         {seenDropInfo.imageUrl && (
-          <Button>
-            <SquarePlay />
-            ANIMATE!
-          </Button>
+          <>
+            {isSignedIn && user ? (
+              <Button onClick={handleGenerateVideo}>
+                <SquarePlay />
+                ANIMATE!
+              </Button>
+            ) : (
+              <>
+                <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                  <DialogTrigger asChild>
+                    <Button onClick={() => setOpenDialog(true)}>
+                      <SquarePlay />
+                      ANIMATE!
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="w-[350px]">
+                    <DialogHeader>
+                      <DialogTitle className="text-base text-center">
+                        Sign up to animate your SeenDrop
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="flex flex-col items-center justify-center py-4">
+                      <SignUpButton mode="modal">
+                        <Button variant="default">Sign Up / Sign In</Button>
+                      </SignUpButton>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </>
+            )}
+          </>
         )}
       </div>
+
+      {loadingVideo && (
+        <div className="flex flex-row items-center justify-center gap-4">
+          <LoaderCircle className="animate-spin w-12 h-12 text-green-500 mt-4 mb-4" />
+          <p className="text-sm text-white">
+            Please wait! You video SeenDrop is generated
+          </p>
+        </div>
+      )}
     </div>
   )
 }
 
 /*
-<p className="mx-auto text-xl font-medium text-black mt-2 mb-2">
+      <p className="mx-auto text-xl font-medium text-black mt-2 mb-2">
         {seenDropInfo.name}
       </p>
-
       <p className="mx-auto text-sm font-medium text-black w-[320px] h-[40px] text-center line-clamp-2">
         {seenDropInfo.message}
       </p>
 
+*/
+
+/*
+<DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setOpenDialog(false)}
+                      >
+                        Close
+                      </Button>
+                    </DialogFooter>
 */
