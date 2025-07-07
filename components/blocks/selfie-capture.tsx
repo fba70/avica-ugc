@@ -71,23 +71,28 @@ export function SelfieCapture({
   return (
     <div className="flex flex-col gap-2">
       {!capturing ? (
-        <Button variant="outline" onClick={startCamera} disabled={disabled}>
+        <Button
+          variant="outline"
+          type="button"
+          onClick={startCamera}
+          disabled={disabled}
+        >
           Or Take a Selfie
         </Button>
       ) : (
         <>
           <video
             ref={videoRef}
-            width={320}
+            width={380}
             height={320}
             autoPlay
             style={{ display: "block" }}
           />
           <div className="flex flex-row items-center justify-center gap-4">
-            <Button variant="outline" onClick={capture}>
+            <Button variant="outline" type="button" onClick={capture}>
               Capture
             </Button>
-            <Button variant="outline" onClick={stopCamera}>
+            <Button variant="outline" type="button" onClick={stopCamera}>
               Cancel
             </Button>
           </div>

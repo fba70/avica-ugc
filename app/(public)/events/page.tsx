@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import EventCard from "@/components/blocks/event-card"
-import { EventItem } from "@/types/types"
+import { EventItem, UserItem } from "@/types/types"
 import { CreateEventForm } from "@/components/forms/create-event"
 import { Search } from "lucide-react"
 import axios from "axios"
+import { useUser } from "@clerk/nextjs"
 
 export default function Events() {
   const [events, setEvents] = useState<EventItem[]>([])
@@ -17,6 +18,9 @@ export default function Events() {
   const [search, setSearch] = useState<string>("")
 
   const [page, setPage] = useState(1)
+
+  const { isSignedIn, user } = useUser()
+  const [dbUser, setDbUser] = useState<UserItem>()
 
   const orderedEvents = events
     .slice()
@@ -56,6 +60,14 @@ export default function Events() {
     fetchEvents()
   }, [])
 
+  useEffect(() => {
+    if (isSignedIn && user && user?.id) {
+      axios.get(`/api/user?externalId=${user.id}`).then((res) => {
+        setDbUser(res.data[0])
+      })
+    }
+  }, [user])
+
   if (loading) return <div>Loading events...</div>
   if (error) return <div>{error}</div>
 
@@ -69,7 +81,9 @@ export default function Events() {
         Ongoing Events
       </p>
 
-      <CreateEventForm onEventCreated={handleEventCreated} />
+      {isSignedIn && dbUser && dbUser.role === "partner" && (
+        <CreateEventForm onEventCreated={handleEventCreated} />
+      )}
 
       <Separator className="mt-12 mb-12 bg-gray-400" />
 

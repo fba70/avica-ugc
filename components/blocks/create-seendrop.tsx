@@ -32,7 +32,7 @@ import { createImageWithOverlays } from "@/lib/createImageWithOverlays"
 import { EventItem, UserItem } from "@/types/types"
 import { useUser } from "@clerk/nextjs"
 import { v4 as uuidv4 } from "uuid"
-// import { SelfieCapture } from "./selfie-capture"
+import { SelfieCapture } from "./selfie-capture"
 // import { CustomImageWithOverlays } from "@/components/blocks/image-overlays"
 
 interface SeenDropItem {
@@ -315,6 +315,33 @@ export default function CreateSeenDrop() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="selfieUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel></FormLabel>
+                    <FormControl>
+                      <div className="flex flex-col gap-2">
+                        {/* Show the captured image if present */}
+                        {field.value && (
+                          <img
+                            src={field.value}
+                            alt="Selfie preview"
+                            className="w-[370px] h-[360px] object-cover mb-2 rounded"
+                          />
+                        )}
+                        <SelfieCapture
+                          onCapture={field.onChange}
+                          disabled={isPending}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <FormError message={error} />
@@ -395,17 +422,27 @@ export default function CreateSeenDrop() {
 }
 
 /*
-<FormField
+// Need to add saving of the selfie to the Cloudinary via back-end API and return the URL to be used in further processing
+              <FormField
                 control={form.control}
                 name="selfieUrl"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel></FormLabel>
                     <FormControl>
-                      <SelfieCapture
-                        onCapture={field.onChange}
-                        disabled={isPending}
-                      />
+                      <div className="flex flex-col gap-2">
+                        {field.value && (
+                          <img
+                            src={field.value}
+                            alt="Selfie preview"
+                            className="w-[370px] h-[360px] object-cover mb-2 rounded"
+                          />
+                        )}
+                        <SelfieCapture
+                          onCapture={field.onChange}
+                          disabled={isPending}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
