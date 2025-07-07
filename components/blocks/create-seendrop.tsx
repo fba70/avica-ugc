@@ -53,9 +53,11 @@ export default function CreateSeenDrop() {
   // If there is no user, store claim token in local storage
   const claimToken = uuidv4() as string
 
-  if (!user || !isSignedIn) {
-    localStorage.setItem("seendropClaimToken", claimToken)
-  }
+  useEffect(() => {
+    if (!user || !isSignedIn) {
+      localStorage.setItem("seendropClaimToken", claimToken)
+    }
+  }, [user, isSignedIn, claimToken])
 
   const router = useRouter()
   const searchParams = useSearchParams()
