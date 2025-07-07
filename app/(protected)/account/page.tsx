@@ -212,13 +212,9 @@ export default function Account() {
 
   return (
     <>
-      <main className="flex h-full flex-col items-center justify-start pt-12 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-600 to-gray-900">
-        <div className="text-center">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-white mb-12">
-              Here are your SeenDrops, {user.fullName}!
-            </div>
-          </div>
+      <section className="max-w-7xl flex flex-col items-center justify-center">
+        <div className="text-center text-2xl font-bold text-white mb-12 mt-12">
+          Here are your SeenDrops, {user.fullName}!
         </div>
 
         <Form {...form}>
@@ -316,7 +312,7 @@ export default function Account() {
             </div>
           </>
         )}
-      </main>
+      </section>
     </>
   )
 }
