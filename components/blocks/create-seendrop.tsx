@@ -326,12 +326,11 @@ export default function CreateSeenDrop() {
                     <FormLabel></FormLabel>
                     <FormControl>
                       <div className="flex flex-col gap-2">
-                        {/* Show the captured image if present */}
                         {field.value && (
                           <img
                             src={field.value}
                             alt="Selfie preview"
-                            className="w-[370px] h-[360px] object-cover mb-2 rounded"
+                            className="w-[370px] h-[370px] object-cover mb-2"
                           />
                         )}
                         <SelfieCapture

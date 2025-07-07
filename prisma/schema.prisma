@@ -16,7 +16,8 @@ model Event {
   qrcodeUrl           String?
   brandLogoUrl        String?         @default("")
   description         String?         @default("")
-  prompt              String?         @default("") 
+  prompt              String?         @default("")
+  promptVideo         String?         @default("")  
 
   startDate           DateTime?       @default(now())
   endDate             DateTime?       @default(now())

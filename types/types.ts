@@ -7,6 +7,7 @@ export interface EventItem {
   brandLogoUrl?: string
   description?: string
   prompt?: string
+  promptVideo?: string
   startDate?: Date
   endDate?: Date
   createdAt: Date

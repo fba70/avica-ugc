@@ -45,6 +45,9 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
   const promptTemplate =
     "Task: Create a visually appealing image for the event. Context: The base image of the scene is provided by the second image (input_image_2 parameter) image. The user image provided by the first image (input_image_1 parameter) should be put into the context of the event scene and style. Style: The image should capture the essence of the event, highlighting its key features and benefits for participants. Use vibrant colors and engaging elements to attract attention. The image should be suitable for social media sharing and promotional materials."
 
+  const promptVideoTemplate =
+    "Animate the image to create a short video clip that showcases the user image, event's atmosphere and key highlights. Use smooth transitions and engaging effects to make the video visually appealing. The video should be suitable for social media sharing and promotional materials."
+
   // const form = useForm<z.infer<typeof EventSchema>>({
   const form = useForm({
     resolver: zodResolver(EventSchema),
@@ -56,6 +59,7 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
       brandLogoUrl: "",
       description: "",
       prompt: promptTemplate || "",
+      promptVideo: promptVideoTemplate || "",
       startDate: new Date() as Date,
       endDate: new Date() as Date,
     },
@@ -84,6 +88,7 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
         brandLogoUrl: values.brandLogoUrl,
         description: values.description,
         prompt: values.prompt,
+        promptVideo: values.promptVideo,
         startDate: values.startDate
           ? new Date(values.startDate).toISOString()
           : undefined,
@@ -236,12 +241,32 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
                 name="prompt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Define prompt for generative AI:</FormLabel>
+                    <FormLabel>Define prompt for image Gen AI:</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
                         value={field.value || ""}
                         placeholder={promptTemplate}
+                        disabled={isPending}
+                        className="min-h-64 w-[380px]"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="promptVideo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Define prompt for video Gen AI:</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        value={field.value || ""}
+                        placeholder={promptVideoTemplate}
                         disabled={isPending}
                         className="min-h-64 w-[380px]"
                       />

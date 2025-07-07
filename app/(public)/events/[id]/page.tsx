@@ -124,17 +124,6 @@ export default function Event() {
 
   // console.log("SD:", seenDrops)
 
-  /*
-  const handleCreateSeenDrop = () => {
-    const imageUrl = event?.imageUrl
-    router.push(
-      `/seendrops?eventId=${id}&eventImageUrl=${encodeURIComponent(
-        imageUrl || ""
-      )}`
-    )
-  }
-    */
-
   const handleCreateSeenDrop = () => {
     router.push(`/seendrops?eventId=${id}`)
   }

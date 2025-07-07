@@ -41,6 +41,7 @@ interface EditEventFormProps {
     brandLogoUrl?: string
     description?: string
     prompt?: string
+    promptVideo?: string
     startDate?: string | Date
     endDate?: string | Date
   }
@@ -65,6 +66,7 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
       brandLogoUrl: event.brandLogoUrl || "",
       description: event.description || "",
       prompt: event.prompt || "",
+      promptVideo: event.promptVideo || "",
       startDate: event.startDate ? new Date(event.startDate) : undefined,
       endDate: event.endDate ? new Date(event.endDate) : undefined,
     },
@@ -94,6 +96,7 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
         brandLogoUrl: values.brandLogoUrl,
         description: values.description,
         prompt: values.prompt,
+        promptVideo: values.promptVideo,
         startDate: values.startDate
           ? new Date(values.startDate).toISOString()
           : undefined,
@@ -246,7 +249,26 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
                 name="prompt"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Define prompt for generative AI:</FormLabel>
+                    <FormLabel>Define prompt for image Gen AI:</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        value={field.value || ""}
+                        disabled={isPending}
+                        className="min-h-64 w-[380px]"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="promptVideo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Define prompt for video Gen AI:</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
