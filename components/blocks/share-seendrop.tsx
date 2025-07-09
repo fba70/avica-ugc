@@ -32,7 +32,7 @@ export const ShareSeenDrop = ({ url }: { url: string }) => {
       <DialogTrigger asChild>
         <Button>
           {" "}
-          <Share />
+          <Share size={16} />
           SHARE!
         </Button>
       </DialogTrigger>

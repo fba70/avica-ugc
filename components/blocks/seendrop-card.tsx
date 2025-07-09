@@ -5,7 +5,7 @@ import Image from "next/image"
 import { ShareSeenDrop } from "@/components/blocks/share-seendrop"
 import { SeenDropItem, UserItem, EventItem } from "@/types/types"
 import { Button } from "../ui/button"
-import { SquarePlay, LoaderCircle } from "lucide-react"
+import { SquarePlay, LoaderCircle, Download } from "lucide-react"
 import axios from "axios"
 import { toast } from "sonner"
 import { videoUploadCloudinary } from "@/actions/upload-video"
@@ -17,8 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useUser } from "@clerk/nextjs"
-import { SignUpButton } from "@clerk/nextjs"
+import { useUser, SignUpButton } from "@clerk/nextjs"
 
 interface UploadResults {
   secure_url?: string
@@ -132,6 +131,8 @@ export default function SeenDropCard({
         setSetVideoSeenDrop(res.data)
         toast.success("Seendrop saved successfully!")
         console.log("New SeenDrop created:", videoSeenDrop)
+
+        onSeenDropCreated?.() // Notify parent component about the new SeenDrop
       })
       .catch((err) => {
         toast.error("Seendrop can not be saved successfully!")
@@ -139,7 +140,6 @@ export default function SeenDropCard({
       })
 
     setLoadingVideo(false)
-    onSeenDropCreated?.()
   }
 
   return (
@@ -182,16 +182,46 @@ export default function SeenDropCard({
         </div>
       )}
 
-      <div className="flex flex-row items-center gap-4 justify-center mb-4 mt-4">
+      <div className="flex flex-row items-center gap-2 justify-center mb-4 mt-4">
         {seenDropInfo.imageOverlayedUrl && (
           <ShareSeenDrop url={seenDropInfo.imageOverlayedUrl} />
         )}
         {seenDropInfo.videoUrl && <ShareSeenDrop url={seenDropInfo.videoUrl} />}
+
+        {seenDropInfo.imageOverlayedUrl && (
+          <div>
+            <a
+              download
+              href={seenDropInfo.imageOverlayedUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white text-sm bg-blue-600"
+            >
+              <Download size={16} />
+              Download
+            </a>
+          </div>
+        )}
+
+        {seenDropInfo.videoUrl && (
+          <div>
+            <a
+              download
+              href={seenDropInfo.videoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white text-sm bg-blue-600"
+            >
+              <Download size={16} />
+              Download
+            </a>
+          </div>
+        )}
         {seenDropInfo.imageUrl && (
           <>
             {isSignedIn && user ? (
               <Button onClick={handleGenerateVideo}>
-                <SquarePlay />
+                <SquarePlay size={16} />
                 ANIMATE!
               </Button>
             ) : (
@@ -235,22 +265,16 @@ export default function SeenDropCard({
 }
 
 /*
-      <p className="mx-auto text-xl font-medium text-black mt-2 mb-2">
-        {seenDropInfo.name}
-      </p>
-      <p className="mx-auto text-sm font-medium text-black w-[320px] h-[40px] text-center line-clamp-2">
-        {seenDropInfo.message}
-      </p>
-
-*/
-
-/*
-<DialogFooter>
-                      <Button
-                        variant="outline"
-                        onClick={() => setOpenDialog(false)}
-                      >
-                        Close
-                      </Button>
-                    </DialogFooter>
+<div>
+                <a
+                  download
+                  href={uploadedImage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-4 border border-gray-300 px-4 py-2 rounded-lg text-white text-sm"
+                >
+                  <Download />
+                  Download SeenDrop
+                </a>
+              </div>
 */

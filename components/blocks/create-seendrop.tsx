@@ -172,10 +172,11 @@ export default function CreateSeenDrop() {
     } else {
       setUploadedImage(uploadResult.secure_url || "")
       setUploadedOriginalImage(uploadOriginalResult.secure_url || "")
-      console.log("Uploaded image URL:", uploadResult.secure_url)
+      console.log("Uploaded image URL:", uploadResult.secure_url, uploadedImage)
       console.log(
         "Uploaded original image URL:",
-        uploadOriginalResult.secure_url
+        uploadOriginalResult.secure_url,
+        uploadedOriginalImage
       )
       toast.success("Image uploaded successfully!")
     }
@@ -382,27 +383,28 @@ export default function CreateSeenDrop() {
             <p className="text-center">Your SeenDrop is ready!</p>
             <div className="flex flex-row items-center justify-center relative h-[400px] w-[400px]">
               <Image
-                src={uploadedOriginalImage || "/Avatar.jpg"}
+                src={uploadedImage || "/Avatar.jpg"}
                 fill
                 alt="SeenDrop image"
                 className="object-cover object-center"
               />
             </div>
-            <ShareSeenDrop url={uploadedImage} />
-            <div className="hidden">
+
+            <div className="flex flex-row items-center justify-center gap-4">
               <ShareSeenDrop url={uploadedImage} />
-            </div>
-            <div>
-              <a
-                download
-                href={uploadedImage}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-4 border border-gray-300 px-4 py-2 rounded-lg text-white text-sm"
-              >
-                <Download />
-                Download SeenDrop
-              </a>
+
+              <div>
+                <a
+                  download
+                  href={uploadedImage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-4 border border-gray-300 px-4 py-2 rounded-lg text-white text-sm"
+                >
+                  <Download />
+                  Download SeenDrop
+                </a>
+              </div>
             </div>
           </div>
         </>
