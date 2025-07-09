@@ -26,23 +26,20 @@ export default function Header() {
     return <div>Loading user data...</div>
   }
 
-  // /Logo_SeenDrop.png
-  // /Logo_AVICA.png
-
   return (
     <>
       <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between  bg-black p-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-6">
         <div className="flex flex-row items-center justify-center gap-6">
           <Link href="/">
             <Image
-              src="/Logo_SeenDrop.png"
+              src="/Logo_AVICA.png"
               alt="Next.js logo"
               width={80}
               height={80}
               priority
             />
           </Link>
-          <p className="text-4xl font-medium text-white">UGC DEMO</p>
+          <p className="text-4xl font-medium text-white">AVICA UGC DEMO</p>
         </div>
 
         <div className="flex flex-row items-center justify-center gap-6">

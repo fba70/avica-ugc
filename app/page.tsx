@@ -28,9 +28,6 @@ export default function Home() {
     setLoading(false)
   }, [user, isSignedIn])
 
-  // /Logo_SeenDrop.png
-  // /Logo_AVICA.png
-
   /*
       <Image
         src="/Logo_AVICA.png"
