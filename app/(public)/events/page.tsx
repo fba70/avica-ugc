@@ -68,8 +68,8 @@ export default function Events() {
     }
   }, [user])
 
-  if (loading) return <div>Loading events...</div>
-  if (error) return <div>{error}</div>
+  if (loading) return <div className="mt-8">Loading events...</div>
+  if (error) return <div className="mt-8">{error}</div>
 
   const handleEventCreated = () => {
     fetchEvents()

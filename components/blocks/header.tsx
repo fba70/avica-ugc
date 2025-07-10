@@ -14,6 +14,7 @@ import {
   useUser,
 } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
+import { House } from "lucide-react"
 
 export default function Header() {
   const path = usePathname()
@@ -28,7 +29,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between  bg-black p-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-6">
+      <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between  bg-[url('/HBG_1.jpg')] bg-cover bg-center p-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-6">
         <div className="flex flex-row items-center justify-center gap-6">
           <Link href="/">
             <Image
@@ -48,11 +49,11 @@ export default function Header() {
               className={cn(
                 "text-center text-2xl",
                 path === "/"
-                  ? "text-orange-600 border-b-white border-b-2"
+                  ? "text-white border-b-white border-b-2"
                   : "text-white"
               )}
             >
-              HOME
+              <House />
             </p>
           </Link>
 
@@ -61,7 +62,7 @@ export default function Header() {
               className={cn(
                 "text-center text-2xl",
                 path.startsWith("/events")
-                  ? "text-orange-600 border-b-white border-b-2"
+                  ? "text-white border-b-white border-b-2"
                   : "text-white"
               )}
             >
@@ -75,7 +76,7 @@ export default function Header() {
                 className={cn(
                   "text-center text-2xl",
                   path.startsWith("/account")
-                    ? "text-orange-600 border-b-white border-b-2"
+                    ? "text-white border-b-white border-b-2"
                     : "text-white"
                 )}
               >
@@ -96,7 +97,7 @@ export default function Header() {
               </SignUpButton>
             </SignedOut>
             <SignedIn>
-              <div className="border border-gray-500 rounded-lg pr-4 pl-4 pt-1 pb-1">
+              <div className="border border-gray-300 rounded-lg pr-4 pl-4 pt-1 pb-1">
                 <UserButton showName />
               </div>
             </SignedIn>

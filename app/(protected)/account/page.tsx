@@ -21,6 +21,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { toast } from "sonner"
 
 export default function Account() {
   const { isSignedIn, user, isLoaded } = useUser()
@@ -109,7 +110,7 @@ export default function Account() {
           setPage(1)
         })
         .catch(() => {
-          console.error("Failed to fetch seen drops")
+          toast.error("Sorry! Can not fetch your SeenDrops")
         })
         .finally(() => setLoadingSeenDrops(false))
     }
@@ -137,6 +138,7 @@ export default function Account() {
         })
         .catch((err) => {
           console.error("Failed to claim SeenDrop:", err)
+          toast.error("Sorry! Can't your SeenDrops")
         })
     }
   }, [dbUser])
@@ -167,7 +169,7 @@ export default function Account() {
   // Update user role
   function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!dbUser?.id) {
-      console.error("No user ID found")
+      toast.error("Sorry! No user ID is found")
       return
     }
 
@@ -184,22 +186,23 @@ export default function Account() {
       })
       .catch((err) => {
         console.error("Failed to update user role:", err)
+        toast.error("Sorry! Can not update the role of the user")
         // TBD - show error message, etc.
       })
   }
 
   if (!isLoaded || loadingUsers) {
-    return <div>Loading user data...</div>
+    return <div className="mt-8">Loading user data...</div>
   }
 
   if (loadingSeenDrops) {
-    return <div>Loading your SeenDrops ...</div>
+    return <div className="mt-8">Loading your SeenDrops ...</div>
   }
 
   if (!isSignedIn) {
     return (
       <main className="flex h-full flex-col items-center justify-start pt-12 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-600 to-gray-900">
-        <div className="text-center">
+        <div className="text-center mt-8">
           <p className="text-lg text-white mb-6">User is not authorized!</p>
         </div>
       </main>
@@ -229,7 +232,7 @@ export default function Account() {
                 name="userType"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-center space-x-4">
-                    <FormLabel>My account type is:</FormLabel>
+                    <FormLabel>My account type:</FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}

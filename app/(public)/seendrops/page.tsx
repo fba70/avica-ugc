@@ -6,7 +6,7 @@ export default function SeenDrop() {
   return (
     <Suspense
       fallback={
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-screen mt-8">
           <LoaderCircle className="animate-spin w-12 h-12 text-green-500" />
         </div>
       }

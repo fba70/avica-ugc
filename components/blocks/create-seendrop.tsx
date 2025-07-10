@@ -134,7 +134,7 @@ export default function CreateSeenDrop() {
 
     const imageData = await response.json()
 
-    console.log("Image data format:", imageData.output)
+    // console.log("Image data format:", imageData.output)
 
     if (response.status !== 201) {
       setError("Image generation error")
@@ -168,16 +168,12 @@ export default function CreateSeenDrop() {
 
     if (uploadResult.error) {
       setError("Cloudinary upload error")
-      console.error("Cloudinary upload error:", uploadResult.error)
+      // console.error("Cloudinary upload error:", uploadResult.error)
     } else {
       setUploadedImage(uploadResult.secure_url || "")
       setUploadedOriginalImage(uploadOriginalResult.secure_url || "")
-      console.log("Uploaded image URL:", uploadResult.secure_url, uploadedImage)
-      console.log(
-        "Uploaded original image URL:",
-        uploadOriginalResult.secure_url,
-        uploadedOriginalImage
-      )
+      // console.log("Uploaded image URL:", uploadResult.secure_url, uploadedImage)
+      // console.log("Uploaded original image URL:", uploadOriginalResult.secure_url, uploadedOriginalImage)
       toast.success("Image uploaded successfully!")
     }
 
@@ -199,11 +195,11 @@ export default function CreateSeenDrop() {
         setNewSeenDrop(res.data)
         setSuccess("Image upload is successful")
         toast.success("Seendrop saved successfully!")
-        console.log("New SeenDrop created:", res.data)
+        // console.log("New SeenDrop created:", res.data)
       })
       .catch((err) => {
-        setError(`Error uploading the image`)
-        console.error(err)
+        setError(`Error uploading the image: ${err.message}`)
+        // console.error(err)
       })
 
     setGeneratingImage(false)
@@ -216,7 +212,7 @@ export default function CreateSeenDrop() {
         setNewSeenDrop(res.data)
         setSeenDropRefetched(true)
         setLoading(false)
-        console.log("Fetched new SeenDrop:", res.data)
+        // console.log("Fetched new SeenDrop:", res.data)
       })
       .catch(() => {
         setError("Failed to fetch events")
@@ -234,7 +230,7 @@ export default function CreateSeenDrop() {
     if (!parsed.success) {
       setError("Invalid form data. Please check your inputs.")
       setGeneratingImage(false)
-      console.log("Validation errors:", parsed.error.errors)
+      // console.log("Validation errors:", parsed.error.errors)
       return
     }
 
@@ -383,7 +379,9 @@ export default function CreateSeenDrop() {
             <p className="text-center">Your SeenDrop is ready!</p>
             <div className="flex flex-row items-center justify-center relative h-[400px] w-[400px]">
               <Image
-                src={uploadedImage || "/Avatar.jpg"}
+                src={
+                  uploadedImage || uploadedOriginalImage || "/Logo_AVICA.png"
+                }
                 fill
                 alt="SeenDrop image"
                 className="object-cover object-center"
