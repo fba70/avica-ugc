@@ -11,7 +11,7 @@ import {
   FacebookIcon,
   LinkedinIcon,
   TelegramIcon,
-  TwitterIcon,
+  XIcon,
   WhatsappIcon,
 } from "react-share"
 import { Card, CardContent } from "@/components/ui/card"
@@ -60,7 +60,7 @@ export const ShareSeenDrop = ({ url }: { url: string }) => {
                 <WhatsappIcon size={32} round={true} />
               </WhatsappShareButton>
               <TwitterShareButton url={url}>
-                <TwitterIcon size={32} round={true} />
+                <XIcon size={32} round={true} />
               </TwitterShareButton>
             </CardContent>
           </Card>

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import SeenDropCard from "@/components/blocks/seendrop-card"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 import {
   Form,
   FormControl,
@@ -213,48 +214,52 @@ export default function Account() {
   return (
     <>
       <section className="max-w-7xl flex flex-col items-center justify-center">
-        <div className="text-center text-2xl font-bold text-white mb-12 mt-12">
-          Here are your SeenDrops, {user.fullName}!
+        <div className="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-6 mt-16 px-6">
+          <div className="text-center text-2xl font-bold text-white">
+            Here are your SeenDrops, {user.fullName}!
+          </div>
+
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-row items-center justify-center space-x-6"
+            >
+              <FormField
+                control={form.control}
+                name="userType"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-center space-x-4">
+                    <FormLabel>My account type is:</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-row items-center justify-center space-x-2"
+                      >
+                        <FormItem className="flex items-center gap-2">
+                          <FormControl>
+                            <RadioGroupItem value="user" />
+                          </FormControl>
+                          <FormLabel className="font-normal">User</FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center gap-2">
+                          <FormControl>
+                            <RadioGroupItem value="partner" />
+                          </FormControl>
+                          <FormLabel className="font-normal">Partner</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Save</Button>
+            </form>
+          </Form>
         </div>
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-row items-center justify-center space-x-6 mb-8"
-          >
-            <FormField
-              control={form.control}
-              name="userType"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-center space-x-4">
-                  <FormLabel>My account type is:</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex flex-row items-center justify-center space-x-2"
-                    >
-                      <FormItem className="flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem value="user" />
-                        </FormControl>
-                        <FormLabel className="font-normal">User</FormLabel>
-                      </FormItem>
-                      <FormItem className="flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem value="partner" />
-                        </FormControl>
-                        <FormLabel className="font-normal">Partner</FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Save</Button>
-          </form>
-        </Form>
+        <Separator className="mt-12 mb-12 bg-gray-400" />
 
         <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-6">
           <div className="flex flex-row items-center justify-center gap-4">

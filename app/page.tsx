@@ -40,7 +40,7 @@ export default function Home() {
   */
 
   return (
-    <section className="max-w-7xl flex flex-col items-center justify-center gap-8 mt-4">
+    <section className="max-w-7xl flex flex-col items-center justify-center gap-8 mt-16 px-6">
       <p className="mx-auto lg:text-5xl text-3xl font-medium text-white lg:pb-16 pb-6 pl-6 pr-6 text-center">
         USER-GENERATED CONTENT DEMO
       </p>

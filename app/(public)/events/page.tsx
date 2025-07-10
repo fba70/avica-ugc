@@ -77,13 +77,16 @@ export default function Events() {
 
   return (
     <section className="max-w-7xl flex flex-col items-center justify-center">
-      <p className="mx-auto text-7xl font-medium text-white pt-16 pb-16 text-center">
-        Ongoing Events
-      </p>
-
-      {isSignedIn && dbUser && dbUser.role === "partner" && (
-        <CreateEventForm onEventCreated={handleEventCreated} />
-      )}
+      <div className="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-6 mt-16 px-6">
+        <p className="lg:text-6xl text-5xl font-medium text-white lg:text-left text-center">
+          Ongoing Events
+        </p>
+        {isSignedIn && dbUser && dbUser.role === "partner" && (
+          <div className="lg:ml-auto lg:mr-0 w-full lg:w-auto flex justify-center lg:justify-end">
+            <CreateEventForm onEventCreated={handleEventCreated} />
+          </div>
+        )}
+      </div>
 
       <Separator className="mt-12 mb-12 bg-gray-400" />
 

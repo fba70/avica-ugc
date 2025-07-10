@@ -52,7 +52,7 @@ export default function RootLayout({
               <Header />
             </section>
 
-            <section className="row-start-2">{children}</section>
+            <section className="row-start-2 self-start">{children}</section>
 
             <section className="row-start-3">
               <Footer />
