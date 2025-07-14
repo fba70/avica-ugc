@@ -11,8 +11,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { CreateEventForm } from "@/components/forms/create-event"
-import EventsCount from "@/components/blocks/events-counts"
-import SDDailyStats from "@/components/blocks/sd-daily-stats"
+import EventsCount from "@/components/charts/events-counts"
+import SDDailyStats from "@/components/charts/sd-daily-stats"
+import MonthlyImages from "@/components/charts/monthly-images"
+import MonthlyVideos from "@/components/charts/monthly-videos"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function Partner() {
@@ -155,6 +157,9 @@ export default function Partner() {
           <TabsTrigger value="billing" className="text-2xl text-white">
             BILLING
           </TabsTrigger>
+          <TabsTrigger value="payments" className="text-2xl text-white">
+            PAYMENTS
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="events">
@@ -235,6 +240,10 @@ export default function Partner() {
               <EventsCount />
 
               <SDDailyStats />
+
+              <MonthlyImages />
+
+              <MonthlyVideos />
             </div>
           </div>
         </TabsContent>
@@ -243,6 +252,16 @@ export default function Partner() {
           <div className="w-full flex flex-col items-center lg:justify-between justify-center gap-6 my-8">
             <div className="text-center text-2xl font-bold text-white">
               Account Billing Data
+            </div>
+
+            <p></p>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="payments">
+          <div className="w-full flex flex-col items-center lg:justify-between justify-center gap-6 my-8">
+            <div className="text-center text-2xl font-bold text-white">
+              Account Payments
             </div>
 
             <p></p>
