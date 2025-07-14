@@ -1,86 +1,95 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { LocationEdit, Image as SDImage } from "lucide-react"
-import { useUser } from "@clerk/nextjs"
-import { UserItem } from "@/types/types"
-import axios from "axios"
+import { Image as SDImage } from "lucide-react"
+
 // import Image from "next/image"
 
 export default function Home() {
   const router = useRouter()
 
-  const { isSignedIn, user } = useUser()
-
-  const [dbUser, setDBUser] = useState<UserItem>()
-  const [loading, setLoading] = useState(false)
-
-  // Save clerk user to DB and refetch data
-  useEffect(() => {
-    setLoading(true)
-    if (isSignedIn && user && user?.id) {
-      axios.get(`/api/user?externalId=${user.id}`).then((res) => {
-        setDBUser(res.data[0])
-      })
-    }
-    setLoading(false)
-  }, [user, isSignedIn])
-
-  /*
-      <Image
-        src="/Logo_AVICA.png"
-        alt="Next.js logo"
-        width={300}
-        height={300}
-        priority
-        className="lg:block hidden"
-      />
-  */
-
   return (
     <section className="max-w-7xl flex flex-col items-center justify-center gap-8 mt-16 px-6">
-      <p className="mx-auto lg:text-5xl text-3xl font-medium text-white lg:pb-16 pb-6 pl-6 pr-6 text-center">
-        USER-GENERATED CONTENT DEMO
+      <p className="mx-auto lg:text-7xl text-5xl font-medium text-white lg:pb-12 pb-6 px-6 text-center">
+        <span className="text-orange-600">AVICA</span> MYFLIX
       </p>
 
-      {loading && (
-        <p className="lg:w-[60%] w-[80%] text-2xl font-medium text-cyan-500 pb-8 text-center">
-          Wait! Loading user data ...
-        </p>
-      )}
+      <p className="mx-auto lg:text-4xl text-2xl font-medium text-white lg:pb-10 pb-6 px-6 text-center">
+        The Next-Gen Social & Brand Engagement Ecosystem
+      </p>
 
-      {dbUser && dbUser?.role === "partner" && (
-        <>
-          <p className="lg:w-[60%] w-[80%] text-2xl font-medium text-cyan-500 pb-8 text-center">
-            Create your event or brand spot and personalize it for the
-            interaction with your clients
-          </p>
-          <Button
-            className="flex flex-row items-center justify-center gap-4 w-[300px]"
-            onClick={() => router.push("/events")}
-          >
-            <LocationEdit />
-            <p className="pr-2 text-lg">Create your event!</p>
-          </Button>
-        </>
-      )}
+      <p className="mx-auto lg:text-3xl text-xl font-medium text-white lg:pb-6 pb-6 lg:w-[70%] w-[90%] text-center">
+        Revolutionizing social interaction through short stories with user
+        avatars and brand digital twins as actors
+      </p>
 
-      {dbUser && dbUser?.role === "user" && (
-        <>
-          <p className="lg:w-[60%] w-[80%] text-2xl font-medium text-orange-500 pb-8 pt-8 text-center">
-            Select the event and generate your SeenDrop!
-          </p>
-          <Button
-            className="flex flex-row items-center justify-center gap-4 w-[300px]"
-            onClick={() => router.push("/events")}
-          >
-            <SDImage />
-            <p className="pr-2 text-lg">Generate your SeenDrop!</p>
-          </Button>
-        </>
-      )}
+      <Button
+        className="flex flex-row items-center justify-center gap-4 w-[300px]"
+        onClick={() => router.push("/events")}
+      >
+        <SDImage />
+        <p className="pr-2 text-lg">Generate your SeenDrop!</p>
+      </Button>
+
+      <div className="flex flex-row items-center justify-center gap-8 flex-wrap mt-6">
+        <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
+          <Image
+            src={"/Card_1.png"}
+            fill
+            alt="SeenDrop image"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
+            <span className="text-white text-4xl font-bold">Personalized</span>
+          </div>
+        </div>
+        <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
+          <Image
+            src={"/Card_2.png"}
+            fill
+            alt="SeenDrop image"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
+            <span className="text-white text-4xl font-bold">Engaging</span>
+          </div>
+        </div>
+        <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
+          <Image
+            src={"/Card_3.png"}
+            fill
+            alt="SeenDrop image"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
+            <span className="text-white text-4xl font-bold">Interaction</span>
+          </div>
+        </div>
+        <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
+          <Image
+            src={"/Card_4.png"}
+            fill
+            alt="SeenDrop image"
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
+            <span className="text-white text-4xl font-bold">Gen AI</span>
+          </div>
+        </div>
+      </div>
     </section>
   )
 }
+
+/*
+<div className="relative h-[400px] w-[400px] border border-white">
+          <Image
+            src={"/Card_1.png"}
+            fill
+            alt="SeenDrop image"
+            className="object-cover object-center"
+          />
+        </div>
+*/

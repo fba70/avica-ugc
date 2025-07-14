@@ -19,6 +19,9 @@ model Event {
   prompt              String?         @default("")
   promptVideo         String?         @default("")  
 
+  userId              String?         
+  user                User?           @relation(fields: [userId], references: [id])
+
   startDate           DateTime?       @default(now())
   endDate             DateTime?       @default(now())
 
@@ -44,7 +47,7 @@ model SeenDrop {
   updatedAt           DateTime        @updatedAt
 
   event               Event           @relation(fields: [eventId], references: [id])
-  user                User?            @relation(fields: [userId], references: [id])
+  user                User?           @relation(fields: [userId], references: [id])
 }
 
 model User {
@@ -59,4 +62,5 @@ model User {
   updatedAt           DateTime        @updatedAt
 
   seenDrops           SeenDrop[]
+  events              Event[]
 }

@@ -116,7 +116,7 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
   }
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center">
       {!open && (
         <Button onClick={() => setOpen(true)} className="text-lg pl-4 pr-4">
           <LocationEdit />
@@ -364,6 +364,6 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
           </form>
         </Form>
       )}
-    </>
+    </div>
   )
 }

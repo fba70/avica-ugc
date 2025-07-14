@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import EventCard from "@/components/blocks/event-card"
-import { EventItem, UserItem } from "@/types/types"
-import { CreateEventForm } from "@/components/forms/create-event"
+import { EventItem } from "@/types/types"
 import { Search } from "lucide-react"
 import axios from "axios"
-import { useUser } from "@clerk/nextjs"
+// import { useUser } from "@clerk/nextjs"
 
 export default function Events() {
   const [events, setEvents] = useState<EventItem[]>([])
@@ -19,8 +18,8 @@ export default function Events() {
 
   const [page, setPage] = useState(1)
 
-  const { isSignedIn, user } = useUser()
-  const [dbUser, setDbUser] = useState<UserItem>()
+  // const { isSignedIn, user } = useUser()
+  // const [dbUser, setDbUser] = useState<UserItem>()
 
   const orderedEvents = events
     .slice()
@@ -60,6 +59,7 @@ export default function Events() {
     fetchEvents()
   }, [])
 
+  /*
   useEffect(() => {
     if (isSignedIn && user && user?.id) {
       axios.get(`/api/user?externalId=${user.id}`).then((res) => {
@@ -67,39 +67,31 @@ export default function Events() {
       })
     }
   }, [user])
+  */
 
   if (loading) return <div className="mt-8">Loading events...</div>
   if (error) return <div className="mt-8">{error}</div>
 
-  const handleEventCreated = () => {
-    fetchEvents()
-  }
-
   return (
     <section className="max-w-7xl flex flex-col items-center justify-center">
       <div className="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-6 mt-16 px-6">
-        <p className="lg:text-6xl text-5xl font-medium text-white lg:text-left text-center">
+        <p className="lg:text-6xl text-5xl font-medium text-white lg:text-left text-center pb-2">
           Ongoing Events
         </p>
-        {isSignedIn && dbUser && dbUser.role === "partner" && (
-          <div className="lg:ml-auto lg:mr-0 w-full lg:w-auto flex justify-center lg:justify-end">
-            <CreateEventForm onEventCreated={handleEventCreated} />
-          </div>
-        )}
+
+        <div className="flex flex-row items-center justify-center lg:pl-20 pl-0 gap-4">
+          <Search />
+          <Input
+            type="text"
+            placeholder="Search by event name or brand"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border px-4 py-1 rounded w-[320px]"
+          />
+        </div>
       </div>
 
-      <Separator className="mt-12 mb-12 bg-gray-400" />
-
-      <div className="mb-8 flex flex-row items-center justify-center gap-4">
-        <Search />
-        <Input
-          type="text"
-          placeholder="Search by event name or brand"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-4 py-1 rounded w-[300px]"
-        />
-      </div>
+      <Separator className="mt-10 mb-12 bg-gray-400" />
 
       <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">
         {currentEvents.map((item) => (

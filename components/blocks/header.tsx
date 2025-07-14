@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -15,15 +16,31 @@ import {
 } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import { House } from "lucide-react"
+import axios from "axios"
+import { UserItem } from "@/types/types"
 
 export default function Header() {
   const path = usePathname()
   // const router = useRouter()
 
-  const { isSignedIn, isLoaded } = useUser()
+  const { isSignedIn, isLoaded, user } = useUser()
   // console.log("User:", user)
 
-  if (!isLoaded) {
+  const [dbUser, setDbUser] = useState<UserItem>()
+  const [loadingUser, setLoadingUser] = useState(false)
+
+  useEffect(() => {
+    if (user?.id) {
+      setLoadingUser(true)
+
+      axios.get(`/api/user?externalId=${user.id}`).then((res) => {
+        setDbUser(res.data[0])
+        setLoadingUser(false)
+      })
+    }
+  }, [user])
+
+  if (!isLoaded || loadingUser) {
     return <div>Loading user data...</div>
   }
 
@@ -40,7 +57,7 @@ export default function Header() {
               priority
             />
           </Link>
-          <p className="text-4xl font-medium text-white">AVICA UGC DEMO</p>
+          <p className="text-4xl font-medium text-white">AVICA MYFLIX</p>
         </div>
 
         <div className="flex flex-row items-center justify-center gap-6">
@@ -70,7 +87,7 @@ export default function Header() {
             </p>
           </Link>
 
-          {isSignedIn && (
+          {isSignedIn && dbUser?.role === "user" && (
             <Link href="/account">
               <p
                 className={cn(
@@ -80,7 +97,22 @@ export default function Header() {
                     : "text-white"
                 )}
               >
-                SEENDROPS
+                MY SEENDROPS
+              </p>
+            </Link>
+          )}
+
+          {isSignedIn && dbUser?.role === "partner" && (
+            <Link href="/admin">
+              <p
+                className={cn(
+                  "text-center text-2xl",
+                  path.startsWith("/admin")
+                    ? "text-white border-b-white border-b-2"
+                    : "text-white"
+                )}
+              >
+                MY EVENTS
               </p>
             </Link>
           )}

@@ -5,8 +5,7 @@ import { EventSchema } from "@/schemas"
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const id = searchParams.get("id")
-
-  console.log(id)
+  const userId = searchParams.get("userId") // <-- get userId from query
 
   if (id) {
     // Return a single event by id
@@ -15,9 +14,18 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Event not found" }, { status: 404 })
     }
     return NextResponse.json(event)
+  } else if (userId) {
+    // Return all events for a specific user
+    const events = await db.event.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" }, // optional: newest first
+    })
+    return NextResponse.json(events)
   } else {
     // Return all events
-    const events = await db.event.findMany()
+    const events = await db.event.findMany({
+      orderBy: { createdAt: "desc" }, // optional: newest first
+    })
     return NextResponse.json(events)
   }
 }

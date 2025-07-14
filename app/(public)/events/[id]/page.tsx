@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation"
 import { useUser } from "@clerk/nextjs"
 import { SignUpButton } from "@clerk/nextjs"
 import Image from "next/image"
-import { EventItem, SeenDropItem } from "@/types/types"
+import { EventItem, SeenDropItem, UserItem } from "@/types/types"
 import { Input } from "@/components/ui/input"
 import EventCard from "@/components/blocks/event-card"
 import SeenDropCard from "@/components/blocks/seendrop-card"
@@ -41,7 +41,10 @@ interface UploadResults {
 
 export default function Event() {
   const router = useRouter()
-  const { isSignedIn } = useUser()
+  const { isSignedIn, isLoaded, user } = useUser()
+
+  const [dbUser, setDbUser] = useState<UserItem>()
+  const [loadingUser, setLoadingUser] = useState(false)
 
   const [event, setEvent] = useState<EventItem>()
   const [seenDrops, setSeenDrops] = useState<SeenDropItem[]>()
@@ -126,6 +129,22 @@ export default function Event() {
 
   const handleCreateSeenDrop = () => {
     router.push(`/seendrops?eventId=${id}`)
+  }
+
+  // Fetch db user data
+  useEffect(() => {
+    if (user?.id) {
+      setLoadingUser(true)
+
+      axios.get(`/api/user?externalId=${user.id}`).then((res) => {
+        setDbUser(res.data[0])
+        setLoadingUser(false)
+      })
+    }
+  }, [user])
+
+  if (!isLoaded || loadingUser) {
+    return <div>Loading user data...</div>
   }
 
   if (loading) return <div>Loading SeenDrops...</div>
@@ -254,7 +273,9 @@ export default function Event() {
           {!flip ? "QR code" : "Event card"}
         </Button>
 
-        <EditEventForm event={event} onSuccess={handleEventCreated} />
+        {dbUser?.role === "partner" && (
+          <EditEventForm event={event} onSuccess={handleEventCreated} />
+        )}
       </div>
 
       <Separator className="mt-10 mb-10 bg-gray-400" />
