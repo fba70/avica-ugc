@@ -9,6 +9,7 @@ export const EventSchema = z.object({
   description: z.string().optional(),
   prompt: z.string().optional(),
   promptVideo: z.string().optional(),
+  userId: z.string().optional(),
   startDate: z.preprocess(
     (arg) =>
       typeof arg === "string" || arg instanceof Date

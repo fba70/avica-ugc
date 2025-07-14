@@ -13,6 +13,7 @@ import { toast } from "sonner"
 import { CreateEventForm } from "@/components/forms/create-event"
 import EventsCount from "@/components/blocks/events-counts"
 import SDDailyStats from "@/components/blocks/sd-daily-stats"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function Partner() {
   const { isSignedIn, user, isLoaded } = useUser()
@@ -36,7 +37,7 @@ export default function Partner() {
         .includes((search ?? "").toLowerCase())
   )
 
-  const CARDS_PER_PAGE = 6
+  const CARDS_PER_PAGE = 3
   const totalPages = Math.ceil(safeEvents.length / CARDS_PER_PAGE)
   const startIdx = (page - 1) * CARDS_PER_PAGE
   const currentSeenDrops = filteredSeenDrops.slice(
@@ -127,8 +128,8 @@ export default function Partner() {
   // console.log("User's SeenDrops:", mySeenDrops)
 
   return (
-    <section className="max-w-7xl flex flex-col items-center justify-center">
-      <div className="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-6 mt-16 px-6">
+    <section className="w-full max-w-7xl flex flex-col items-center justify-center">
+      <div className="w-[1280px] flex flex-col lg:flex-row lg:justify-between gap-6 mt-16 px-6">
         <div className="text-center text-2xl font-bold text-white">
           Here are your Events, {user.fullName}!
         </div>
@@ -140,78 +141,114 @@ export default function Partner() {
 
       <Separator className="mt-12 mb-12 bg-gray-400" />
 
-      {isSignedIn && dbUser && dbUser.role === "partner" && (
-        <div className="w-full flex flex-row items-center justify-center mb-8 ">
-          <CreateEventForm onEventCreated={fetchMyEvents} />
-        </div>
-      )}
+      <Tabs
+        defaultValue="events"
+        className="w-full flex flex-col items-center justify-center mb-8"
+      >
+        <TabsList className="gap-4 ">
+          <TabsTrigger value="events" className="text-2xl text-white">
+            EVENTS
+          </TabsTrigger>
+          <TabsTrigger value="stats" className="text-2xl text-white">
+            STATISTICS
+          </TabsTrigger>
+          <TabsTrigger value="billing" className="text-2xl text-white">
+            BILLING
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-6">
-        <div className="flex flex-row items-center justify-center gap-4">
-          <Search />
-          <Input
-            type="text"
-            placeholder="Search by content type or message"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border px-4 py-1 rounded w-[300px]"
-          />
-        </div>
-      </div>
+        <TabsContent value="events">
+          {isSignedIn && dbUser && dbUser.role === "partner" && (
+            <div className="flex flex-row items-center justify-center mb-8 mt-8">
+              <CreateEventForm
+                onEventCreated={fetchMyEvents}
+                userId={dbUser?.id}
+              />
+            </div>
+          )}
 
-      {!loadingEvents && (
-        <>
-          <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">
-            {currentSeenDrops
-              .slice()
-              .sort((a, b) =>
-                "createdAt" in a && "createdAt" in b
-                  ? new Date((b as SeenDropItem).createdAt).getTime() -
-                    new Date((a as SeenDropItem).createdAt).getTime()
-                  : 0
-              )
-              .map((item) => (
-                <EventCard cardInfo={item} showButton={true} key={item.id} />
-              ))}
+          <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-6">
+            <div className="flex flex-row items-center justify-center gap-4">
+              <Search />
+              <Input
+                type="text"
+                placeholder="Search by content type or message"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border px-4 py-1 rounded w-[300px]"
+              />
+            </div>
           </div>
 
-          <div className="flex justify-center items-center gap-4 mt-4">
-            <Button
-              className=" text-gray-300 disabled:text-gray-300"
-              variant="outline"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-            >
-              Prev
-            </Button>
-            <span>
-              page {page} of {totalPages}
-            </span>
-            <Button
-              className="text-gray-300 disabled:text-gray-300"
-              variant="outline"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-            >
-              Next
-            </Button>
+          {!loadingEvents && (
+            <>
+              <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">
+                {currentSeenDrops
+                  .slice()
+                  .sort((a, b) =>
+                    "createdAt" in a && "createdAt" in b
+                      ? new Date((b as SeenDropItem).createdAt).getTime() -
+                        new Date((a as SeenDropItem).createdAt).getTime()
+                      : 0
+                  )
+                  .map((item) => (
+                    <EventCard
+                      cardInfo={item}
+                      showButton={true}
+                      key={item.id}
+                    />
+                  ))}
+              </div>
+
+              <div className="flex justify-center items-center gap-4 mt-4">
+                <Button
+                  className=" text-gray-300 disabled:text-gray-300"
+                  variant="outline"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  Prev
+                </Button>
+                <span>
+                  page {page} of {totalPages}
+                </span>
+                <Button
+                  className="text-gray-300 disabled:text-gray-300"
+                  variant="outline"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                >
+                  Next
+                </Button>
+              </div>
+            </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="stats">
+          <div className="w-full flex flex-col items-center lg:justify-between justify-center gap-6 my-8">
+            <div className="text-center text-2xl font-bold text-white">
+              Events Statistics
+            </div>
+
+            <div className="flex flex-row items-center justify-center gap-8 flex-wrap mt-6">
+              <EventsCount />
+
+              <SDDailyStats />
+            </div>
           </div>
-        </>
-      )}
+        </TabsContent>
 
-      <Separator className="mt-12 mb-12 bg-gray-400" />
+        <TabsContent value="billing">
+          <div className="w-full flex flex-col items-center lg:justify-between justify-center gap-6 my-8">
+            <div className="text-center text-2xl font-bold text-white">
+              Account Billing Data
+            </div>
 
-      <div className="w-full flex flex-col items-center lg:justify-between justify-center gap-6 mb-8">
-        <div className="text-center text-2xl font-bold text-white">
-          Events Statistics
-        </div>
-
-        <div className="flex flex-row items-center justify-center gap-6 flex-wrap mt-6">
-          <EventsCount />
-
-          <SDDailyStats />
-        </div>
-      </div>
+            <p></p>
+          </div>
+        </TabsContent>
+      </Tabs>
     </section>
   )
 }

@@ -33,9 +33,13 @@ import {
 
 interface CreateEventFormProps {
   onEventCreated?: () => void
+  userId?: string
 }
 
-export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
+export const CreateEventForm = ({
+  onEventCreated,
+  userId,
+}: CreateEventFormProps) => {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | undefined>("")
@@ -62,6 +66,7 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
       promptVideo: promptVideoTemplate || "",
       startDate: new Date() as Date,
       endDate: new Date() as Date,
+      userId: userId,
     },
   })
 
@@ -96,6 +101,7 @@ export const CreateEventForm = ({ onEventCreated }: CreateEventFormProps) => {
           ? new Date(values.endDate).toISOString()
           : undefined,
         qrcodeUrl: "",
+        userId: userId,
       }
 
       axios
