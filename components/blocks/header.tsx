@@ -40,6 +40,17 @@ export default function Header() {
     }
   }, [user])
 
+  useEffect(() => {
+    if (user?.id) {
+      axios.post("/api/clerk", {
+        userId: user.id,
+        userRole: dbUser?.role,
+      })
+    }
+  }, [user, dbUser])
+
+  console.log("User:", user)
+
   if (!isLoaded || loadingUser) {
     return <div>Loading user data...</div>
   }

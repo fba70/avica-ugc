@@ -5,6 +5,7 @@ import Footer from "@/components/blocks/footer"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ClerkProvider } from "@clerk/nextjs"
+import { Suspense } from "react"
 import { dark } from "@clerk/themes"
 import "./globals.css"
 
@@ -49,7 +50,9 @@ export default function RootLayout({
             <Toaster />
 
             <section className="row-start-1">
-              <Header />
+              <Suspense fallback={<div>Loading...</div>}>
+                <Header />
+              </Suspense>
             </section>
 
             <section className="row-start-2 self-start">{children}</section>
