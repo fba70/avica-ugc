@@ -157,7 +157,7 @@ export default function SeenDropCard({
 
       {seenDropInfo.type === "video" && (
         <div className="relative h-[350px] w-[350px] bg-purple-950">
-          <p className="px-4 py-1 text-lg">{dbUser?.firstName}</p>
+          <p className="px-4 py-1 text-lg">{seenDropInfo.name}</p>
           <video controls autoPlay loop height={350} width={350} className="">
             <source src={seenDropInfo.videoUrl} type="video/mp4" />
           </video>
