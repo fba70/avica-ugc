@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // Update all SeenDrops with this claimToken to set userId and clear claimToken
+  // Update all MYFLIXes with this claimToken to set userId and clear claimToken
   await db.seenDrop.updateMany({
     where: { claimToken },
     data: { userId, claimToken: null },

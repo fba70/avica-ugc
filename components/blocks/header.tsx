@@ -5,7 +5,6 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { ModeToggle } from "@/components/mode-toggle"
 import {
   SignInButton,
   SignUpButton,
@@ -19,11 +18,13 @@ import { House } from "lucide-react"
 import axios from "axios"
 import { UserItem } from "@/types/types"
 
+// import { ModeToggle } from "@/components/mode-toggle"
+
 export default function Header() {
   const path = usePathname()
   // const router = useRouter()
 
-  const { isSignedIn, isLoaded, user } = useUser()
+  const { isSignedIn, user } = useUser()
   // console.log("User:", user)
 
   const [dbUser, setDbUser] = useState<UserItem>()
@@ -50,10 +51,6 @@ export default function Header() {
   }, [user, dbUser])
 
   // console.log("User:", user)
-
-  if (!isLoaded || loadingUser) {
-    return <div>Loading user data...</div>
-  }
 
   return (
     <>
@@ -108,7 +105,7 @@ export default function Header() {
                     : "text-white"
                 )}
               >
-                MY SEENDROPS
+                MYFLIXES
               </p>
             </Link>
           )}
@@ -139,16 +136,20 @@ export default function Header() {
                 <Button>Sign Up</Button>
               </SignUpButton>
             </SignedOut>
-            <SignedIn>
-              <div className="border border-gray-300 rounded-lg pr-4 pl-4 pt-1 pb-1">
-                <UserButton showName />
-              </div>
-            </SignedIn>
+            {loadingUser ? (
+              <span className="text-white text-sm">Loading user...</span>
+            ) : (
+              <SignedIn>
+                <div className="border border-gray-300 rounded-lg pr-4 pl-4 pt-1 pb-1">
+                  <UserButton showName />
+                </div>
+              </SignedIn>
+            )}
           </div>
-
-          <ModeToggle />
         </div>
       </header>
     </>
   )
 }
+
+// <ModeToggle />

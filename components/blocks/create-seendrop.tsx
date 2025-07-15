@@ -148,10 +148,8 @@ export default function CreateSeenDrop() {
     const customImage = await createImageWithOverlays({
       text: name,
       baseImageUrl: imageData.output || "",
-      image1Url:
-        "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107072/Image_top_nxvzqe.jpg",
-      image2Url:
-        "https://res.cloudinary.com/dzaz7erch/image/upload/v1751107084/Image_bottom_cywcpt.jpg",
+      image1Url: "/Header_A.jpg",
+      image2Url: "/Footer_A.jpg",
       image3Url: event?.brandLogoUrl || "",
     })
 
@@ -177,7 +175,7 @@ export default function CreateSeenDrop() {
       toast.success("Image uploaded successfully!")
     }
 
-    // 4. Save SeenDrop to DB
+    // 4. Save MYFLIX to DB
     const data = {
       name: name,
       message: prompt,
@@ -195,7 +193,7 @@ export default function CreateSeenDrop() {
         setNewSeenDrop(res.data)
         setSuccess("Image upload is successful")
         toast.success("Seendrop saved successfully!")
-        // console.log("New SeenDrop created:", res.data)
+        // console.log("New MYFLIX created:", res.data)
       })
       .catch((err) => {
         setError(`Error uploading the image: ${err.message}`)
@@ -204,7 +202,7 @@ export default function CreateSeenDrop() {
 
     setGeneratingImage(false)
 
-    // 5. Refetch new SeenDrop from DB
+    // 5. Refetch new MYFLIX from DB
     setLoading(true)
     axios
       .get("/api/seendrops", { params: { id: newSeenDrop?.id } })
@@ -212,7 +210,7 @@ export default function CreateSeenDrop() {
         setNewSeenDrop(res.data)
         setSeenDropRefetched(true)
         setLoading(false)
-        // console.log("Fetched new SeenDrop:", res.data)
+        // console.log("Fetched new MYFLIX:", res.data)
       })
       .catch(() => {
         setError("Failed to fetch events")
@@ -235,7 +233,7 @@ export default function CreateSeenDrop() {
     }
 
     startTransition(() => {
-      // Generate SeenDrop image with gen AI, upload it to Cloudinary and save in DB
+      // Generate MYFLIX image with gen AI, upload it to Cloudinary and save in DB
       const selectedImageUrl = values.imageUrl || values.selfieUrl || ""
 
       generateAiImage(
@@ -283,7 +281,7 @@ export default function CreateSeenDrop() {
                       <Textarea
                         {...field}
                         value={field.value || ""}
-                        placeholder="What do you want your SeenDrop to be?"
+                        placeholder="What do you want your MYFLIX to be?"
                         disabled={isPending}
                         className="min-h-32 w-[380px]"
                       />
@@ -346,7 +344,7 @@ export default function CreateSeenDrop() {
             <FormSuccess message={success} />
 
             <Button disabled={isPending} type="submit" className="w-full">
-              Generate your SeenDrop!
+              Generate your MYFLIX
             </Button>
           </form>
         </Form>
@@ -371,19 +369,19 @@ export default function CreateSeenDrop() {
         </div>
       )}
 
-      {loading && <p>Loading new SeenDrop. Please wait!</p>}
+      {loading && <p>Loading new MYFLIX. Please wait!</p>}
 
       {seenDropRefetched && (
         <>
           <div className="flex flex-col items-center justify-center gap-6 mt-12 bg-gray-700 p-4 pb-6">
-            <p className="text-center">Your SeenDrop is ready!</p>
+            <p className="text-center">Your MYFLIX is ready!</p>
             <div className="flex flex-row items-center justify-center relative h-[400px] w-[400px]">
               <Image
                 src={
                   uploadedImage || uploadedOriginalImage || "/Logo_AVICA.png"
                 }
                 fill
-                alt="SeenDrop image"
+                alt="MYFLIX image"
                 className="object-cover object-center"
               />
             </div>
@@ -400,7 +398,7 @@ export default function CreateSeenDrop() {
                   className="flex items-center justify-center gap-4 border border-gray-300 px-4 py-2 rounded-lg text-white text-sm"
                 >
                   <Download />
-                  Download SeenDrop
+                  Download MYFLIX
                 </a>
               </div>
             </div>

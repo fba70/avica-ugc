@@ -38,9 +38,7 @@ export const ShareSeenDrop = ({ url }: { url: string }) => {
       </DialogTrigger>
       <DialogContent className="flex align-center justify-center">
         <DialogHeader>
-          <DialogTitle className="text-center">
-            SHARE YOUR SEENDROP!
-          </DialogTitle>
+          <DialogTitle className="text-center">SHARE YOUR MYFLIX</DialogTitle>
           <DialogDescription></DialogDescription>
           <Card className="bg-secondary w-[360px] shadow-md">
             <CardContent className="flex flex-row gap-4 align-center justify-center">

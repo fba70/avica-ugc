@@ -96,7 +96,7 @@ export default function Partner() {
           setPage(1)
         })
         .catch(() => {
-          toast.error("Sorry! Can not fetch your SeenDrops")
+          toast.error("Sorry! Can not fetch your MYFLIXes")
         })
         .finally(() => setLoadingEvents(false))
     }

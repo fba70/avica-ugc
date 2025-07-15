@@ -54,9 +54,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json(seendrop, { status: 201 })
   } catch (error) {
-    console.error("Error creating seendrop:", error)
+    console.error("Error creating MYFLIX:", error)
     return NextResponse.json(
-      { error: "Failed to create seendrop", details: (error as Error).message },
+      { error: "Failed to create MYFLIX", details: (error as Error).message },
       { status: 500 }
     )
   }

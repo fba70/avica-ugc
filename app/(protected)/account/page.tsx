@@ -151,7 +151,7 @@ export default function Account() {
       <section className="max-w-7xl flex flex-col items-center justify-center">
         <div className="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-6 mt-16 px-6">
           <div className="text-center text-2xl font-bold text-white">
-            Here are your SeenDrops, {user.fullName}!
+            Here are your MYFLIXes, {user.fullName}!
           </div>
 
           <p>
@@ -221,93 +221,3 @@ export default function Account() {
     </>
   )
 }
-
-/*
-// Role update form
-  const FormSchema = z.object({
-    userType: z.enum(["user", "partner"], {
-      required_error: "You need to select a notification type.",
-    }),
-  })
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      userType: dbUser?.role === "partner" ? "partner" : "user",
-    },
-  })
-
-  // Reset form defaults when dbUser.role changes
-  useEffect(() => {
-    if (dbUser?.role) {
-      form.reset({
-        userType: dbUser.role === "partner" ? "partner" : "user",
-      })
-    }
-  }, [dbUser?.role, form])
-
-// Update user role
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    if (!dbUser?.id) {
-      toast.error("Sorry! No user ID is found")
-      return
-    }
-
-    // console.log("Submitting update:", { ...dbUser, role: data.userType })
-
-    axios
-      .put("/api/user", {
-        ...dbUser,
-        role: data.userType,
-      })
-      .then((res) => {
-        setDbUser(res.data)
-        // TBD - show success message, etc.
-      })
-      .catch((err) => {
-        console.error("Failed to update user role:", err)
-        toast.error("Sorry! Can not update the role of the user")
-        // TBD - show error message, etc.
-      })
-  }
-
-
-<Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-row items-center justify-center space-x-6"
-            >
-              <FormField
-                control={form.control}
-                name="userType"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-center space-x-4">
-                    <FormLabel>My account type:</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-row items-center justify-center space-x-2"
-                      >
-                        <FormItem className="flex items-center gap-2">
-                          <FormControl>
-                            <RadioGroupItem value="user" />
-                          </FormControl>
-                          <FormLabel className="font-normal">User</FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center gap-2">
-                          <FormControl>
-                            <RadioGroupItem value="partner" />
-                          </FormControl>
-                          <FormLabel className="font-normal">Partner</FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">Save</Button>
-            </form>
-          </Form>
-*/

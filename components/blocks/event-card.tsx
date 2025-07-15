@@ -79,7 +79,7 @@ export default function EventCard({
           onClick={() => router.push(`/events/${cardInfo.id}`)}
         >
           <Eye />
-          <p className="pr-2 text-lg">Event SeenDrops</p>
+          <p className="pr-2 text-lg">Event MYFLIXES</p>
         </Button>
       ) : (
         ""

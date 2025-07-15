@@ -146,11 +146,11 @@ export default function Event() {
   */
 
   if (!isLoaded) {
-    return <div>Loading user data...</div>
+    return <div className="mt-8">Loading user data...</div>
   }
 
-  if (loading) return <div>Loading SeenDrops...</div>
-  if (error) return <div>{error}</div>
+  if (loading) return <div className="mt-8">Loading MYFLIXES...</div>
+  if (error) return <div className="mt-8">{error}</div>
 
   const generateQR = async () => {
     // 1. Generate QR code
@@ -285,7 +285,7 @@ export default function Event() {
       <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-8">
         <Button onClick={handleCreateSeenDrop}>
           <SDImage />
-          Create new SeenDrop!
+          Create new MYFLIX
         </Button>
 
         {!isSignedIn && (
@@ -293,13 +293,13 @@ export default function Event() {
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
               <DialogTrigger asChild>
                 <Button onClick={() => setOpenDialog(true)}>
-                  Claim your SeenDrop!
+                  Claim your MYFLIX
                 </Button>
               </DialogTrigger>
               <DialogContent className="w-[350px]">
                 <DialogHeader>
                   <DialogTitle className="text-base text-center">
-                    Sign up to claim your SeenDrop
+                    Sign up to claim your MYFLIX
                   </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col items-center justify-center py-4">
@@ -316,7 +316,7 @@ export default function Event() {
           <Search />
           <Input
             type="text"
-            placeholder="Search by SeenDrop user name or type"
+            placeholder="Search by MYFLIX user name or type"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border px-4 py-1 rounded w-[300px]"

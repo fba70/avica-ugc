@@ -63,7 +63,7 @@ export default function SeenDropCard({
   }, [seenDropInfo.eventId])
 
   // console.log("DB user:", dbUser)
-  // console.log("SeenDrop info:", seenDropInfo)
+  // console.log("MYFLIX info:", seenDropInfo)
 
   const handleGenerateVideo = async () => {
     setLoadingVideo(true)
@@ -129,13 +129,13 @@ export default function SeenDropCard({
       .post("/api/seendrops", videoDSData)
       .then((res) => {
         setSetVideoSeenDrop(res.data)
-        toast.success("Seendrop saved successfully!")
-        console.log("New SeenDrop created:", videoSeenDrop)
+        toast.success("MYFLIX saved successfully!")
+        console.log("New MYFLIX created:", videoSeenDrop)
 
-        onSeenDropCreated?.() // Notify parent component about the new SeenDrop
+        onSeenDropCreated?.() // Notify parent component about the new MYFLIX
       })
       .catch((err) => {
-        toast.error("Seendrop can not be saved successfully!")
+        toast.error("MYFLIX can not be saved successfully!")
         console.error(err)
       })
 
@@ -172,7 +172,7 @@ export default function SeenDropCard({
             </div>
             <div className="relative h-[42px] w-[48px]">
               <Image
-                src={"/Logo_SeenDrop.png"}
+                src={"/Logo_AVICA.png"}
                 alt="Picture of the author"
                 className="object-contain object-center"
                 fill
@@ -236,7 +236,7 @@ export default function SeenDropCard({
                   <DialogContent className="w-[350px]">
                     <DialogHeader>
                       <DialogTitle className="text-base text-center">
-                        Sign up to animate your SeenDrop
+                        Sign up to animate your MYFLIX
                       </DialogTitle>
                     </DialogHeader>
                     <div className="flex flex-col items-center justify-center py-4">
@@ -256,25 +256,10 @@ export default function SeenDropCard({
         <div className="flex flex-row items-center justify-center gap-4">
           <LoaderCircle className="animate-spin w-12 h-12 text-green-500 mt-4 mb-4" />
           <p className="text-sm text-white">
-            Please wait! Video SeenDrop is generated
+            Please wait! Video MYFLIX is generated
           </p>
         </div>
       )}
     </div>
   )
 }
-
-/*
-<div>
-                <a
-                  download
-                  href={uploadedImage}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-4 border border-gray-300 px-4 py-2 rounded-lg text-white text-sm"
-                >
-                  <Download />
-                  Download SeenDrop
-                </a>
-              </div>
-*/
