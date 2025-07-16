@@ -8,21 +8,21 @@ export async function GET(req: NextRequest) {
   const userId = searchParams.get("userId")
 
   if (id) {
-    // Return a single seendrop by id
+    // Return a single SPARKBIT by id
     const seendrop = await db.seenDrop.findUnique({ where: { id } })
     if (!seendrop) {
-      return NextResponse.json({ error: "Seendrop not found" }, { status: 404 })
+      return NextResponse.json({ error: "SPARKBIT not found" }, { status: 404 })
     }
     return NextResponse.json(seendrop)
   } else if (userId) {
-    // Return all seendrops for a specific userId
+    // Return all SPARKBITS for a specific userId
     const seendrops = await db.seenDrop.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
     })
     return NextResponse.json(seendrops)
   } else {
-    // Return all seendrops
+    // Return all SPARKBITS
     const seendrops = await db.seenDrop.findMany({
       orderBy: { createdAt: "desc" },
     })
@@ -54,9 +54,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json(seendrop, { status: 201 })
   } catch (error) {
-    console.error("Error creating MYFLIX:", error)
+    console.error("Error creating SPARKBIT:", error)
     return NextResponse.json(
-      { error: "Failed to create MYFLIX", details: (error as Error).message },
+      { error: "Failed to create SPARKBIT", details: (error as Error).message },
       { status: 500 }
     )
   }

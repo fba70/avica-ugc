@@ -59,16 +59,6 @@ export default function Events() {
     fetchEvents()
   }, [])
 
-  /*
-  useEffect(() => {
-    if (isSignedIn && user && user?.id) {
-      axios.get(`/api/user?externalId=${user.id}`).then((res) => {
-        setDbUser(res.data[0])
-      })
-    }
-  }, [user])
-  */
-
   if (loading) return <div className="mt-8">Loading events...</div>
   if (error) return <div className="mt-8">{error}</div>
 
@@ -108,7 +98,7 @@ export default function Events() {
         >
           Prev
         </Button>
-        <span>
+        <span className="text-sm">
           page {page} of {totalPages}
         </span>
         <Button

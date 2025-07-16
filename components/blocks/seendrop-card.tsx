@@ -63,7 +63,7 @@ export default function SeenDropCard({
   }, [seenDropInfo.eventId])
 
   // console.log("DB user:", dbUser)
-  // console.log("MYFLIX info:", seenDropInfo)
+  // console.log("SPARKBIT info:", seenDropInfo)
 
   const handleGenerateVideo = async () => {
     setLoadingVideo(true)
@@ -129,13 +129,13 @@ export default function SeenDropCard({
       .post("/api/seendrops", videoDSData)
       .then((res) => {
         setSetVideoSeenDrop(res.data)
-        toast.success("MYFLIX saved successfully!")
-        console.log("New MYFLIX created:", videoSeenDrop)
+        toast.success("SPARKBIT saved successfully!")
+        console.log("New SPARKBIT created:", videoSeenDrop)
 
-        onSeenDropCreated?.() // Notify parent component about the new MYFLIX
+        onSeenDropCreated?.() // Notify parent component about the new SPARKBIT
       })
       .catch((err) => {
-        toast.error("MYFLIX can not be saved successfully!")
+        toast.error("SPARKBIT can not be saved successfully!")
         console.error(err)
       })
 
@@ -236,7 +236,7 @@ export default function SeenDropCard({
                   <DialogContent className="w-[350px]">
                     <DialogHeader>
                       <DialogTitle className="text-base text-center">
-                        Sign up to animate your MYFLIX
+                        Sign up to animate your SPARKBIT
                       </DialogTitle>
                     </DialogHeader>
                     <div className="flex flex-col items-center justify-center py-4">
@@ -256,7 +256,7 @@ export default function SeenDropCard({
         <div className="flex flex-row items-center justify-center gap-4">
           <LoaderCircle className="animate-spin w-12 h-12 text-green-500 mt-4 mb-4" />
           <p className="text-sm text-white">
-            Please wait! Video MYFLIX is generated
+            Please wait! Video SPARKBIT is generated
           </p>
         </div>
       )}

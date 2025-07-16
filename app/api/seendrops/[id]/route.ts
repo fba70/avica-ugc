@@ -6,12 +6,12 @@ export async function PATCH(req: NextRequest) {
   const id = data.id
 
   if (!id) {
-    return NextResponse.json({ error: "MYFLIX ID required" }, { status: 400 })
+    return NextResponse.json({ error: "SPARKBIT ID required" }, { status: 400 })
   }
 
   const existingSeendrop = await db.seenDrop.findUnique({ where: { id } })
   if (!existingSeendrop) {
-    return NextResponse.json({ error: "MYFLIX not found" }, { status: 404 })
+    return NextResponse.json({ error: "SPARKBIT not found" }, { status: 404 })
   }
 
   const updatedSeendrop = await db.seenDrop.update({

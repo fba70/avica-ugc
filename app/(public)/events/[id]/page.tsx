@@ -19,6 +19,7 @@ import {
   Search,
   Download,
   ArrowLeftRight,
+  BookAlert,
 } from "lucide-react"
 import { toast } from "sonner"
 import { EditEventForm } from "@/components/forms/edit-event"
@@ -125,7 +126,7 @@ export default function Event() {
     fetchEvents()
   }, [])
 
-  // console.log("SD:", seenDrops)
+  // console.log("SB:", seenDrops)
 
   const handleCreateSeenDrop = () => {
     router.push(`/seendrops?eventId=${id}`)
@@ -149,7 +150,7 @@ export default function Event() {
     return <div className="mt-8">Loading user data...</div>
   }
 
-  if (loading) return <div className="mt-8">Loading MYFLIXES...</div>
+  if (loading) return <div className="mt-8">Loading SPARKBITS...</div>
   if (error) return <div className="mt-8">{error}</div>
 
   const generateQR = async () => {
@@ -283,9 +284,11 @@ export default function Event() {
       <Separator className="mt-10 mb-10 bg-gray-400" />
 
       <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-8">
+        {!isSignedIn && <p>Sign In/Up to save your SPARKBITS</p>}
+
         <Button onClick={handleCreateSeenDrop}>
           <SDImage />
-          Create new MYFLIX
+          Create new SPARKBIT
         </Button>
 
         {!isSignedIn && (
@@ -293,13 +296,14 @@ export default function Event() {
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
               <DialogTrigger asChild>
                 <Button onClick={() => setOpenDialog(true)}>
-                  Claim your MYFLIX
+                  <BookAlert />
+                  Claim your SPARKBIT
                 </Button>
               </DialogTrigger>
               <DialogContent className="w-[350px]">
                 <DialogHeader>
                   <DialogTitle className="text-base text-center">
-                    Sign up to claim your MYFLIX
+                    Sign up to claim your SPARKBIT
                   </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col items-center justify-center py-4">
@@ -316,7 +320,7 @@ export default function Event() {
           <Search />
           <Input
             type="text"
-            placeholder="Search by MYFLIX user name or type"
+            placeholder="Search by SPARKBIT name or type"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="border px-4 py-1 rounded w-[300px]"
@@ -351,7 +355,7 @@ export default function Event() {
         >
           Prev
         </Button>
-        <span>
+        <span className="text-sm">
           page {page} of {totalPages}
         </span>
         <Button

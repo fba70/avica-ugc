@@ -11,7 +11,7 @@ export function EmailTemplate({
 }: EmailTemplateProps) {
   return (
     <div>
-      <h1>AVICA MYFLIX message from: {userName}</h1>
+      <h1>AVICA SPARKBIT message from: {userName}</h1>
       <h1>Email address: {email}</h1>
       <h2>Message: {message}!</h2>
     </div>

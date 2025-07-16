@@ -12,20 +12,27 @@ export default function Home() {
 
   return (
     <section className="max-w-7xl flex flex-col items-center justify-center gap-8 mt-16">
-      <div className="lg:h-[720px] h-[236px] w-full">
+      <div className="w-full aspect-video">
         <ReactPlayer
           src="https://youtu.be/W-wz7uvLs20?si=wW8iCPtXLbqEoCYT"
           playing={true}
           muted={true}
           controls={true}
-          width="100%"
-          height="100%"
           loop={true}
+          width="100%"
+          height="98%"
+          style={{
+            background: "transparent",
+            aspectRatio: "16/9",
+          }}
         />
       </div>
 
       <p className="mx-auto lg:text-7xl text-5xl font-medium text-white lg:pb-12 pb-6 px-6 text-center">
-        <span className="text-orange-600">AVICA</span> MYFLIX
+        <span className="text-orange-600">AVICA</span>{" "}
+        <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent ml-2">
+          SPARKBITS
+        </span>
       </p>
 
       <p className="mx-auto lg:text-4xl text-2xl font-medium text-white lg:pb-10 pb-6 px-6 text-center">
@@ -42,13 +49,14 @@ export default function Home() {
         onClick={() => router.push("/events")}
       >
         <SDImage />
-        <p className="pr-2 text-lg">Generate AVICA MYFLIX</p>
+        <p className="pr-2 text-lg">Generate your SPARKBIT</p>
       </Button>
 
       <p className="mx-auto lg:text-3xl text-xl font-medium text-white lg:pb-6 pb-6 lg:w-[70%] w-[90%] text-center">
-        Event organizers and brands can create engaging and personalized
-        user-generated content in the context of events and campaigns
-        automatically using AI and AVICA storytelling engine
+        Event organizers and brands can easily facilitate the creation of the
+        fun, engaging and personalized user-generated images and short videos
+        for events and campaigns using generative AI and{" "}
+        <span className="text-orange-600">AVICA</span> storytelling engine
       </p>
 
       <Link

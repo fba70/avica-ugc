@@ -39,7 +39,7 @@ export default function RootLayout({
     >
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-rows-[240px_1fr_80px] lg:grid-rows-[120px_1fr_80px] items-center justify-items-center min-h-screen gap-4 bg-[url(/BG_6.jpg)] bg-cover bg-no-repeat bg-center`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased grid grid-rows-[240px_1fr_80px] lg:grid-rows-[120px_1fr_80px] items-center justify-items-center min-h-screen gap-4 bg-[url(/BG_1.jpg)] bg-cover bg-no-repeat bg-center`}
         >
           <ThemeProvider
             attribute="class"

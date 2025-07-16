@@ -37,7 +37,7 @@ export default function EventCard({
 
       <div className="relative h-[120px] w-[350px] ">
         <Image
-          src={cardInfo.brandLogoUrl || "/Logo_SeenDrop.png"}
+          src={cardInfo.brandLogoUrl || "/Logo_AVICA.png"}
           fill
           alt="Picture of the author"
           className="object-contain object-center pl-6 pr-6 mt-2"
@@ -79,7 +79,7 @@ export default function EventCard({
           onClick={() => router.push(`/events/${cardInfo.id}`)}
         >
           <Eye />
-          <p className="pr-2 text-lg">Event MYFLIXES</p>
+          <p className="pr-2 text-lg">Event SPARKBITS</p>
         </Button>
       ) : (
         ""

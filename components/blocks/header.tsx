@@ -65,7 +65,7 @@ export default function Header() {
               priority
             />
           </Link>
-          <p className="text-4xl font-medium text-white">AVICA MYFLIX</p>
+          <p className="text-4xl font-medium text-white">AVICA SPARKBITS</p>
         </div>
 
         <div className="flex flex-row items-center justify-center gap-6">
@@ -105,7 +105,7 @@ export default function Header() {
                     : "text-white"
                 )}
               >
-                MYFLIXES
+                MY SPARKBITS
               </p>
             </Link>
           )}
@@ -137,7 +137,7 @@ export default function Header() {
               </SignUpButton>
             </SignedOut>
             {loadingUser ? (
-              <span className="text-white text-sm">Loading user...</span>
+              <span className="text-white text-sm">Loading user data...</span>
             ) : (
               <SignedIn>
                 <div className="border border-gray-300 rounded-lg pr-4 pl-4 pt-1 pb-1">

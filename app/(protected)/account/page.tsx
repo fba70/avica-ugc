@@ -79,7 +79,7 @@ export default function Account() {
     }
   }, [user])
 
-  // Fetch seendrops of the user
+  // Fetch SPARKBITS of the user
   const fetchMySeenDrops = useCallback(() => {
     if (dbUser && dbUser.id) {
       setLoadingSeenDrops(true)
@@ -90,7 +90,7 @@ export default function Account() {
           setPage(1)
         })
         .catch(() => {
-          toast.error("Sorry! Can not fetch your SeenDrops")
+          toast.error("Sorry! Can not fetch your SPARKBITS")
         })
         .finally(() => setLoadingSeenDrops(false))
     }
@@ -100,7 +100,7 @@ export default function Account() {
     fetchMySeenDrops()
   }, [dbUser, fetchMySeenDrops])
 
-  // Claim seendrops if there is claimToken in local Storage (newly signed up users)
+  // Claim SPARKBITS if there is claimToken in local Storage (newly signed up users)
   useEffect(() => {
     const claimToken = localStorage.getItem("seendropClaimToken")
     if (dbUser?.id && claimToken) {
@@ -111,14 +111,14 @@ export default function Account() {
         })
         .then(() => {
           localStorage.removeItem("seendropClaimToken")
-          // Optionally, refetch user's SeenDrops here
+          // Optionally, refetch user's SPARKBITS here
           axios
             .get(`/api/seendrops?userId=${dbUser.id}`)
             .then((res) => setMySeenDrops(res.data))
         })
         .catch((err) => {
-          console.error("Failed to claim SeenDrop:", err)
-          toast.error("Sorry! Can't your SeenDrops")
+          console.error("Failed to claim SPARKBIT:", err)
+          toast.error("Sorry! Can't claim your SPARKBIT")
         })
     }
   }, [dbUser])
@@ -128,7 +128,7 @@ export default function Account() {
   }
 
   if (loadingSeenDrops) {
-    return <div className="mt-8">Loading your SeenDrops ...</div>
+    return <div className="mt-8">Loading your SPARKBITS ...</div>
   }
 
   if (!isSignedIn) {
@@ -144,14 +144,14 @@ export default function Account() {
   // Useful cosole logs:
   // console.log("Clerk User:", user)
   // console.log("DB User:", dbUser)
-  // console.log("User's SeenDrops:", mySeenDrops)
+  // console.log("User's SPARKBITS:", mySeenDrops)
 
   return (
     <>
       <section className="max-w-7xl flex flex-col items-center justify-center">
         <div className="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-6 mt-16 px-6">
           <div className="text-center text-2xl font-bold text-white">
-            Here are your MYFLIXes, {user.fullName}!
+            Here are your SPARKBITS, {user.fullName}!
           </div>
 
           <p>

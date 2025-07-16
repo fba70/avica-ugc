@@ -96,7 +96,7 @@ export default function Partner() {
           setPage(1)
         })
         .catch(() => {
-          toast.error("Sorry! Can not fetch your MYFLIXes")
+          toast.error("Sorry! Can not fetch your SPARKBITS")
         })
         .finally(() => setLoadingEvents(false))
     }
@@ -127,7 +127,7 @@ export default function Partner() {
   // Useful cosole logs:
   // console.log("Clerk User:", user)
   // console.log("DB User:", dbUser)
-  // console.log("User's SeenDrops:", mySeenDrops)
+  // console.log("User's SPARKBITS:", mySeenDrops)
 
   return (
     <section className="w-full max-w-7xl flex flex-col items-center justify-center">

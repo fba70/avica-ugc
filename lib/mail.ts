@@ -11,7 +11,7 @@ export const sendEmail = async (
   await resend.emails.send({
     from: `${email}`,
     to: "in4@in4comgroup.com",
-    subject: "AVICA MYFLIX message",
+    subject: "AVICA SPARKBIT message",
     react: EmailTemplate({ userName, email, message }),
   })
 }
