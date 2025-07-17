@@ -4,6 +4,13 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Image as SDImage } from "lucide-react"
 import ReactPlayer from "react-player"
 
@@ -39,7 +46,7 @@ export default function Home() {
         The Next-Gen Social & Brand Engagement Ecosystem
       </p>
 
-      <div className="flex lg:flex-row flex-col items-center justify-center gap-12 mb-12">
+      <div className="flex lg:flex-row flex-col items-center justify-center gap-12">
         <div className="flex flex-col items-center justify-between w-[400px] h-[460px] bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 p-6 rounded-lg">
           <p className="mx-auto text-2xl font-medium text-white text-center">
             Revolutionizing social interaction through short stories with user
@@ -53,16 +60,16 @@ export default function Home() {
             onClick={() => router.push("/events")}
           >
             <SDImage />
-            <p className="pr-2 text-lg">Generate first SPARKBIT</p>
+            <p className="pr-2 text-lg">GENERATE FIRST SPARKBIT</p>
           </Button>
         </div>
 
         <div className="flex flex-col items-center justify-between gap-8 w-[400px] h-[460px] bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 p-6 rounded-lg">
           <p className="mx-auto text-2xl font-medium text-white text-center">
-            Marketing agency, Event organizer, Brand owner? We offer the
-            platform for you to facilitate the creation of the fun, engaging and
-            personalized user-generated images and short videos for your events
-            and campaigns using generative AI and{" "}
+            Marketing agency, Event organizer, Brand owner? We offer you the
+            platform to facilitate the creation of the personalized, engaging
+            and fun user-generated images and short videos for your events and
+            campaigns using generative AI and{" "}
             <span className="text-orange-600">AVICA</span> storytelling engine
           </p>
 
@@ -80,13 +87,15 @@ export default function Home() {
                 height={24}
                 priority
               />
-              <p className="pr-2 text-lg">Become a partner!</p>
+              <p className="pr-2 text-lg">BECOME A PARTNER</p>
             </Button>
           </Link>
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-12 mt-6">
+      <Separator className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 mt-12 mb-12" />
+
+      <div className="flex flex-col items-center justify-center gap-12">
         <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6">
           <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
             <Image
@@ -169,7 +178,7 @@ export default function Home() {
               AVICA SPARKBITS magic
             </p>
             <p className="text-lg text-white">
-              Create your event digital twin with brand or event styling in 10
+              Create your event digital twin with brand styling in just 10
               minutes.
             </p>
             <p className="text-lg text-white">
@@ -178,11 +187,9 @@ export default function Home() {
             </p>
             <p className="text-lg text-white">
               Share the landing page to your audience and let them create their
-              own SPARKBITS with their selfies or avatars automatically put into
-              the context of your event or brand.
-            </p>
-            <p className="text-lg text-white">
-              Monitor your statistics in real-time
+              own SPARKBITS with their selfies or avatars automatically.
+              SPARKBITS magic will put them into the context of your event or
+              brand
             </p>
           </div>
         </div>
@@ -206,14 +213,14 @@ export default function Home() {
               AVICA storytelling engine
             </p>
             <p className="text-lg text-white">
-              AVICA engine enable storytelling capabilities which are not
-              achievable via publicly available generative AI tools.
+              AVICA content generation engine enables automated storytelling
+              capabilities which are not achievable via publicly available
+              generative AI tools.
             </p>
             <p className="text-lg text-white">
-              We allow you to control every single element of the content
-              independently such as dynamic styling, automated translation of
-              the text, audio tracks generation, custom intro- and outro clips
-              and much more
+              We allow you to control every single element of the content such
+              as dynamic styling, automated translation of the text, audio
+              tracks generation, custom intro- and outro clips and much more
             </p>
           </div>
         </div>
@@ -228,26 +235,26 @@ export default function Home() {
             />
             <div className="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
               <span className="text-white text-4xl font-bold">
-                Self-care setup
+                All billing models
               </span>
             </div>
           </div>
           <div className="flex flex-col items-left justify-start gap-6 h-[400px] w-[400px] pt-4">
             <p className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-              Business model
+              Business model that fits
             </p>
             <p className="text-lg text-white">
               We offer subscription- or pay-as-you-go pricing models for
               partners for standard SPARKBITS available for free for your users.
             </p>
             <p className="text-lg text-white">
-              We also offer the model to work with premium content, such as
+              We also offer business model to work with premium content, such as
               longer videos, complex storytelling templates and so on, so that
               you can monetize it with your clients within the revenue sharing
               model.
             </p>
             <p className="text-lg text-white">
-              We also offer white label solutions for you
+              Finally, we offer white label solutions for you
             </p>
           </div>
         </div>
@@ -262,7 +269,7 @@ export default function Home() {
             />
             <div className="absolute inset-0 bg-black/70 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-300">
               <span className="text-white text-4xl font-bold">
-                Self-care setup
+                Tailored solutions
               </span>
             </div>
           </div>
@@ -272,13 +279,12 @@ export default function Home() {
             </p>
             <p className="text-lg text-white">
               Start with simple out of the box functionality to engage with your
-              audience immediately.
+              audience immediately. Get your usage statistics specific to your
+              event and content type in partner dashboard.
             </p>
             <p className="text-lg text-white">
               Get in touch with us when you want to build a more complex
-              solution tailored to your specific events or brand needs. Or maybe
-              you want to track the effectiveness of the content in social media
-              - let us talk how to integrate that
+              solution tailored to your specific events or brand needs
             </p>
             <p className="text-lg text-white">
               We also offer white label solutions for you
@@ -287,18 +293,169 @@ export default function Home() {
         </div>
       </div>
 
-      <p className="mx-auto lg:text-3xl text-xl font-medium text-white lg:pb-6 pb-6 lg:w-[70%] w-[90%] text-center lg:mt-10 mt-6">
-        Interested? Have questions? Check content examples created on our AVICA
-        SPARKBITS platform!
+      <Separator className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 mt-12 mb-12" />
+
+      <p className="mx-auto lg:text-3xl text-xl font-medium text-white lg:pb-6 pb-6 lg:w-[70%] w-[90%] text-center">
+        Interested? Have questions? Check content examples created on our{" "}
+        <span className="text-orange-600">AVICA</span>
+        <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent ml-2">
+          SPARKBITS
+        </span>{" "}
+        platform. You can sign up and create your own SPARKBITS in your account.
+        get in touch with us to become a partner and start using the platform!
       </p>
 
       <Button
-        className="flex flex-row items-center justify-center gap-4 w-[300px] mb-12"
+        className="flex flex-row items-center justify-center gap-4 w-[300px]"
         onClick={() => router.push("/events")}
       >
         <SDImage />
-        <p className="pr-2 text-lg">SPARKBITS examples</p>
+        <p className="pr-2 text-lg">SPARKBITS EXAMPLES</p>
       </Button>
+
+      <Separator className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 mt-12 mb-12" />
+
+      <p className="mx-auto lg:text-3xl text-xl font-medium text-white lg:pb-6 pb-6 lg:w-[70%] w-[90%] text-center">
+        FAQ
+      </p>
+
+      <Accordion
+        type="single"
+        collapsible
+        className="w-[80%] mb-12"
+        defaultValue="item-1"
+      >
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            What do I need to configure the event?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              You need to specify the name of the event, brand logo and image
+              that will be used as graphical context of the event by generative
+              AI as well as some styling parameters for the event and landing
+              page. Normally it will take only 5-10 minutes
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-2">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            What kind of content is generated?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              SPARKBITS can be either images or short videos with branded
+              overlay and user personalization.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-3">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            How end-users can generate their SPARKBITS?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              Once partner creates the event it is available as landing page
+              with specific URL. End-users can visit it, see the event
+              description and examples of the content generated by other users,
+              register and generate the content for themselves by specifying
+              their user name and image uploading it or making selfie using the
+              smartphone camera. It takes just few seconds to generate the image
+              or video.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-4">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            Is there premium type of the content?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              Yes, we offer premium content options such as: higher resolution
+              images, longer videos, videos enhanced with AVICA storytelling
+              engine, content personalization options such as automated text
+              translation into different languages, audio tracks generation,
+              custom intor- and outro-tracks and so on.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-5">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            Can I control the way the content is generated?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              Yes, you can select appropriate image for the event context and
+              fully configure the generative AI prompt which will drive the
+              storytelling part of image and video content generation. We offer
+              templates which help to configure it. You might need to make test
+              generations and fine tune your event content and prompts to achive
+              better outcome.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-6">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            What is the subscription model?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              Subscription model is based on number of SPARKBITS generated per
+              month including certain number of images and short videos. It is
+              recommendede if you plan to use the platform frequently.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-7">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            What is the pay-as-you-go model?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              In this model you pay only for the SPARKBITS you generate without
+              any subscription commitment. It is recommended for trial purposes
+              or if your operations are not regular in terms of content
+              generation workflows.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-8">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            Is there a model when users pay for the premium content?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              Yes, we offer options for the users to purchase premium content
+              and offer partners revenue sharing opportunities in this case.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-9">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            I still don{"'"}t understand how it works ...
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              Take a look at examples of the EVENTS and SPARKBITS we offer.
+              Generate test content for predefined example events. If you are
+              still not sure we recommend getting in touch with us to clarify
+              details and offer you the solution which fits your specific needs.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-10">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            How to subscribe as a B2B partner?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              You can register in a system and get in touch with us to let us
+              know your interest. We will convert your account into partner one
+              and you will be able to create your events.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </section>
   )
 }

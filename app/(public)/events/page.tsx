@@ -66,7 +66,7 @@ export default function Events() {
     <section className="max-w-7xl flex flex-col items-center justify-center">
       <div className="w-full flex flex-col lg:flex-row items-center lg:justify-between justify-center gap-6 mt-16 px-6">
         <p className="lg:text-6xl text-5xl font-medium text-white lg:text-left text-center pb-2">
-          Ongoing Events
+          Events
         </p>
 
         <div className="flex flex-row items-center justify-center lg:pl-20 pl-0 gap-4">
@@ -80,6 +80,14 @@ export default function Events() {
           />
         </div>
       </div>
+
+      <p className="text-xl font-medium text-gray-300 lg:text-left text-center mt-4">
+        Select the event you like from the list of examples below to create your
+        own{" "}
+        <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+          SPARKBITS
+        </span>
+      </p>
 
       <Separator className="mt-10 mb-12 bg-gray-400" />
 
