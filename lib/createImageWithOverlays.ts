@@ -38,7 +38,7 @@ export async function createImageWithOverlays({
   ctx.drawImage(baseImg, 0, 0, width, height)
 
   // Draw 1st overlay (top banner)
-  const img1 = await loadImage(image1Url || "/Avatar.jpg")
+  const img1 = await loadImage(image1Url || "/Header_A.jpg")
   ctx.drawImage(img1, 0, 0, 1024, 100)
 
   // Draw text overlay
@@ -53,11 +53,11 @@ export async function createImageWithOverlays({
   ctx.restore()
 
   // Draw 2nd overlay (bottom banner)
-  const img2 = await loadImage(image2Url || "/Avatar.jpg")
+  const img2 = await loadImage(image2Url || "/Footer_A.jpg")
   ctx.drawImage(img2, 0, 864, 1024, 160)
 
   // Draw 3rd overlay (logo)
-  const img3 = await loadImage(image3Url || "/Avatar.jpg")
+  const img3 = await loadImage(image3Url || "/Logo_AVICA.jpg")
   const destWidth = 384
   const destHeight = 128
   const destX = 48

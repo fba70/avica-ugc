@@ -65,7 +65,10 @@ export default function Header() {
               priority
             />
           </Link>
-          <p className="text-4xl font-medium text-white">AVICA SPARKBITS</p>
+          <p className="lg:text-4xl text-3xl font-medium text-white ">
+            <span className="text-orange-600">AVICA</span>{" "}
+            <span className="">SPARKBITS</span>
+          </p>
         </div>
 
         <div className="flex flex-row items-center justify-center gap-6">
