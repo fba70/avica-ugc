@@ -323,8 +323,28 @@ export default function Home() {
         type="single"
         collapsible
         className="w-[80%] mb-12"
-        defaultValue="item-1"
+        defaultValue="item-0"
       >
+        <AccordionItem value="item-0">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            What kind of events can be configured?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              It can be anything from sport events, to music concerts, city
+              cultural spots, entertainment and gaming events, brand campaigns,
+              product promotions and so on. Important only is that event needs
+              to be the place with which user can interact with so that system
+              can put the user virtually into the context of this event using
+              the AVICA SPARKBITS magic.
+            </p>
+            <p className="text-lg text-white w-full">
+              For example for sport event it can be the sport arena where the
+              user can play the game with the team, or for music event it can be
+              the stage where the user can play with musicians and so on.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             What do I need to configure the event?

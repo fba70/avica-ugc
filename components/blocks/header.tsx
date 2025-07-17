@@ -54,7 +54,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between  bg-[url('/HBG_1.jpg')] bg-cover bg-center p-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-6">
+      <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between  bg-[url('/HBG_1.jpg')] bg-cover bg-center py-4 px-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-6">
         <div className="flex flex-row items-center justify-center gap-6">
           <Link href="/">
             <Image

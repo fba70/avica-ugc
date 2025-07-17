@@ -89,6 +89,14 @@ export default function Events() {
         </span>
       </p>
 
+      <p className="text-xl font-medium text-gray-300 lg:text-left text-center mt-4">
+        Sign Up / In to save your{" "}
+        <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+          SPARKBITS
+        </span>{" "}
+        and to be able to generate short video clips
+      </p>
+
       <Separator className="mt-10 mb-12 bg-gray-400" />
 
       <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">

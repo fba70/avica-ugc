@@ -15,6 +15,7 @@ import EventsCount from "@/components/charts/events-counts"
 import SDDailyStats from "@/components/charts/sd-daily-stats"
 import MonthlyImages from "@/components/charts/monthly-images"
 import MonthlyVideos from "@/components/charts/monthly-videos"
+import MonthlyUsers from "@/components/charts/monthly-users"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function Partner() {
@@ -244,6 +245,8 @@ export default function Partner() {
               <MonthlyImages />
 
               <MonthlyVideos />
+
+              <MonthlyUsers />
             </div>
           </div>
         </TabsContent>
