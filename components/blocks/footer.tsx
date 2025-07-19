@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function Footer() {
   return (
-    <footer className="row-start-4 flex flex-row gap-6 flex-wrap items-center justify-center bg-gray-900/70 py-2 px-4 rounded-xl mt-6">
+    <footer className="row-start-4 flex flex-row gap-8 flex-wrap items-center justify-center bg-gray-900/70 py-2 px-4 rounded-xl mt-6 lg:mx-0 mx-10">
       <Link
         className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-white text-sm"
         href="https://avica.cloud/impressum"
@@ -39,7 +39,23 @@ export default function Footer() {
           height={24}
           priority
         />
-        Company
+        AVICA
+      </Link>
+
+      <Link
+        className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-white text-sm"
+        href="https://www.in4comgroup.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Image
+          src="/Logo_IN4COM.png"
+          alt="AVICA logo"
+          width={24}
+          height={24}
+          priority
+        />
+        IN4COM
       </Link>
     </footer>
   )

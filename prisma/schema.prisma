@@ -63,4 +63,45 @@ model User {
 
   seenDrops           SeenDrop[]
   events              Event[]
+  products            Product[]
+  productInstances    ProductInstance[]
+}
+
+model Product {
+  id                  String          @id @default(cuid())
+  name                String
+  description         String?         @default("")
+  type                String          @default("free") 
+  recurrenceType      String          @default("oneoff")
+  userType            String          @default("user")
+
+  limitImages         Int?            @default(0)
+  limitVideos         Int?            @default(0)
+  
+  priceRecurring      Float?          @default(0.0)
+  priceOneoff         Float?          @default(0.0)
+  
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  users               User[]
+  productInstances    ProductInstance[]
+}
+
+model ProductInstance {
+  id                  String          @id @default(cuid())
+  userId              String
+  productId           String
+  status              String          @default("active")
+
+  limitImages         Int?            @default(0)
+  limitVideos         Int?            @default(0)
+  imagesCount         Int?            @default(0)
+  videosCount         Int?            @default(0)
+  
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  user                User            @relation(fields: [userId], references: [id])
+  product             Product         @relation(fields: [productId], references: [id])
 }

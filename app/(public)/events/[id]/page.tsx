@@ -44,9 +44,6 @@ export default function Event() {
   const router = useRouter()
   const { isSignedIn, isLoaded, user } = useUser()
 
-  // const [dbUser, setDbUser] = useState<UserItem>()
-  // const [loadingUser, setLoadingUser] = useState(false)
-
   const [event, setEvent] = useState<EventItem>()
   const [seenDrops, setSeenDrops] = useState<SeenDropItem[]>()
   const [loading, setLoading] = useState(true)
@@ -60,6 +57,17 @@ export default function Event() {
   const [flip, setFlip] = useState(false)
 
   const [openDialog, setOpenDialog] = useState(false)
+
+  // Temporary unregistered users free images limit
+  const MAX_UNREGISTERED_IMAGES = 3
+  const [unregImageCount, setUnregImageCount] = useState<number>(0)
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      const count = Number(sessionStorage.getItem("unreg_image_count") || "0")
+      setUnregImageCount(count)
+    }
+  }, [isSignedIn])
 
   const safeSeenDrops = Array.isArray(seenDrops) ? seenDrops : []
   const orderedSeenDrops = safeSeenDrops
@@ -129,22 +137,15 @@ export default function Event() {
   // console.log("SB:", seenDrops)
 
   const handleCreateSeenDrop = () => {
+    if (!isSignedIn) {
+      const newCount = unregImageCount + 1
+      sessionStorage.setItem("unreg_image_count", String(newCount))
+      setUnregImageCount(newCount) // Re-render immediately
+      if (newCount > MAX_UNREGISTERED_IMAGES) return // Prevent further navigation
+    }
+
     router.push(`/seendrops?eventId=${id}`)
   }
-
-  /*
-  // Fetch db user data
-  useEffect(() => {
-    if (user?.id) {
-      setLoadingUser(true)
-
-      axios.get(`/api/user?externalId=${user.id}`).then((res) => {
-        setDbUser(res.data[0])
-        setLoadingUser(false)
-      })
-    }
-  }, [user])
-  */
 
   if (!isLoaded) {
     return <div className="mt-8">Loading user data...</div>
@@ -283,13 +284,32 @@ export default function Event() {
 
       <Separator className="mt-10 mb-10 bg-gray-400" />
 
-      <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-8">
-        {!isSignedIn && <p>Sign In/Up to save your SPARKBITS</p>}
+      {!isSignedIn && (
+        <p className="mb-8">
+          Unregistered users can only create up to {MAX_UNREGISTERED_IMAGES}{" "}
+          <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+            SPARKBITS
+          </span>
+        </p>
+      )}
 
-        <Button onClick={handleCreateSeenDrop}>
-          <SDImage />
-          Create new SPARKBIT
-        </Button>
+      <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6 mb-8">
+        {!isSignedIn && (
+          <p>
+            Sign In/Up to save your{" "}
+            <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+              SPARKBITS
+            </span>
+          </p>
+        )}
+
+        {(isSignedIn ||
+          (!isSignedIn && unregImageCount < MAX_UNREGISTERED_IMAGES)) && (
+          <Button onClick={handleCreateSeenDrop}>
+            <SDImage />
+            Create new SPARKBIT
+          </Button>
+        )}
 
         {!isSignedIn && (
           <>

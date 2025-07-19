@@ -34,10 +34,36 @@ export default function Header() {
     if (user?.id) {
       setLoadingUser(true)
 
-      axios.get(`/api/user?externalId=${user.id}`).then((res) => {
-        setDbUser(res.data[0])
-        setLoadingUser(false)
-      })
+      // Save clerk user to DB and refetch his DB data
+      axios
+        .get(`/api/user?externalId=${user.id}`)
+        .then((res) => {
+          setDbUser(res.data[0])
+          // console.log("Initial DB user saved to state:", res.data)
+
+          // If no user found by externalId, create new one in DB
+          if (Array.isArray(res.data) && res.data.length === 0) {
+            const userData = {
+              firstName: user?.firstName || "John",
+              lastName: user?.lastName || "Doe",
+              email:
+                user?.primaryEmailAddress?.emailAddress || "No email provided",
+              externalId: user?.id || "No external ID",
+              role: "user",
+            }
+            axios
+              .post("/api/user", userData)
+              .then(() => {
+                // Refetch user info after creating new user
+                return axios.get(`/api/user?externalId=${user.id}`)
+              })
+              .then((res) => {
+                setDbUser(res.data)
+                // console.log("DB user saved to state:", res.data)
+              })
+          }
+        })
+        .finally(() => setLoadingUser(false))
     }
   }, [user])
 
@@ -51,6 +77,7 @@ export default function Header() {
   }, [user, dbUser])
 
   // console.log("User:", user)
+  // console.log("DB User:", dbUser)
 
   return (
     <>

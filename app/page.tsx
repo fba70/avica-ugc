@@ -331,12 +331,12 @@ export default function Home() {
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p className="text-lg text-white w-full">
-              It can be anything from sport events, to music concerts, city
-              cultural spots, entertainment and gaming events, brand campaigns,
-              product promotions and so on. Important only is that event needs
-              to be the place with which user can interact with so that system
-              can put the user virtually into the context of this event using
-              the AVICA SPARKBITS magic.
+              The only limit is your imagination! It can be anything from sport
+              events, to music concerts, city cultural spots, entertainment and
+              gaming events, brand campaigns, product promotions and so on.
+              Important only is that event needs to be the place with which user
+              can interact with so that system can put the user virtually into
+              the context of this event using the AVICA SPARKBITS magic.
             </p>
             <p className="text-lg text-white w-full">
               For example for sport event it can be the sport arena where the

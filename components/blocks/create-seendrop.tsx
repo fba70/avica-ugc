@@ -78,6 +78,8 @@ export default function CreateSeenDrop() {
   const [seenDropRefetched, setSeenDropRefetched] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const freeUserId = "cmda2dqfe0002jhepbythrwbf" // Free user ID for unregistered users
+
   const form = useForm<z.infer<typeof SeenDropSchema>>({
     resolver: zodResolver(SeenDropSchema),
     defaultValues: {
@@ -85,7 +87,7 @@ export default function CreateSeenDrop() {
       message: "",
       imageUrl: "",
       eventId: eventId,
-      userId: dbUser?.id || "",
+      userId: dbUser?.id || freeUserId,
       claimToken: claimToken || "",
     },
   })
@@ -114,6 +116,14 @@ export default function CreateSeenDrop() {
   }, [user])
 
   const generateAiImage = async (url: string, prompt: string, name: string) => {
+    // Check for required images
+    if (!url) {
+      setError("Please provide your image or selfie photo!")
+      toast.error("You need to upload your image or selfie photo")
+      setGeneratingImage(false)
+      return
+    }
+
     setGeneratingImage(true)
 
     // 1. Generate image with Replicate AI
@@ -182,7 +192,7 @@ export default function CreateSeenDrop() {
       imageUrl: uploadOriginalResult.secure_url || "", // <-- original image
       imageOverlayedUrl: uploadResult.secure_url || "",
       eventId: eventId,
-      userId: dbUser?.id || "",
+      userId: dbUser?.id || freeUserId,
       claimToken: claimToken || "",
       type: "image",
     }
@@ -250,7 +260,7 @@ export default function CreateSeenDrop() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmitEvent)}
-            className="space-y-6 bg-gray-700 p-6"
+            className="space-y-6 bg-gray-700 p-6 mt-10"
           >
             <div className="flex flex-col space-y-4">
               <FormField
@@ -281,9 +291,9 @@ export default function CreateSeenDrop() {
                       <Textarea
                         {...field}
                         value={field.value || ""}
-                        placeholder="What do you want your SPARKBIT to be?"
+                        placeholder="Leave your comments about the event here!"
                         disabled={isPending}
-                        className="min-h-32 w-[380px]"
+                        className="min-h-24 w-[380px]"
                       />
                     </FormControl>
                     <FormMessage />
