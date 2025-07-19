@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { useUser } from "@clerk/nextjs"
 import axios from "axios"
 import { SeenDropItem, EventItem, UserItem } from "@/types/types"
 import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { Search, Eye } from "lucide-react"
 import EventCard from "@/components/blocks/event-card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -17,14 +18,34 @@ import MonthlyImages from "@/components/charts/monthly-images"
 import MonthlyVideos from "@/components/charts/monthly-videos"
 import MonthlyUsers from "@/components/charts/monthly-users"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { FormError } from "@/components/forms/form-error"
+import { FormSuccess } from "@/components/forms/form-success"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { PageNameSchema } from "@/schemas"
 
 export default function Partner() {
+  const router = useRouter()
+
   const { isSignedIn, user, isLoaded } = useUser()
 
   const [dbUser, setDbUser] = useState<UserItem>()
   const [myEvents, setMyEvents] = useState<EventItem[]>()
   const [loadingUsers, setLoadingUsers] = useState(false)
   const [loadingEvents, setLoadingEvents] = useState(false)
+
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | undefined>("")
+  const [success, setSuccess] = useState<string | undefined>("")
 
   const [search, setSearch] = useState<string>("")
   const [page, setPage] = useState(1)
@@ -47,6 +68,57 @@ export default function Partner() {
     startIdx,
     startIdx + CARDS_PER_PAGE
   )
+
+  const form = useForm<z.infer<typeof PageNameSchema>>({
+    resolver: zodResolver(PageNameSchema),
+    defaultValues: {
+      pageName: dbUser?.pageName || "",
+    },
+  })
+
+  const onSubmitEvent = (values: z.infer<typeof PageNameSchema>) => {
+    setError("")
+    setSuccess("")
+
+    // console.log(values)
+
+    const parsed = PageNameSchema.safeParse(values)
+    if (!parsed.success) {
+      setError("Invalid form data. Please check your inputs.")
+      return
+    }
+
+    axios
+      .get(`/api/user?pageName=${values.pageName}`)
+      .then((res) => {
+        if (res.data.count > 0) {
+          setError(
+            "This page name is already taken. Please choose another one."
+          )
+          return // Stop form update
+        }
+
+        // Proceed with update if count is 0
+        startTransition(() => {
+          axios
+            .put("/api/user", {
+              ...dbUser,
+              pageName: values.pageName || dbUser?.pageName,
+            })
+            .then(() => {
+              toast.success("Page name updated!")
+              setSuccess("Page name updated successfully!")
+            })
+            .catch(() => {
+              toast.error("Page name was not updated!")
+              setError("Failed to update page name")
+            })
+        })
+      })
+      .catch(() => {
+        setError("Failed to check page name uniqueness")
+      })
+  }
 
   // Save clerk user to DB and refetch data
   useEffect(() => {
@@ -132,7 +204,7 @@ export default function Partner() {
 
   return (
     <section className="w-full max-w-7xl flex flex-col items-center justify-center">
-      <div className="w-[1280px] flex flex-col lg:flex-row lg:justify-between gap-6 mt-16 px-6">
+      <div className="lg:w-[1280px] w-[420px] flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-6 lg:mt-16 mt-8 px-6">
         <div className="text-center text-2xl font-bold text-white">
           Here are your Events, {user.fullName}!
         </div>
@@ -142,6 +214,50 @@ export default function Partner() {
         </p>
       </div>
 
+      <div className="flex flex-col lg:flex-row justify-center items-center mt-10 gap-12 lg: w-full lg:justify-between px-6">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmitEvent)}
+            className="flex lg:flex-row flex-col items-center justify-center gap-6"
+          >
+            <FormField
+              control={form.control}
+              name="pageName"
+              render={({ field }) => (
+                <FormItem className="flex lg:flex-row flex-col gap-4 items-center justify-center">
+                  <FormLabel className="w-[220px]">
+                    Landing page name:
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder={dbUser?.pageName || "Untitled"}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button disabled={isPending} type="submit" className="w-auto">
+              Update your landing page name
+            </Button>
+
+            <FormError message={error} />
+            <FormSuccess message={success} />
+          </form>
+        </Form>
+
+        <Button
+          className="flex flex-row items-center justify-center gap-4"
+          onClick={() => router.push(`/${dbUser?.pageName}`)}
+        >
+          <Eye />
+          <p className="pr-2 text-sm">View your events landing page</p>
+        </Button>
+      </div>
+
       <Separator className="mt-12 mb-12 bg-gray-400" />
 
       <Tabs
@@ -149,16 +265,25 @@ export default function Partner() {
         className="w-full flex flex-col items-center justify-center mb-8"
       >
         <TabsList className="gap-4 ">
-          <TabsTrigger value="events" className="text-2xl text-white">
+          <TabsTrigger
+            value="events"
+            className="lg:text-2xl text-sm text-white"
+          >
             EVENTS
           </TabsTrigger>
-          <TabsTrigger value="stats" className="text-2xl text-white">
+          <TabsTrigger value="stats" className="lg:text-2xl text-sm text-white">
             STATISTICS
           </TabsTrigger>
-          <TabsTrigger value="billing" className="text-2xl text-white">
+          <TabsTrigger
+            value="billing"
+            className="lg:text-2xl text-sm text-white"
+          >
             BILLING
           </TabsTrigger>
-          <TabsTrigger value="payments" className="text-2xl text-white">
+          <TabsTrigger
+            value="payments"
+            className="lg:text-2xl text-sm text-white"
+          >
             PAYMENTS
           </TabsTrigger>
         </TabsList>

@@ -5,7 +5,9 @@ import { EventSchema } from "@/schemas"
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const id = searchParams.get("id")
-  const userId = searchParams.get("userId") // <-- get userId from query
+  const userId = searchParams.get("userId")
+  const pageName = searchParams.get("pageName")
+  const partnerPageName = searchParams.get("partnerPageName")
 
   if (id) {
     // Return a single event by id
@@ -21,6 +23,21 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" }, // optional: newest first
     })
     return NextResponse.json(events)
+  } else if (pageName) {
+    // Return user events with the same page name
+    const events = await db.event.findMany({ where: { pageName } })
+    const count = events.length
+    return NextResponse.json({ count, events })
+  } else if (partnerPageName) {
+    const users = await db.user.findMany({
+      where: { pageName: partnerPageName },
+      select: { id: true },
+    })
+    const userIds = users.map((u) => u.id)
+    const events = await db.event.findMany({
+      where: { userId: { in: userIds } },
+    })
+    return NextResponse.json({ events })
   } else {
     // Return all events
     const events = await db.event.findMany({

@@ -1,6 +1,7 @@
 export interface EventItem {
   id: string
   name?: string
+  pageName?: string
   brand?: string
   imageUrl?: string
   qrcodeUrl?: string
@@ -33,4 +34,5 @@ export interface UserItem {
   firstName?: string
   lastName?: string
   createdAt: Date
+  pageName?: string
 }

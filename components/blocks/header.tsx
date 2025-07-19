@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button"
 import { House } from "lucide-react"
 import axios from "axios"
 import { UserItem } from "@/types/types"
+import { v4 as uuidv4 } from "uuid"
 
 // import { ModeToggle } from "@/components/mode-toggle"
 
@@ -50,6 +51,7 @@ export default function Header() {
                 user?.primaryEmailAddress?.emailAddress || "No email provided",
               externalId: user?.id || "No external ID",
               role: "user",
+              pageName: user?.id || uuidv4(),
             }
             axios
               .post("/api/user", userData)
@@ -150,7 +152,7 @@ export default function Header() {
                     : "text-white"
                 )}
               >
-                MY EVENTS
+                ACCOUNT
               </p>
             </Link>
           )}

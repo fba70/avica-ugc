@@ -42,6 +42,12 @@ interface UploadResults {
 
 export default function Event() {
   const router = useRouter()
+
+  const params = useParams()
+  // const id = params.id as string
+  const pageName = params.pageName as string
+  // console.log("Page name:", pageName)
+
   const { isSignedIn, isLoaded, user } = useUser()
 
   const [event, setEvent] = useState<EventItem>()
@@ -82,9 +88,6 @@ export default function Event() {
       (item.type ?? "").toLowerCase().includes((search ?? "").toLowerCase())
   )
 
-  const params = useParams()
-  const id = params.id as string
-
   // const event: EventItem | undefined = events.find((item) => item.id === id)
 
   const CARDS_PER_PAGE = 6
@@ -95,15 +98,30 @@ export default function Event() {
     startIdx + CARDS_PER_PAGE
   )
 
+  const fetchEvent = () => {
+    setLoading(true)
+    axios
+      .get(`/api/events?pageName=${pageName}`)
+      .then((res) => {
+        setEvent(res.data.events[0])
+        setLoading(false)
+      })
+      .catch(() => {
+        setError("Failed to fetch events")
+        setLoading(false)
+      })
+  }
+
+  useEffect(() => {
+    fetchEvent()
+  }, [])
+
   const fetchSeenDrops = () => {
     setLoading(true)
     axios
-      .get("/api/seendrops")
+      .get(`/api/seendrops?eventId=${event?.id}`)
       .then((res) => {
-        const filteredSDs = res.data.filter(
-          (item: { eventId: string }) => item.eventId === id
-        )
-        setSeenDrops(filteredSDs)
+        setSeenDrops(res.data)
         setLoading(false)
       })
       .catch(() => {
@@ -113,28 +131,11 @@ export default function Event() {
   }
 
   useEffect(() => {
-    fetchSeenDrops()
-  }, [])
-
-  const fetchEvents = () => {
-    setLoading(true)
-    axios
-      .get(`/api/events?id=${id}`)
-      .then((res) => {
-        setEvent(res.data)
-        setLoading(false)
-      })
-      .catch(() => {
-        setError("Failed to fetch events")
-        setLoading(false)
-      })
-  }
-
-  useEffect(() => {
-    fetchEvents()
-  }, [])
-
-  // console.log("SB:", seenDrops)
+    if (event?.id) {
+      fetchSeenDrops()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event?.id])
 
   const handleCreateSeenDrop = () => {
     if (!isSignedIn) {
@@ -144,7 +145,7 @@ export default function Event() {
       if (newCount > MAX_UNREGISTERED_IMAGES) return // Prevent further navigation
     }
 
-    router.push(`/seendrops?eventId=${id}`)
+    router.push(`/seendrops?eventId=${event?.id}`)
   }
 
   if (!isLoaded) {
@@ -157,7 +158,7 @@ export default function Event() {
   const generateQR = async () => {
     // 1. Generate QR code
     // const fullUrl = `${process.env.NEXT_PUBLIC_APP_URL}/events/${id}`
-    const fullUrl = `https://avica-ugc-demo.vercel.app//events/${id}`
+    const fullUrl = `https://avica-ugc.vercel.app/events/${event?.pageName}`
 
     const qrCodeDataUrl = await QrCode.toDataURL(fullUrl, {
       width: imageSize,
@@ -182,14 +183,14 @@ export default function Event() {
     // 3. Save QR code to DB
     if (uploadResults) {
       axios.put("/api/events", {
-        id: id,
+        id: event?.id,
         qrcodeUrl: uploadResults.secure_url,
       })
     }
   }
 
   const handleEventCreated = () => {
-    fetchEvents()
+    fetchEvent()
   }
 
   if (!event) {

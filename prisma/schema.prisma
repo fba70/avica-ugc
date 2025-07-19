@@ -17,7 +17,8 @@ model Event {
   brandLogoUrl        String?         @default("")
   description         String?         @default("")
   prompt              String?         @default("")
-  promptVideo         String?         @default("")  
+  promptVideo         String?         @default("")
+  pageName            String?         @unique  @default(cuid())
 
   userId              String?         
   user                User?           @relation(fields: [userId], references: [id])
@@ -57,6 +58,7 @@ model User {
   lastName            String?
   email               String          @unique
   role                String          @default("user")
+  pageName            String?         @unique @default(cuid())
 
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt

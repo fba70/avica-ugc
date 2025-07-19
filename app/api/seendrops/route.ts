@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const id = searchParams.get("id")
   const userId = searchParams.get("userId")
+  const eventId = searchParams.get("eventId")
 
   if (id) {
     // Return a single SPARKBIT by id
@@ -18,6 +19,13 @@ export async function GET(req: NextRequest) {
     // Return all SPARKBITS for a specific userId
     const seendrops = await db.seenDrop.findMany({
       where: { userId },
+      orderBy: { createdAt: "desc" },
+    })
+    return NextResponse.json(seendrops)
+  } else if (eventId) {
+    // Return all SPARKBITS for a specific eventId
+    const seendrops = await db.seenDrop.findMany({
+      where: { eventId },
       orderBy: { createdAt: "desc" },
     })
     return NextResponse.json(seendrops)

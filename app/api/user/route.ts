@@ -5,11 +5,15 @@ import { UsersSchema } from "@/schemas"
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const externalId = searchParams.get("externalId")
+  const pageName = searchParams.get("pageName")
 
   if (externalId) {
     // Return all users with this externalId (should be 0 or 1)
     const users = await db.user.findMany({ where: { externalId } })
     return NextResponse.json(users)
+  } else if (pageName) {
+    const count = await db.user.count({ where: { pageName } })
+    return NextResponse.json({ count })
   } else {
     // Return all users
     const users = await db.user.findMany()

@@ -30,6 +30,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { v4 as uuidv4 } from "uuid"
 
 interface CreateEventFormProps {
   onEventCreated?: () => void
@@ -58,6 +59,7 @@ export const CreateEventForm = ({
     defaultValues: {
       name: "",
       brand: "",
+      pageName: "",
       imageUrl: "",
       qrcodeUrl: "",
       brandLogoUrl: "",
@@ -85,40 +87,58 @@ export const CreateEventForm = ({
       return
     }
 
-    startTransition(() => {
-      const data = {
-        name: values.name,
-        brand: values.brand,
-        imageUrl: values.imageUrl,
-        brandLogoUrl: values.brandLogoUrl,
-        description: values.description,
-        prompt: values.prompt,
-        promptVideo: values.promptVideo,
-        startDate: values.startDate
-          ? new Date(values.startDate).toISOString()
-          : undefined,
-        endDate: values.endDate
-          ? new Date(values.endDate).toISOString()
-          : undefined,
-        qrcodeUrl: "",
-        userId: userId,
-      }
+    const transformedPageName = (values?.pageName ?? uuidv4())
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
 
-      axios
-        .post("/api/events", data)
-        .then(() => {
-          setSuccess("Event data is saved successfully")
-          setLoading(false)
-          setOpen(false)
+    axios
+      .get(`/api/events?pageName=${transformedPageName}`)
+      .then((res) => {
+        if (res.data.count > 0) {
+          setError("This page name is already taken. Please choose another.")
+          return // Stop further execution
+        }
 
-          if (onEventCreated) onEventCreated() // callback to refetch the data on main page
+        startTransition(() => {
+          const data = {
+            name: values.name,
+            pageName: transformedPageName,
+            brand: values.brand,
+            imageUrl: values.imageUrl,
+            brandLogoUrl: values.brandLogoUrl,
+            description: values.description,
+            prompt: values.prompt,
+            promptVideo: values.promptVideo,
+            startDate: values.startDate
+              ? new Date(values.startDate).toISOString()
+              : undefined,
+            endDate: values.endDate
+              ? new Date(values.endDate).toISOString()
+              : undefined,
+            qrcodeUrl: "",
+            userId: userId,
+          }
+
+          axios
+            .post("/api/events", data)
+            .then(() => {
+              setSuccess("Event data is saved successfully")
+              setLoading(false)
+              setOpen(false)
+
+              if (onEventCreated) onEventCreated() // callback to refetch the data on main page
+            })
+            .catch((err) => {
+              setError("Error saving event data")
+              setLoading(false)
+              console.error(err)
+            })
         })
-        .catch((err) => {
-          setError("Error saving event data")
-          setLoading(false)
-          console.error(err)
-        })
-    })
+      })
+      .catch(() => {
+        setError("Failed to check page name uniqueness")
+      })
   }
 
   return (
@@ -155,6 +175,24 @@ export const CreateEventForm = ({
                         {...field}
                         disabled={isPending}
                         placeholder="Event name"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="pageName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Event page name:</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="Page name"
                       />
                     </FormControl>
                     <FormMessage />

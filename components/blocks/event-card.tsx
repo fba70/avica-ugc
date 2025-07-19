@@ -76,7 +76,7 @@ export default function EventCard({
       {showButton ? (
         <Button
           className="flex flex-row items-center justify-center gap-4 mt-6"
-          onClick={() => router.push(`/events/${cardInfo.id}`)}
+          onClick={() => router.push(`/events/${cardInfo.pageName}`)}
         >
           <Eye />
           <p className="pr-2 text-lg">Event SPARKBITS</p>
@@ -87,3 +87,5 @@ export default function EventCard({
     </div>
   )
 }
+
+// onClick={() => router.push(`/events/${cardInfo.id}`)}

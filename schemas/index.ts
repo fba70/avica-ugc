@@ -10,6 +10,7 @@ export const EventSchema = z.object({
   prompt: z.string().optional(),
   promptVideo: z.string().optional(),
   userId: z.string().optional(),
+  pageName: z.string().optional(),
   startDate: z.preprocess(
     (arg) =>
       typeof arg === "string" || arg instanceof Date
@@ -45,4 +46,9 @@ export const UsersSchema = z.object({
   email: z.string().email(),
   role: z.enum(["user", "partner"]).default("user"),
   externalId: z.string(),
+  pageName: z.string().optional(),
+})
+
+export const PageNameSchema = z.object({
+  pageName: z.string().optional(),
 })
