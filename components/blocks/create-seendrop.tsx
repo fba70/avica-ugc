@@ -419,7 +419,7 @@ export default function CreateSeenDrop() {
       <div className="flex flex-row items-center justify-center mt-12">
         <Button
           onClick={() => {
-            router.push(`/events/${eventId}`)
+            router.push(`/events/${event?.pageName}`)
           }}
         >
           <CircleArrowLeft />
