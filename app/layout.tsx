@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "UGC DEMO APP",
+  title: "AVICA SPARKBITS DEMO APP",
   description: "Generate your UGC with AI interacting with brands and events!",
 }
 
@@ -47,7 +47,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Toaster />
+            <Toaster position="top-right" />
 
             <section className="row-start-1">
               <Suspense fallback={<div>Loading...</div>}>

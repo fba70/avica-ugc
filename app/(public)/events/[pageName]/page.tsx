@@ -65,7 +65,7 @@ export default function Event() {
   const [openDialog, setOpenDialog] = useState(false)
 
   // Temporary unregistered users free images limit
-  const MAX_UNREGISTERED_IMAGES = 3
+  const MAX_UNREGISTERED_IMAGES = 5
   const [unregImageCount, setUnregImageCount] = useState<number>(0)
 
   useEffect(() => {
@@ -157,8 +157,8 @@ export default function Event() {
 
   const generateQR = async () => {
     // 1. Generate QR code
-    // const fullUrl = `${process.env.NEXT_PUBLIC_APP_URL}/events/${id}`
-    const fullUrl = `https://avica-ugc.vercel.app/events/${event?.pageName}`
+
+    const fullUrl = `${process.env.PRODUCTION_URL}/events/${event?.pageName}`
 
     const qrCodeDataUrl = await QrCode.toDataURL(fullUrl, {
       width: imageSize,

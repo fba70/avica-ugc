@@ -197,11 +197,6 @@ export default function Partner() {
     )
   }
 
-  // Useful cosole logs:
-  // console.log("Clerk User:", user)
-  // console.log("DB User:", dbUser)
-  // console.log("User's SPARKBITS:", mySeenDrops)
-
   return (
     <section className="w-full max-w-7xl flex flex-col items-center justify-center">
       <div className="lg:w-[1280px] w-[420px] flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-6 lg:mt-16 mt-8 px-6">
