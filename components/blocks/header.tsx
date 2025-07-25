@@ -14,35 +14,48 @@ import {
   useUser,
 } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
-import { House } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
+import { House, Image as ImagePic, MapPinCheck } from "lucide-react"
 import axios from "axios"
 import { UserItem } from "@/types/types"
 import { v4 as uuidv4 } from "uuid"
 
+// DialogTrigger
 // import { ModeToggle } from "@/components/mode-toggle"
+
+type PendingUserData = {
+  firstName: string
+  lastName: string
+  email: string
+  externalId: string
+  pageName: string
+}
 
 export default function Header() {
   const path = usePathname()
-  // const router = useRouter()
 
   const { isSignedIn, user } = useUser()
-  // console.log("User:", user)
 
   const [dbUser, setDbUser] = useState<UserItem>()
   const [loadingUser, setLoadingUser] = useState(false)
 
+  const [showRoleDialog, setShowRoleDialog] = useState(false)
+  const [pendingUserData, setPendingUserData] = useState<PendingUserData>()
+
   useEffect(() => {
     if (user?.id) {
       setLoadingUser(true)
-
-      // Save clerk user to DB and refetch his DB data
       axios
         .get(`/api/user?externalId=${user.id}`)
         .then((res) => {
           setDbUser(res.data[0])
-          // console.log("Initial DB user saved to state:", res.data)
-
-          // If no user found by externalId, create new one in DB
+          // If no user found by externalId, prepare userData and show role dialog
           if (Array.isArray(res.data) && res.data.length === 0) {
             const userData = {
               firstName: user?.firstName || "John",
@@ -50,24 +63,29 @@ export default function Header() {
               email:
                 user?.primaryEmailAddress?.emailAddress || "No email provided",
               externalId: user?.id || "No external ID",
-              role: "user",
               pageName: user?.id || uuidv4(),
             }
-            axios
-              .post("/api/user", userData)
-              .then(() => {
-                // Refetch user info after creating new user
-                return axios.get(`/api/user?externalId=${user.id}`)
-              })
-              .then((res) => {
-                setDbUser(res.data)
-                // console.log("DB user saved to state:", res.data)
-              })
+            setPendingUserData(userData)
+            setShowRoleDialog(true)
           }
         })
         .finally(() => setLoadingUser(false))
     }
   }, [user])
+
+  // Handler for user role selection
+  const handleRoleSelect = (role: "user" | "partner") => {
+    if (!pendingUserData) return
+    const userData = { ...pendingUserData, role }
+    setShowRoleDialog(false)
+    setLoadingUser(true)
+    axios
+      .post("/api/user", userData)
+      .then(() => axios.get(`/api/user?externalId=${user?.id}`))
+      .then((res) => setDbUser(res.data[0]))
+      .finally(() => setLoadingUser(false))
+    setPendingUserData(undefined)
+  }
 
   useEffect(() => {
     if (user?.id) {
@@ -179,6 +197,34 @@ export default function Header() {
             )}
           </div>
         </div>
+
+        <Dialog open={showRoleDialog}>
+          <DialogContent className="w-[400px]">
+            <DialogHeader>
+              <DialogTitle>Select your account type</DialogTitle>
+              <DialogDescription>
+                Users can create SPARKBITS. Partners can purchase products and
+                create new Events.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-4 items-center">
+              <Button
+                onClick={() => handleRoleSelect("user")}
+                className="w-[120px] gap-2"
+              >
+                <ImagePic />
+                User
+              </Button>
+              <Button
+                onClick={() => handleRoleSelect("partner")}
+                className="w-[120px] gap-2"
+              >
+                <MapPinCheck />
+                Partner
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </header>
     </>
   )
