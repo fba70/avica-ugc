@@ -9,9 +9,11 @@ import { EventItem } from "@/types/types"
 export default function EventCard({
   cardInfo,
   showButton,
+  showCounts,
 }: {
   cardInfo: EventItem
-  showButton: boolean
+  showButton?: boolean
+  showCounts?: boolean
 }) {
   const router = useRouter()
 
@@ -73,6 +75,26 @@ export default function EventCard({
         </p>
       </div>
 
+      {showCounts && (
+        <>
+          <div className="flex flex-row gap-2 items-center justify-center w-[350px] py-2">
+            <p className="mx-auto text-base font-medium text-white mt-4 w-[320px] text-center">
+              <span className="text-gray-400 mr-2">Images left: </span>
+              {cardInfo.imagesCount}
+            </p>
+            <p className="mx-auto text-base text-white mt-4 w-[320px] text-center">
+              <span className="text-gray-400 mr-2">Videos left: </span>
+              {cardInfo.videosCount}
+            </p>
+          </div>
+
+          <p className="mx-auto text-base text-white mt-4 w-[320px] text-center">
+            <span className="text-gray-400 mr-2">Event status: </span>
+            {cardInfo.status || "active"}
+          </p>
+        </>
+      )}
+
       {showButton ? (
         <Button
           className="flex flex-row items-center justify-center gap-4 mt-6"
@@ -87,5 +109,3 @@ export default function EventCard({
     </div>
   )
 }
-
-// onClick={() => router.push(`/events/${cardInfo.id}`)}

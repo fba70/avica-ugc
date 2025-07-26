@@ -12,6 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { FormError } from "@/components/forms/form-error"
@@ -42,6 +49,11 @@ interface EditEventFormProps {
     description?: string
     prompt?: string
     promptVideo?: string
+    limitImages?: number
+    limitVideos?: number
+    imagesCount?: number
+    videosCount?: number
+    status?: string
     startDate?: string | Date
     endDate?: string | Date
   }
@@ -87,6 +99,41 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
       return
     }
 
+    // Calculate new counts if limits changed
+    let newImagesCount = event.limitImages ?? 0
+    let newVideosCount = event.limitVideos ?? 0
+
+    if (
+      values.limitImages !== undefined &&
+      values.limitImages !== event.limitImages
+    ) {
+      // Adjust imagesCount by the difference
+      newImagesCount =
+        (event.imagesCount ?? event.limitImages ?? 0) +
+        (values.limitImages - (event.limitImages ?? 0))
+      if (newImagesCount < 0) newImagesCount = 0
+    } else {
+      newImagesCount = event.imagesCount ?? event.limitImages ?? 0
+    }
+
+    if (
+      values.limitVideos !== undefined &&
+      values.limitVideos !== event.limitVideos
+    ) {
+      // Adjust videosCount by the difference
+      newVideosCount =
+        (event.videosCount ?? event.limitVideos ?? 0) +
+        (values.limitVideos - (event.limitVideos ?? 0))
+      if (newVideosCount < 0) newVideosCount = 0
+    } else {
+      newVideosCount = event.videosCount ?? event.limitVideos ?? 0
+    }
+
+    let status = values.status
+    if (newImagesCount === 0 && newVideosCount === 0) {
+      status = "inactive"
+    }
+
     startTransition(() => {
       const data = {
         id: event.id,
@@ -97,6 +144,11 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
         description: values.description,
         prompt: values.prompt,
         promptVideo: values.promptVideo,
+        limitImages: values.limitImages,
+        limitVideos: values.limitVideos,
+        imagesCount: newImagesCount,
+        videosCount: newVideosCount,
+        status: status,
         startDate: values.startDate
           ? new Date(values.startDate).toISOString()
           : undefined,
@@ -276,6 +328,82 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
                         disabled={isPending}
                         className="min-h-64 w-[380px]"
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="limitImages"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Images count limit:</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="100"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="limitVideos"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Videos count limit:</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isPending} placeholder="20" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="limitImages"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Images count limit:</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="100"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Activity status:</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isPending}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

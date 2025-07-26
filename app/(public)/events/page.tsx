@@ -101,7 +101,12 @@ export default function Events() {
 
       <div className="flex flex-row flex-wrap items-center justify-center gap-10 mb-6">
         {currentEvents.map((item) => (
-          <EventCard cardInfo={item} showButton={true} key={item.id} />
+          <EventCard
+            cardInfo={item}
+            showButton={true}
+            showCounts={false}
+            key={item.id}
+          />
         ))}
       </div>
 

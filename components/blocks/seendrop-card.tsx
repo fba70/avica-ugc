@@ -68,6 +68,11 @@ export default function SeenDropCard({
   const handleGenerateVideo = async () => {
     setLoadingVideo(true)
 
+    if ((event?.videosCount ?? 0) <= 0) {
+      toast.error("No more video SPARKBITS left for this event!")
+      return
+    }
+
     // 1. Define the prompt for animation
     const prompt = "Animate the image moving the human around" // Make prompt be Event dependent
 
@@ -140,6 +145,17 @@ export default function SeenDropCard({
       })
 
     setLoadingVideo(false)
+
+    // 5. Update counts in event and product instance
+    axios
+      .post(`/api/counter?eventId=${event?.id}&flag=video`)
+      .then(() => {
+        toast.success("Counts are updated successfully")
+      })
+      .catch((err) => {
+        toast.error(`Error updating counts: ${err.message}`)
+        // console.error(err)
+      })
   }
 
   return (
@@ -158,7 +174,7 @@ export default function SeenDropCard({
       {seenDropInfo.type === "video" && (
         <div className="relative h-[350px] w-[350px] bg-purple-950">
           <p className="px-4 py-1 text-lg">{seenDropInfo.name}</p>
-          <video controls autoPlay loop height={350} width={350} className="">
+          <video controls loop height={350} width={350} className="">
             <source src={seenDropInfo.videoUrl} type="video/mp4" />
           </video>
           <div className="flex flex-row items-center justify-between px-4 mt-17">
@@ -166,7 +182,7 @@ export default function SeenDropCard({
               <Image
                 src={event?.brandLogoUrl || "/Logo_AVICA.png"}
                 alt="Picture of the author"
-                className="object-contain object-center"
+                className="object-contain object-left"
                 fill
               />
             </div>

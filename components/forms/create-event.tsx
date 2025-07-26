@@ -12,6 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { FormError } from "@/components/forms/form-error"
@@ -64,6 +71,11 @@ export const CreateEventForm = ({
       qrcodeUrl: "",
       brandLogoUrl: "",
       description: "",
+      limitImages: 100,
+      limitVideos: 20,
+      imagesCount: 100,
+      videosCount: 20,
+      status: "active",
       prompt: promptTemplate || "",
       promptVideo: promptVideoTemplate || "",
       startDate: new Date() as Date,
@@ -110,6 +122,11 @@ export const CreateEventForm = ({
             description: values.description,
             prompt: values.prompt,
             promptVideo: values.promptVideo,
+            limitImages: values.limitImages,
+            limitVideos: values.limitVideos,
+            imagesCount: values.limitImages,
+            videosCount: values.limitVideos,
+            status: values.status,
             startDate: values.startDate
               ? new Date(values.startDate).toISOString()
               : undefined,
@@ -314,6 +331,64 @@ export const CreateEventForm = ({
                         disabled={isPending}
                         className="min-h-64 w-[380px]"
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="limitImages"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Images count limit:</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="100"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="limitVideos"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Videos count limit:</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isPending} placeholder="20" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Activity status:</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={isPending}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

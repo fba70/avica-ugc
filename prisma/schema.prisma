@@ -20,6 +20,13 @@ model Event {
   promptVideo         String?         @default("")
   pageName            String?         @unique  @default(cuid())
 
+  status              String          @default("active")
+
+  limitImages         Int?            @default(0)
+  limitVideos         Int?            @default(0)
+  imagesCount         Int?            @default(0)
+  videosCount         Int?            @default(0)
+
   userId              String?         
   user                User?           @relation(fields: [userId], references: [id])
 
@@ -95,6 +102,7 @@ model ProductInstance {
   userId              String
   productId           String
   status              String          @default("active")
+  paidStatus          String          @default("unpaid")
 
   limitImages         Int?            @default(0)
   limitVideos         Int?            @default(0)

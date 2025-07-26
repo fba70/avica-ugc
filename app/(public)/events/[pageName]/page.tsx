@@ -206,7 +206,7 @@ export default function Event() {
       <div className="flex lg:flex-row flex-col items-center justify-center gap-6 mb-8">
         {!flip && (
           <div className="flex flex-col items-center justify-center mt-12 gap-6">
-            <EventCard cardInfo={event} showButton={false} />
+            <EventCard cardInfo={event} showCounts={false} showButton={false} />
           </div>
         )}
 

@@ -11,6 +11,11 @@ export const EventSchema = z.object({
   promptVideo: z.string().optional(),
   userId: z.string().optional(),
   pageName: z.string().optional(),
+  limitImages: z.number().optional(),
+  limitVideos: z.number().optional(),
+  imagesCount: z.number().optional(),
+  videosCount: z.number().optional(),
+  status: z.string().optional(),
   startDate: z.preprocess(
     (arg) =>
       typeof arg === "string" || arg instanceof Date
@@ -51,4 +56,15 @@ export const UsersSchema = z.object({
 
 export const PageNameSchema = z.object({
   pageName: z.string().optional(),
+})
+
+export const ProductInstancesSchema = z.object({
+  userId: z.string(),
+  productId: z.string(),
+  status: z.string().default("active"),
+  paidStatus: z.string().default("not_paid"),
+  limitImages: z.number().optional(),
+  limitVideos: z.number().optional(),
+  imagesCount: z.number().optional(),
+  videosCount: z.number().optional(),
 })

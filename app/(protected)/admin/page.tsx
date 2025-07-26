@@ -32,6 +32,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PageNameSchema } from "@/schemas"
+import AccountPurchases from "@/components/blocks/account-purchases"
 
 export default function Partner() {
   const router = useRouter()
@@ -270,10 +271,10 @@ export default function Partner() {
             STATISTICS
           </TabsTrigger>
           <TabsTrigger
-            value="billing"
+            value="purchases"
             className="lg:text-2xl text-sm text-white"
           >
-            BILLING
+            PURCHASES
           </TabsTrigger>
           <TabsTrigger
             value="payments"
@@ -321,6 +322,7 @@ export default function Partner() {
                     <EventCard
                       cardInfo={item}
                       showButton={true}
+                      showCounts={true}
                       key={item.id}
                     />
                   ))}
@@ -371,13 +373,13 @@ export default function Partner() {
           </div>
         </TabsContent>
 
-        <TabsContent value="billing">
+        <TabsContent value="purchases">
           <div className="w-full flex flex-col items-center lg:justify-between justify-center gap-6 my-8">
-            <div className="text-center text-2xl font-bold text-white">
-              Account Billing Data
-            </div>
-
-            <p></p>
+            {dbUser?.id ? (
+              <AccountPurchases userId={dbUser.id} />
+            ) : (
+              <p>No user purchases data is found</p>
+            )}
           </div>
         </TabsContent>
 

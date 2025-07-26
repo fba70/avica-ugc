@@ -72,13 +72,13 @@ export async function createImageWithOverlays({
     // Image is wider: fit by width
     drawWidth = destWidth
     drawHeight = destWidth / imgAspect
-    dx = destX
+    dx = destX // align left
     dy = destY + (destHeight - drawHeight) / 2
   } else {
     // Image is taller: fit by height
     drawHeight = destHeight
     drawWidth = destHeight * imgAspect
-    dx = destX + (destWidth - drawWidth) / 2
+    dx = destX // align left
     dy = destY
   }
 

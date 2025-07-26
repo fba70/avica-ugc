@@ -9,6 +9,11 @@ export interface EventItem {
   description?: string
   prompt?: string
   promptVideo?: string
+  limitImages?: number
+  limitVideos?: number
+  imagesCount?: number
+  videosCount?: number
+  status?: string
   startDate?: Date
   endDate?: Date
   createdAt: Date

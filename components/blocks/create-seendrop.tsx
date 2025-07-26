@@ -51,13 +51,15 @@ export default function CreateSeenDrop() {
   const { isSignedIn, user } = useUser()
 
   // If there is no user, store claim token in local storage
-  const claimToken = uuidv4() as string
+  const [claimToken, setClaimToken] = useState<string>("")
 
   useEffect(() => {
     if (!user || !isSignedIn) {
-      localStorage.setItem("seendropClaimToken", claimToken)
+      const token = uuidv4()
+      setClaimToken(token)
+      localStorage.setItem("seendropClaimToken", token)
     }
-  }, [user, isSignedIn, claimToken])
+  }, [user, isSignedIn])
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -155,13 +157,22 @@ export default function CreateSeenDrop() {
     toast.success("Image generated successfully!")
 
     // 2. Add layout overlays to the generated image
-    const customImage = await createImageWithOverlays({
-      text: name,
-      baseImageUrl: imageData.output || "",
-      image1Url: "/Header_A.jpg",
-      image2Url: "/Footer_A.jpg",
-      image3Url: event?.brandLogoUrl || "",
-    })
+    let customImage
+    try {
+      customImage = await createImageWithOverlays({
+        text: name,
+        baseImageUrl: imageData.output || "",
+        image1Url: "/Header_A.jpg",
+        image2Url: "/Footer_A.jpg",
+        image3Url: event?.brandLogoUrl || "",
+      })
+    } catch (err) {
+      setError("Overlay creation failed")
+      toast.error("Failed to prepare image overlays!")
+      setGeneratingImage(false)
+      console.log("Overlay creation error:", err)
+      return
+    }
 
     toast.success("Image prepared successfully!")
 
@@ -176,6 +187,8 @@ export default function CreateSeenDrop() {
 
     if (uploadResult.error) {
       setError("Cloudinary upload error")
+      setGeneratingImage(false)
+      return
       // console.error("Cloudinary upload error:", uploadResult.error)
     } else {
       setUploadedImage(uploadResult.secure_url || "")
@@ -207,12 +220,24 @@ export default function CreateSeenDrop() {
       })
       .catch((err) => {
         setError(`Error uploading the image: ${err.message}`)
+        setGeneratingImage(false)
         // console.error(err)
       })
 
     setGeneratingImage(false)
 
-    // 5. Refetch new SPARKBIT from DB
+    // 5. Update counts in event and product instance
+    axios
+      .post(`/api/counter?eventId=${event?.id}&flag=image`)
+      .then(() => {
+        toast.success("Counts are updated successfully")
+      })
+      .catch((err) => {
+        toast.error(`Error updating counts: ${err.message}`)
+        // console.error(err)
+      })
+
+    // 6. Refetch new SPARKBIT from DB
     setLoading(true)
     axios
       .get("/api/seendrops", { params: { id: newSeenDrop?.id } })
@@ -233,6 +258,13 @@ export default function CreateSeenDrop() {
     setSuccess("")
 
     // console.log(values)
+
+    if ((event?.imagesCount ?? 0) <= 0) {
+      setError("Sorry, no more SPARKBITS can be generated for this event")
+      toast.error("No more SPARKBITS left for this event!")
+      setGeneratingImage(false)
+      return
+    }
 
     const parsed = SeenDropSchema.safeParse(values)
     if (!parsed.success) {

@@ -111,7 +111,12 @@ export default function PartnerEvents() {
                   : 0
               )
               .map((item) => (
-                <EventCard cardInfo={item} showButton={true} key={item.id} />
+                <EventCard
+                  cardInfo={item}
+                  showButton={true}
+                  showCounts={false}
+                  key={item.id}
+                />
               ))}
           </div>
 
