@@ -62,7 +62,7 @@ export const ProductInstancesSchema = z.object({
   userId: z.string(),
   productId: z.string(),
   status: z.string().default("active"),
-  paidStatus: z.string().default("not_paid"),
+  paidStatus: z.string().default("unpaid"),
   limitImages: z.number().optional(),
   limitVideos: z.number().optional(),
   imagesCount: z.number().optional(),

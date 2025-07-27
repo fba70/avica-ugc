@@ -25,6 +25,7 @@ import { House, Image as ImagePic, MapPinCheck } from "lucide-react"
 import axios from "axios"
 import { UserItem } from "@/types/types"
 import { v4 as uuidv4 } from "uuid"
+import { toast } from "sonner"
 
 // DialogTrigger
 // import { ModeToggle } from "@/components/mode-toggle"
@@ -47,6 +48,8 @@ export default function Header() {
 
   const [showRoleDialog, setShowRoleDialog] = useState(false)
   const [pendingUserData, setPendingUserData] = useState<PendingUserData>()
+
+  const freeTrialProductId = "ba63139f-7b0e-4b81-b318-fb0b7a3f8a22"
 
   useEffect(() => {
     if (user?.id) {
@@ -82,7 +85,22 @@ export default function Header() {
     axios
       .post("/api/user", userData)
       .then(() => axios.get(`/api/user?externalId=${user?.id}`))
-      .then((res) => setDbUser(res.data[0]))
+      .then(async (res) => {
+        const newUser = res.data[0]
+        setDbUser(newUser)
+        // Assign trial product instance if user is a partner
+        if (newUser?.role === "partner") {
+          try {
+            await axios.post(
+              `/api/product-instances?userId=${newUser.id}&productId=${freeTrialProductId}`
+            )
+            // Add logic to check that this user does not yet have trial free product ionstance
+          } catch (err) {
+            toast.error("Can't assign trial product to new partner user")
+            console.log("Error assigning trial product:", err)
+          }
+        }
+      })
       .finally(() => setLoadingUser(false))
     setPendingUserData(undefined)
   }

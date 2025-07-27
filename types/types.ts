@@ -41,3 +41,39 @@ export interface UserItem {
   createdAt: Date
   pageName?: string
 }
+
+export interface ProductInstanceItem {
+  id: string
+  productId: string
+  status: string
+  paidStatus: string
+  createdAt: string
+  limitImages: number
+  limitVideos: number
+  imagesCount: number
+  videosCount: number
+  product: {
+    id: string
+    name: string
+    description?: string
+    type: string
+    recurrenceType: string
+    priceRecurring: number
+    priceOneoff: number
+  }
+}
+
+export interface ProductItem {
+  id: string
+  name: string
+  description?: string
+  type: string
+  recurrenceType: string
+  userType: string
+  priceRecurring: number
+  priceOneoff: number
+  status: string
+  limitImages: number
+  limitVideos: number
+  createdAt: string
+}

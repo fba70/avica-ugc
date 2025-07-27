@@ -20,8 +20,10 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "AVICA SPARKBITS DEMO APP",
+  title: "SPARKBITS",
   description: "Generate your UGC with AI interacting with brands and events!",
+  authors: [{ name: "IN4COM GmbH", url: "https://www.in4comgroup.com" }],
+  keywords: ["UGC", "AI", "marketing", "brands", "events", "content creation"],
 }
 
 // metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://yourdomain.com"),
@@ -66,3 +68,72 @@ export default function RootLayout({
     </ClerkProvider>
   )
 }
+
+/*
+export const metadata: Metadata = {
+  // Basic Metadata
+  title: 'SPARKBITS',
+  description: 'Generate your UGC with AI interacting with brands and events!',
+  metadataBase: new URL('https://www.sparkbits.com'), // Base URL for absolute URLs
+  // Viewport for responsive design
+  viewport: {
+    width: 'device-width',
+    initialScale: 1.0,
+  },
+  // Author
+  authors: [{ name: 'Your Name or Team', url: 'https://www.sparkbits.com/about' }],
+  // Keywords (optional, less impactful for SEO)
+  keywords: ['UGC', 'AI', 'brands', 'events', 'content creation'],
+  // Robots (control search engine indexing)
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  // Open Graph (for social media sharing)
+  openGraph: {
+    title: 'SPARKBITS',
+    description: 'Generate your UGC with AI interacting with brands and events!',
+    url: 'https://www.sparkbits.com',
+    siteName: 'SPARKBITS',
+    images: [
+      {
+        url: '/og-image.jpg', // Path to image in /public or absolute URL
+        width: 1200,
+        height: 630,
+        alt: 'SPARKBITS Preview Image',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  // Twitter Card
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SPARKBITS',
+    description: 'Generate your UGC with AI interacting with brands and events!',
+    images: ['/twitter-image.jpg'], // Path to image in /public or absolute URL
+    creator: '@sparkbits', // Optional: Twitter handle
+  },
+  // Favicon and Icons
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png',
+  },
+  // Theme Color (for mobile browser UI)
+  themeColor: '#ffffff',
+  // Language (optional, can also be set in <html lang="en">)
+  alternates: {
+    languages: {
+      'en-US': '/en-US',
+    },
+  },
+};
+*/

@@ -70,11 +70,17 @@ export async function POST(req: NextRequest) {
       newVideosCount = Math.max(0, newVideosCount - 1)
     }
 
+    let eventStatus = "active"
+    if (newImagesCount === 0 && newVideosCount === 0) {
+      eventStatus = "inactive"
+    }
+
     await db.event.update({
       where: { id: eventId },
       data: {
         imagesCount: newImagesCount,
         videosCount: newVideosCount,
+        status: eventStatus,
       },
     })
 
@@ -116,6 +122,22 @@ export async function POST(req: NextRequest) {
       where: { id: target.id },
       data: updateData,
     })
+
+    // 4. Fetch the updated Product Instance to check counts
+    const updatedInstance = await db.productInstance.findUnique({
+      where: { id: target.id },
+    })
+
+    // If both counts are 0, set status to inactive
+    if (
+      (updatedInstance?.imagesCount ?? 0) === 0 &&
+      (updatedInstance?.videosCount ?? 0) === 0
+    ) {
+      await db.productInstance.update({
+        where: { id: target.id },
+        data: { status: "inactive" },
+      })
+    }
 
     return NextResponse.json({
       success: true,

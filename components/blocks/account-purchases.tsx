@@ -1,38 +1,22 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import axios from "axios"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import { ProductInstanceItem } from "@/types/types"
+import { Receipt } from "lucide-react"
 
 type AccountPurchasesProps = {
   userId: string
 }
 
-type ProductInstance = {
-  id: string
-  productId: string
-  status: string
-  paidStatus: string
-  createdAt: string
-  limitImages: number
-  limitVideos: number
-  imagesCount: number
-  videosCount: number
-  product: {
-    id: string
-    name: string
-    description?: string
-    type: string
-    recurrenceType: string
-    priceRecurring: number
-    priceOneoff: number
-  }
-}
-
 export default function AccountPurchases({ userId }: AccountPurchasesProps) {
-  const [purchases, setPurchases] = useState<ProductInstance[]>([])
+  const router = useRouter()
+
+  const [purchases, setPurchases] = useState<ProductInstanceItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>("")
 
@@ -82,14 +66,18 @@ export default function AccountPurchases({ userId }: AccountPurchasesProps) {
   return (
     <>
       <div className="mb-4 flex lg:flex-row flex-col lg:gap-12 gap-4 text-white text-lg">
-        <div>
+        <div className="flex flex-row gap-2 items-center justify-center">
           Total images left:{" "}
           <span className="text-green-500">{totalImagesCount}</span>
         </div>
-        <div>
+        <div className="flex flex-row gap-2 items-center justify-center">
           Total videos left:{" "}
           <span className="text-green-500">{totalVideosCount}</span>
         </div>
+        <Button onClick={() => router.push("/products")}>
+          <Receipt />
+          PURCHASE NEW PRODUCT
+        </Button>
       </div>
 
       <div className="mb-4 flex items-center gap-2">
