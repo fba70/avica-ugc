@@ -91,10 +91,22 @@ export default function Header() {
         // Assign trial product instance if user is a partner
         if (newUser?.role === "partner") {
           try {
-            await axios.post(
-              `/api/product-instances?userId=${newUser.id}&productId=${freeTrialProductId}`
+            // Fetch all product instances for this user
+            const instancesRes = await axios.get(
+              `/api/product-instances?userId=${newUser.id}`
             )
-            // Add logic to check that this user does not yet have trial free product ionstance
+            const hasTrial = Array.isArray(instancesRes.data)
+              ? instancesRes.data.some(
+                  (inst) => inst.productId === freeTrialProductId
+                )
+              : false
+
+            if (!hasTrial) {
+              await axios.post(
+                `/api/product-instances?userId=${newUser.id}&productId=${freeTrialProductId}`
+              )
+            }
+            // else do nothing, trial already assigned
           } catch (err) {
             toast.error("Can't assign trial product to new partner user")
             console.log("Error assigning trial product:", err)

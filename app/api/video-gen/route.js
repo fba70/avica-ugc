@@ -16,11 +16,93 @@ const aj = arcjet({
     tokenBucket({
       mode: "LIVE", // will block requests. Use "DRY_RUN" to log only
       refillRate: 1, // refill 1 token per interval
-      interval: 10, // refill every 30 seconds
+      interval: 30, // refill every 30 seconds
       capacity: 3, // bucket maximum capacity of 10 tokens
     }),
   ],
 })
+
+/*
+// VEO-2
+const prediction = await replicate.run("google/veo-2", {
+    input: {
+      prompt: composedPrompt,
+      image: ugcUrl,
+      aspect_ratio: "16:9",
+      duration: 5,
+      enhance_prompt: true,
+    },
+  })
+
+// SEEDANCE-1-LITE   
+const prediction = await replicate.run("bytedance/seedance-1-lite", {
+    input: {
+      prompt: composedPrompt,
+      image: ugcUrl,
+      aspect_ratio: "16:9",
+      resolution: "720p",
+      fps: 24,
+      duration: 5,
+    },
+  })
+
+// MINIMAX-HAILUO-02
+  const prediction = await replicate.run("minimax/hailuo-02", {
+    input: {
+      prompt: composedPrompt,
+      first_frame_image: ugcUrl,
+      resolution: "768p",
+      duration: 5,
+    },
+  })
+
+// MINIMAX-VIDEO-01-DIRECTOR
+  const prediction = await replicate.run("minimax/video-01-director", {
+    input: {
+      prompt: composedPrompt,
+      first_frame_image: ugcUrl,
+    },
+  })
+    
+// KWAIVGI-KLING-2.1
+const predictionKwaiVgiKling21 = await replicate.run("kwaivgi/kling-v2.1", {
+  input: {
+    prompt: composedPrompt,
+    start_image: ugcUrl,
+    duration: 5,
+  },
+})
+
+// RUNWAYML-GEN4-TURBO
+const prediction = await replicate.run("runwayml/gen4-turbo", {
+  input: {
+    prompt: composedPrompt,
+    image: ugcUrl,
+    aspect_ratio: "16:9",
+    duration: 5,
+  },
+})
+
+// LUMA-RAY (can put several videos together one after another)
+const prediction = await replicate.run("luma/ray", {
+  input: {
+    prompt: composedPrompt,
+    start_image_url: ugcUrl,
+    aspect_ratio: "16:9",
+  },
+})
+
+// PIXVERSE-4.5 (has many extra parameters)
+const prediction = await replicate.run("pixverse/pixverse-v4.5", {
+  input: {
+    prompt: composedPrompt,
+    image: ugcUrl,
+    aspect_ratio: "16:9",
+    duration: 5,
+    quality: "1080p",
+  },
+})
+*/
 
 export async function POST(req) {
   if (!process.env.REPLICATE_API_TOKEN) {
