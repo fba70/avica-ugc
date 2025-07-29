@@ -39,26 +39,21 @@ export async function POST(req) {
     )
   }
 
-  const { url1, url2, text1, text2, prompt } = await req.json()
+  const { url1, url2, prompt } = await req.json()
 
+  /*
   const composedPrompt =
-    `Use the image_1 as an object which should be added to the scene defined by the image_2. Object is described as: ${text1}. Scene is described as: ${text2}. Additional scene description is provided as: ${prompt}. Try to preserve the content and style of image_1 as much as possible merging them together`.trim()
+    `Use the image_1 as an object which should be added to the scene defined by the image_2. Additional scene description is provided as: ${prompt}. Try to preserve the content and style of image_1 as much as possible merging them together`.trim()
+*/
 
   const prediction = await replicate.run(
-    "fofr/image-merge-sdxl:101190cbcc57984b9bfba21e1beea3694dc9d121ed1695059b0d4832e468cd75",
+    "flux-kontext-apps/multi-image-kontext-max",
     {
       input: {
-        steps: 20,
-        width: 1280,
-        height: 720,
-        prompt: composedPrompt,
-        image_1: url1,
-        image_2: url2,
-        base_model: "albedobaseXL_v13.safetensors",
-        batch_size: 1,
-        merge_strength: 0.92,
-        negative_prompt: "",
-        added_merge_noise: 0,
+        prompt: prompt,
+        aspect_ratio: "1:1",
+        input_image_1: url1,
+        input_image_2: url2,
       },
     }
   )
@@ -67,19 +62,10 @@ export async function POST(req) {
     return NextResponse.json({ detail: prediction.error }, { status: 500 })
   }
 
-  // Handle the output (expecting an array with a ReadableStream)
-  if (
-    !Array.isArray(prediction) ||
-    prediction.length === 0 ||
-    !(prediction[0] instanceof ReadableStream)
-  ) {
-    throw new Error(
-      "Unexpected output format: Expected an array with a ReadableStream"
-    )
-  }
+  // console.log("Prediction:", prediction)
 
   // Convert ReadableStream to a Buffer
-  const stream = prediction[0]
+  const stream = prediction
   const chunks = []
   const reader = stream.getReader()
 

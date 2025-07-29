@@ -142,10 +142,11 @@ export default function Header() {
               priority
             />
           </Link>
-          <p className="lg:text-4xl text-3xl font-medium text-white ">
-            <span className="text-orange-600">AVICA</span>{" "}
-            <span className="">SPARKBITS</span>
-          </p>
+          <div className="bg-gray-700 rounded-lg p-2">
+            <p className="lg:text-4xl text-3xl font-medium bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+              SPARKBITS
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-row items-center justify-center gap-6">

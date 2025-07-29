@@ -130,16 +130,16 @@ export async function POST(req) {
     )
   }
 
-  const composedPrompt =
-    `Use the image provided as an input to animate it. Additional scene description is provided as: ${prompt}`.trim()
+  const fixedPrompt = ""
 
-  const prediction = await replicate.run("google/veo-2", {
+  const composedPrompt = `${prompt}. ${fixedPrompt}`.trim()
+
+  const prediction = await replicate.run("runwayml/gen4-turbo", {
     input: {
       prompt: composedPrompt,
       image: ugcUrl,
       aspect_ratio: "16:9",
       duration: 5,
-      enhance_prompt: true,
     },
   })
 

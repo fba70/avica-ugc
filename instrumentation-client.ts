@@ -18,7 +18,7 @@ initBotId({
       method: "POST",
     },
     {
-      path: "/api/image-gen-2",
+      path: "/api/image-gen",
       method: "POST",
     },
     {

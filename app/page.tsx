@@ -36,7 +36,6 @@ export default function Home() {
       </div>
 
       <p className="mx-auto lg:text-7xl text-5xl font-medium text-white lg:pb-12 pb-6 px-6 text-center">
-        <span className="text-orange-600">AVICA</span>{" "}
         <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent ml-2">
           SPARKBITS
         </span>
@@ -70,7 +69,7 @@ export default function Home() {
             platform to facilitate the creation of the personalized, engaging
             and fun user-generated images and short videos for your events and
             campaigns using generative AI and{" "}
-            <span className="text-orange-600">AVICA</span> storytelling engine
+            <span className="text-orange-400">AVICA</span> storytelling engine
           </p>
 
           <Link
@@ -175,7 +174,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col items-left justify-start gap-6 h-[400px] w-[400px] pt-4">
             <p className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-              AVICA SPARKBITS magic
+              SPARKBITS magic
             </p>
             <p className="text-lg text-white">
               Create your event digital twin with brand styling in just 10
@@ -297,12 +296,15 @@ export default function Home() {
 
       <p className="mx-auto lg:text-3xl text-xl font-medium text-white lg:pb-6 pb-6 lg:w-[70%] w-[90%] text-center">
         Interested? Have questions? Check content examples created on our{" "}
-        <span className="text-orange-600">AVICA</span>
         <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent ml-2">
           SPARKBITS
         </span>{" "}
-        platform. You can sign up and create your own SPARKBITS in your account.
-        get in touch with us to become a partner and start using the platform!
+        platform. You can sign up and create your own{" "}
+        <span className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent ml-2">
+          SPARKBITS
+        </span>{" "}
+        in your account. Get in touch with us to become a partner and start
+        using the platform!
       </p>
 
       <Button
@@ -347,7 +349,7 @@ export default function Home() {
         </AccordionItem>
         <AccordionItem value="item-1">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
-            What do I need to configure the event?
+            What do I need to configure my event?
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p className="text-lg text-white w-full">
@@ -410,8 +412,9 @@ export default function Home() {
               custom intor- and outro-tracks and so on.
             </p>
             <p className="text-lg text-white w-full">
-              Get in touch with us to discuss your specific needs and we will
-              provide custom tailored solution for you.
+              It is not available in demo examples.Get in touch with us to
+              discuss your specific needs and we will provide custom tailored
+              solution for you.
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -421,14 +424,19 @@ export default function Home() {
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p className="text-lg text-white w-full">
-              Yes, you can select appropriate image for the event context and
-              fully configure the generative AI prompt which will drive the
+              Yes, you have full control over the sources and prompts for image
+              and video content generation.
+            </p>
+            <p className="text-lg text-white w-full">
+              You can select appropriate reference image for the event context
+              and fully configure the generative AI prompts which will drive the
               storytelling part of image and video content generation. We offer
               templates which help to configure it.
             </p>
             <p className="text-lg text-white w-full">
-              You might need to make test generations and fine tune your event
-              content and prompts to achive better outcome.
+              You might need several iterations to make test generations and
+              fine tune your event content and prompts to achieve better
+              outcome.
             </p>
           </AccordionContent>
         </AccordionItem>
@@ -487,9 +495,36 @@ export default function Home() {
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p className="text-lg text-white w-full">
-              You can register in a system and get in touch with us to let us
-              know your interest. We will convert your account into partner one
-              and you will be able to create your events.
+              You can register in a system providing your email address and
+              selecting "partner" type of the account. Every new partner account
+              gets free trial product with 25 images and 5 video SPARKBITS.
+            </p>
+            <p className="text-lg text-white w-full">
+              Get in touch with us to let us know your interest or explore
+              premium options of the platform.
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-11">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            What is SPARKBITS, AVICA and IN4COM?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              SPARKBITS is a digital content generation tool that leverages AI
+              to create engaging multimedia content as a result of users
+              interacting with brands, products or events.
+            </p>
+            <p className="text-lg text-white w-full">
+              AVICA is a digital content generation automation platform which
+              enables complex storytelling scenarios for digital content
+              generation using AVICA storytelling templates at scale and with
+              low cost. AVICA is an engine when generative AI is not enough to
+              manage the creative process.
+            </p>
+            <p className="text-lg text-white w-full">
+              IN4COM GmbH is the Austrian company which develops and supports
+              SPARKBITS and AVICA platforms.
             </p>
           </AccordionContent>
         </AccordionItem>

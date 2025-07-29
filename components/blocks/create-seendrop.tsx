@@ -129,7 +129,7 @@ export default function CreateSeenDrop() {
     setGeneratingImage(true)
 
     // 1. Generate image with Replicate AI
-    const response = await fetch("/api/image-gen-2", {
+    const response = await fetch("/api/image-gen", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
