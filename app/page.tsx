@@ -496,7 +496,7 @@ export default function Home() {
           <AccordionContent className="flex flex-col gap-4 text-balance">
             <p className="text-lg text-white w-full">
               You can register in a system providing your email address and
-              selecting "partner" type of the account. Every new partner account
+              selecting partner type of the account. Every new partner account
               gets free trial product with 25 images and 5 video SPARKBITS.
             </p>
             <p className="text-lg text-white w-full">
