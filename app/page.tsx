@@ -329,6 +329,31 @@ export default function Home() {
       >
         <AccordionItem value="item-0">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
+            Is this a commercial platform or a demo?
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-4 text-balance">
+            <p className="text-lg text-white w-full">
+              This is a demo version of the platform SPARKBITS which illustrates
+              main product features and capabilities.
+            </p>
+            <p className="text-lg text-white w-full">
+              Interested partners can register and create their events and allow
+              co0ntent creation within the free demo package.
+            </p>
+            <p className="text-lg text-white w-full">
+              We are looking for pilot projects with interested partners to
+              address their specific needs and use cases and make our product
+              better! Please get in touch with us with your ideas and
+              requirements.
+            </p>
+            <p className="text-lg text-white w-full">
+              We are working to launch commercial version of the platform during
+              the fall of 2025. Stay tuned!
+            </p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="text-2xl text-orange-600 w-full">
             What kind of events can be configured?
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-4 text-balance">
@@ -347,7 +372,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-1">
+        <AccordionItem value="item-2">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             What do I need to configure my event?
           </AccordionTrigger>
@@ -365,7 +390,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-2">
+        <AccordionItem value="item-3">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             What kind of content is generated?
           </AccordionTrigger>
@@ -380,7 +405,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-3">
+        <AccordionItem value="item-4">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             How end-users can generate their SPARKBITS?
           </AccordionTrigger>
@@ -399,7 +424,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-4">
+        <AccordionItem value="item-5">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             Is there premium type of the content?
           </AccordionTrigger>
@@ -409,16 +434,16 @@ export default function Home() {
               images, longer videos, videos enhanced with AVICA storytelling
               engine, content personalization options such as automated text
               translation into different languages, audio tracks generation,
-              custom intor- and outro-tracks and so on.
+              custom intro- and outro-tracks and so on.
             </p>
             <p className="text-lg text-white w-full">
-              It is not available in demo examples.Get in touch with us to
+              It is not available in demo examples. Get in touch with us to
               discuss your specific needs and we will provide custom tailored
               solution for you.
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-5">
+        <AccordionItem value="item-6">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             Can I control the way the content is generated?
           </AccordionTrigger>
@@ -440,7 +465,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-6">
+        <AccordionItem value="item-7">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             What is the subscription model?
           </AccordionTrigger>
@@ -452,7 +477,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-7">
+        <AccordionItem value="item-8">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             What is the pay-as-you-go model?
           </AccordionTrigger>
@@ -465,7 +490,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-8">
+        <AccordionItem value="item-9">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             Is there a model when users pay for the premium content?
           </AccordionTrigger>
@@ -476,7 +501,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-9">
+        <AccordionItem value="item-10">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             I still don{"'"}t understand how it works ...
           </AccordionTrigger>
@@ -489,7 +514,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-10">
+        <AccordionItem value="item-11">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             How to subscribe as a B2B partner?
           </AccordionTrigger>
@@ -505,7 +530,7 @@ export default function Home() {
             </p>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-11">
+        <AccordionItem value="item-12">
           <AccordionTrigger className="text-2xl text-orange-600 w-full">
             What is SPARKBITS, AVICA and IN4COM?
           </AccordionTrigger>
