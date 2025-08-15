@@ -45,7 +45,7 @@ export default function Home() {
         The Next-Gen Social & Brand Engagement Ecosystem
       </p>
 
-      <div className="flex lg:flex-row flex-col items-center justify-center gap-12">
+      <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-24 gap-6">
         <div className="flex flex-col items-center justify-between w-[400px] h-[460px] bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 p-6 rounded-lg">
           <p className="mx-auto text-2xl font-medium text-white text-center">
             Revolutionizing social interaction through short stories with user
@@ -95,7 +95,7 @@ export default function Home() {
       <Separator className="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 mt-12 mb-12" />
 
       <div className="flex flex-col items-center justify-center gap-12">
-        <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6">
+        <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-24 gap-6">
           <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
             <Image
               src={"/HP_1.jpg"}
@@ -126,7 +126,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex lg:flex-row-reverse flex-col items-center justify-center lg:gap-16 gap-6 ">
+        <div className="flex lg:flex-row-reverse flex-col items-center justify-center lg:gap-24 gap-6 ">
           <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
             <Image
               src={"/HP_2.jpg"}
@@ -158,7 +158,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6">
+        <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-24 gap-6">
           <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
             <Image
               src={"/HP_3.jpg"}
@@ -193,7 +193,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex lg:flex-row-reverse flex-col items-center justify-center lg:gap-16 gap-6">
+        <div className="flex lg:flex-row-reverse flex-col items-center justify-center lg:gap-24 gap-6">
           <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
             <Image
               src={"/HP_4.jpg"}
@@ -224,7 +224,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-16 gap-6">
+        <div className="flex lg:flex-row flex-col items-center justify-center lg:gap-24 gap-6">
           <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
             <Image
               src={"/HP_6.jpg"}
@@ -258,7 +258,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex lg:flex-row-reverse flex-col items-center justify-center lg:gap-16 gap-6">
+        <div className="flex lg:flex-row-reverse flex-col items-center justify-center lg:gap-24 gap-6">
           <div className="relative h-[400px] w-[400px] border border-white group cursor-pointer">
             <Image
               src={"/HP_5.jpg"}
@@ -557,3 +557,9 @@ export default function Home() {
     </section>
   )
 }
+
+/*
+        <span className="bg-gradient-to-br from-cyan-500 via-purple-500 to-orange-300 bg-clip-text text-transparent">
+          SPARKBITS
+        </span>
+*/

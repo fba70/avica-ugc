@@ -131,7 +131,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between  bg-[url('/HBG_1.jpg')] bg-cover bg-center py-4 px-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-6">
+      <header className="z-100 row-start-1 flex lg:flex-row flex-col items-center justify-between bg-[url('/HBG_1.jpg')] bg-cover bg-center py-4 px-6 rounded-lg gap-6 lg:w-[1280px] w-[420px] mt-2">
         <div className="flex flex-row items-center justify-center gap-6">
           <Link href="/">
             <Image
@@ -142,7 +142,7 @@ export default function Header() {
               priority
             />
           </Link>
-          <div className="bg-gray-700 rounded-lg p-2">
+          <div className="bg-gray-700 rounded-lg p-4 shadow-orange-400/30 shadow-[4px_8px_24px_0px_rgba(255,140,0,0.3)]">
             <p className="lg:text-4xl text-3xl font-medium bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
               SPARKBITS
             </p>

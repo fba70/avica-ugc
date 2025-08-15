@@ -115,10 +115,9 @@ export default function CreateSeenDrop() {
         setDbUser(res.data[0])
       })
     }
-  }, [user])
+  }, [user, isSignedIn])
 
   const generateAiImage = async (url: string, prompt: string, name: string) => {
-    // Check for required images
     if (!url) {
       setError("Please provide your image or selfie photo!")
       toast.error("You need to upload your image or selfie photo")
@@ -127,130 +126,123 @@ export default function CreateSeenDrop() {
     }
 
     setGeneratingImage(true)
-
-    // 1. Generate image with Replicate AI
-    const response = await fetch("/api/image-gen", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url1: url,
-        url2: event?.imageUrl || "",
-        prompt: `${event?.prompt || prompt}`, // removed user prompt adding for now
-      }),
-    })
-
-    // console.log("User prompt:", prompt)
-    // console.log("Event prompt:", event?.prompt)
-
-    const imageData = await response.json()
-
-    // console.log("Image data format:", imageData.output)
-
-    if (response.status !== 201) {
-      setError("Image generation error")
-      toast.error("Image generation failed!")
-      return
-    }
-
-    toast.success("Image generated successfully!")
-
-    // 2. Add layout overlays to the generated image
-    let customImage
     try {
-      customImage = await createImageWithOverlays({
-        text: name,
-        baseImageUrl: imageData.output || "",
-        image1Url: "/Header_A.jpg",
-        image2Url: "/Footer_A.jpg",
-        image3Url: event?.brandLogoUrl || "",
+      // 1. Generate image with Replicate AI
+      const response = await fetch("/api/image-gen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url1: url,
+          url2: event?.imageUrl || "",
+          prompt: `${event?.prompt || prompt}`,
+        }),
       })
-    } catch (err) {
-      setError("Overlay creation failed")
-      toast.error("Failed to prepare image overlays!")
-      setGeneratingImage(false)
-      console.log("Overlay creation error:", err)
-      return
-    }
+      const imageData = await response.json()
+      if (response.status !== 201) {
+        setError("Image generation error")
+        toast.error("Image generation failed!")
+        setGeneratingImage(false)
+        return
+      }
+      toast.success("Image generated successfully!")
 
-    toast.success("Image prepared successfully!")
+      // 2. Add layout overlays to the generated image
+      let customImage
+      try {
+        customImage = await createImageWithOverlays({
+          text: name,
+          baseImageUrl: imageData.output || "",
+          image1Url: "/Header_A.jpg",
+          image2Url: "/Footer_A.jpg",
+          image3Url: event?.brandLogoUrl || "",
+        })
+      } catch (err) {
+        setError("Overlay creation failed")
+        toast.error("Failed to prepare image overlays!")
+        setGeneratingImage(false)
+        console.log("Overlay creation error:", err)
+        return
+      }
+      toast.success("Image prepared successfully!")
 
-    // 3. Upload the generated image to Cloudinary
-    const overlayFlag = false as boolean // Set false when Cloudinary overlay transformations are not used - it did not work
+      // 3. Upload the generated image to Cloudinary
+      const overlayFlag = false
+      const uploadOriginalResult = await imageUploadCloudinary(
+        imageData.output,
+        overlayFlag
+      )
+      const uploadResult = await imageUploadCloudinary(customImage, overlayFlag)
 
-    const uploadOriginalResult = await imageUploadCloudinary(
-      imageData.output,
-      overlayFlag
-    )
-    const uploadResult = await imageUploadCloudinary(customImage, overlayFlag)
-
-    if (uploadResult.error) {
-      setError("Cloudinary upload error")
-      setGeneratingImage(false)
-      return
-      // console.error("Cloudinary upload error:", uploadResult.error)
-    } else {
+      if (uploadResult.error) {
+        setError("Cloudinary upload error")
+        setGeneratingImage(false)
+        return
+      }
       setUploadedImage(uploadResult.secure_url || "")
       setUploadedOriginalImage(uploadOriginalResult.secure_url || "")
-      // console.log("Uploaded image URL:", uploadResult.secure_url, uploadedImage)
-      // console.log("Uploaded original image URL:", uploadOriginalResult.secure_url, uploadedOriginalImage)
       toast.success("Image uploaded successfully!")
-    }
 
-    // 4. Save SPARKBIT to DB
-    const data = {
-      name: name,
-      message: prompt,
-      imageUrl: uploadOriginalResult.secure_url || "", // <-- original image
-      imageOverlayedUrl: uploadResult.secure_url || "",
-      eventId: eventId,
-      userId: dbUser?.id || freeUserId,
-      claimToken: claimToken || "",
-      type: "image",
-    }
-
-    axios
-      .post("/api/seendrops", data)
-      .then((res) => {
+      // 4. Save SPARKBIT to DB
+      const data = {
+        name,
+        message: prompt,
+        imageUrl: uploadOriginalResult.secure_url || "",
+        imageOverlayedUrl: uploadResult.secure_url || "",
+        eventId,
+        userId: dbUser?.id || freeUserId,
+        claimToken: claimToken || "",
+        type: "image",
+      }
+      try {
+        const res = await axios.post("/api/seendrops", data)
         setNewSeenDrop(res.data)
         setSuccess("Image upload is successful")
         toast.success("SPARKBIT saved successfully!")
-        // console.log("New SPARKBIT created:", res.data)
-      })
-      .catch((err) => {
-        setError(`Error uploading the image: ${err.message}`)
+      } catch (err: unknown) {
+        let errorMsg = "Unexpected error"
+        if (err && typeof err === "object" && "message" in err) {
+          errorMsg = (err as { message: string }).message
+        }
+        setError(`Error uploading the image: ${errorMsg}`)
         setGeneratingImage(false)
-        // console.error(err)
-      })
+        return
+      }
 
-    setGeneratingImage(false)
+      setGeneratingImage(false)
 
-    // 5. Update counts in event and product instance
-    axios
-      .post(`/api/counter?eventId=${event?.id}&flag=image`)
-      .then(() => {
+      // 5. Update counts in event and product instance
+      try {
+        await axios.post(`/api/counter?eventId=${event?.id}&flag=image`)
         toast.success("Counts are updated successfully")
-      })
-      .catch((err) => {
-        toast.error(`Error updating counts: ${err.message}`)
-        // console.error(err)
-      })
+      } catch (err: unknown) {
+        let errorMsg = "Unexpected error"
+        if (err && typeof err === "object" && "message" in err) {
+          errorMsg = (err as { message: string }).message
+        }
+        toast.error(`Error updating counts: ${errorMsg}`)
+      }
 
-    // 6. Refetch new SPARKBIT from DB
-    setLoading(true)
-    axios
-      .get("/api/seendrops", { params: { id: newSeenDrop?.id } })
-      .then((res) => {
-        setNewSeenDrop(res.data)
+      // 6. Refetch new SPARKBIT from DB
+      setLoading(true)
+      try {
+        const refetchRes = await axios.get("/api/seendrops", {
+          params: { id: newSeenDrop?.id },
+        })
+        setNewSeenDrop(refetchRes.data)
         setSeenDropRefetched(true)
         setLoading(false)
-        // console.log("Fetched new SPARKBIT:", res.data)
-      })
-      .catch(() => {
+      } catch {
         setError("Failed to fetch events")
         setLoading(false)
-      })
+      }
+    } catch (err: unknown) {
+      let errorMsg = "Unexpected error"
+      if (err && typeof err === "object" && "message" in err) {
+        errorMsg = (err as { message: string }).message
+      }
+      setError("Unexpected error: " + errorMsg)
+      setGeneratingImage(false)
+    }
   }
 
   const onSubmitEvent = (values: z.infer<typeof SeenDropSchema>) => {
@@ -364,10 +356,12 @@ export default function CreateSeenDrop() {
                     <FormControl>
                       <div className="flex flex-col gap-2">
                         {field.value && (
-                          <img
+                          <Image
                             src={field.value}
                             alt="Selfie preview"
-                            className="w-[370px] h-[370px] object-cover mb-2"
+                            width={370}
+                            height={370}
+                            className="object-cover mb-2"
                           />
                         )}
                         <SelfieCapture
@@ -463,30 +457,9 @@ export default function CreateSeenDrop() {
 }
 
 /*
-// Need to add saving of the selfie to the Cloudinary via back-end API and return the URL to be used in further processing
-              <FormField
-                control={form.control}
-                name="selfieUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel></FormLabel>
-                    <FormControl>
-                      <div className="flex flex-col gap-2">
-                        {field.value && (
-                          <img
+<img
                             src={field.value}
                             alt="Selfie preview"
-                            className="w-[370px] h-[360px] object-cover mb-2 rounded"
+                            className="w-[370px] h-[370px] object-cover mb-2"
                           />
-                        )}
-                        <SelfieCapture
-                          onCapture={field.onChange}
-                          disabled={isPending}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 */
