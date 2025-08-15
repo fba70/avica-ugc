@@ -100,7 +100,7 @@ export default function Account() {
     fetchMySeenDrops()
   }, [dbUser, fetchMySeenDrops])
 
-  // Claim SPARKBITS if there is claimToken in local Storage (newly signed up users)
+  // Claim user's SPARKBITS if there is claimToken in local Storage (newly signed up users)
   useEffect(() => {
     const claimToken = localStorage.getItem("seendropClaimToken")
     if (dbUser?.id && claimToken) {
@@ -141,7 +141,7 @@ export default function Account() {
     )
   }
 
-  // Useful cosole logs:
+  // Useful console logs:
   // console.log("Clerk User:", user)
   // console.log("DB User:", dbUser)
   // console.log("User's SPARKBITS:", mySeenDrops)
