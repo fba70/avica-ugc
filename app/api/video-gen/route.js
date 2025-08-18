@@ -138,13 +138,14 @@ export async function POST(req) {
     input: {
       prompt: composedPrompt,
       image: ugcUrl,
-      aspect_ratio: "16:9",
+      aspect_ratio: "4:3",
       duration: 5,
     },
   })
 
   console.log("Prediction output:", prediction)
   console.log("Prediction type:", typeof prediction)
+
   if (Array.isArray(prediction)) {
     console.log(
       "Prediction is array, first element type:",

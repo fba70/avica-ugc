@@ -77,15 +77,16 @@ export default function SeenDropCard({
       }
 
       // 2. Define the prompt for animation
-      const prompt = "Animate the image moving the human around" // Make prompt be Event dependent
+      const defaultPrompt = "Animate the image moving the human around" // Make prompt be Event dependent
 
       // 3. Generate video with Replicate
+      // ugcUrl: seenDropInfo.imageOverlayedUrl || seenDropInfo.imageUrl,
       const response = await fetch("/api/video-gen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ugcUrl: seenDropInfo.imageUrl,
-          prompt,
+          ugcUrl: seenDropInfo.imageOverlayedUrl || seenDropInfo.imageUrl,
+          prompt: event?.promptVideo || defaultPrompt,
         }),
       })
 
@@ -99,6 +100,8 @@ export default function SeenDropCard({
 
       // 4. Save video to Cloudinary
       let uploaded: UploadResults = {}
+
+      // const overlayImage = "https://res.cloudinary.com/dzaz7erch/image/upload/v1755520654/OverlayImage_wpbcpd.jpg"
 
       try {
         uploaded = await videoUploadCloudinary(videoData.output)
@@ -117,7 +120,7 @@ export default function SeenDropCard({
       // 5. Save videoURL to new DB SD
       const videoDSData = {
         name: dbUser?.firstName || "",
-        message: prompt,
+        message: defaultPrompt,
         imageUrl: "",
         imageOverlayedUrl: "",
         videoUrl: uploaded.secure_url || "",
@@ -161,42 +164,23 @@ export default function SeenDropCard({
   }
 
   return (
-    <div className="w-[350px]] flex flex-col items-center justify-center bg-transparent">
+    <div className="w-[360px]] flex flex-col items-center justify-center bg-transparent">
       {seenDropInfo.type === "image" && (
-        <div className="relative h-[350px] w-[350px]">
+        <div className="relative h-[270px] w-[360px]">
           <Image
             src={seenDropInfo.imageOverlayedUrl || "/Avatar.jpg"}
             fill
             alt="Picture of the author"
-            className="object-cover object-center"
+            className="object-contain object-center"
           />
         </div>
       )}
 
       {seenDropInfo.type === "video" && (
-        <div className="relative h-[350px] w-[350px] bg-purple-950">
-          <p className="px-4 py-1 text-lg">{seenDropInfo.name}</p>
-          <video controls loop height={350} width={350} className="">
+        <div className="flex items-center justify-center h-[270px] w-[360px]">
+          <video controls loop height={270} width={360} className="">
             <source src={seenDropInfo.videoUrl} type="video/mp4" />
           </video>
-          <div className="flex flex-row items-center justify-between px-4 mt-17">
-            <div className="relative h-[42px] w-[200px]">
-              <Image
-                src={event?.brandLogoUrl || "/Logo_AVICA.png"}
-                alt="Picture of the author"
-                className="object-contain object-left"
-                fill
-              />
-            </div>
-            <div className="relative h-[42px] w-[48px]">
-              <Image
-                src={"/Logo_AVICA.png"}
-                alt="Picture of the author"
-                className="object-contain object-center"
-                fill
-              />
-            </div>
-          </div>
         </div>
       )}
 
@@ -282,6 +266,35 @@ export default function SeenDropCard({
     </div>
   )
 }
+
+/*
+{seenDropInfo.type === "video" && (
+        <div className="relative h-[270px] w-[360px] bg-purple-950">
+          <p className="px-4 py-1 text-lg">{seenDropInfo.name}</p>
+          <video controls loop height={300} width={360} className="">
+            <source src={seenDropInfo.videoUrl} type="video/mp4" />
+          </video>
+          <div className="flex flex-row items-center justify-between px-4 mt-17">
+            <div className="relative h-[42px] w-[200px]">
+              <Image
+                src={event?.brandLogoUrl || "/Logo_AVICA.png"}
+                alt="Picture of the author"
+                className="object-contain object-left"
+                fill
+              />
+            </div>
+            <div className="relative h-[42px] w-[48px]">
+              <Image
+                src={"/Logo_AVICA.png"}
+                alt="Picture of the author"
+                className="object-contain object-center"
+                fill
+              />
+            </div>
+          </div>
+        </div>
+      )}
+*/
 
 /*
 const handleGenerateVideo = async () => {

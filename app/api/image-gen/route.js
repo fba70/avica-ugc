@@ -51,7 +51,7 @@ export async function POST(req) {
     {
       input: {
         prompt: prompt,
-        aspect_ratio: "1:1",
+        aspect_ratio: "4:3",
         input_image_1: url1,
         input_image_2: url2,
       },

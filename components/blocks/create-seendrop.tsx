@@ -150,11 +150,10 @@ export default function CreateSeenDrop() {
       let customImage
       try {
         customImage = await createImageWithOverlays({
-          text: name,
+          text: `SPARKBITS for ${name}`,
           baseImageUrl: imageData.output || "",
-          image1Url: "/Header_A.jpg",
-          image2Url: "/Footer_A.jpg",
-          image3Url: event?.brandLogoUrl || "",
+          overlayColorCode: "#7E7E7E",
+          logoImage: event?.brandLogoUrl || "",
         })
       } catch (err) {
         setError("Overlay creation failed")
@@ -387,8 +386,8 @@ export default function CreateSeenDrop() {
       )}
 
       {generatingImage && (
-        <div className="flex flex-row items-center justify-center gap-6">
-          <LoaderCircle className="animate-spin w-12 h-12 text-green-500 mt-4 mb-4" />
+        <div className="flex flex-row items-center justify-center gap-6 bg-gray-500 p-6 mt-6 rounded-lg">
+          <LoaderCircle className="animate-spin w-10 h-10 text-green-500" />
           <TextLoop className="text-sm text-white">
             <span>Yes, yes, we already started ...</span>
             <span>Everything works just fine ...</span>
@@ -411,7 +410,7 @@ export default function CreateSeenDrop() {
         <>
           <div className="flex flex-col items-center justify-center gap-6 mt-12 bg-gray-700 p-4 pb-6">
             <p className="text-center">Your SPARKBIT is ready!</p>
-            <div className="flex flex-row items-center justify-center relative h-[400px] w-[400px]">
+            <div className="flex flex-row items-center justify-center relative h-[300px] w-[400px]">
               <Image
                 src={
                   uploadedImage || uploadedOriginalImage || "/Logo_AVICA.png"
@@ -431,9 +430,9 @@ export default function CreateSeenDrop() {
                   href={uploadedImage}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-4 border border-gray-300 px-4 py-2 rounded-lg text-white text-sm"
+                  className="flex items-center justify-center gap-4 bg-blue-600 px-4 py-2 rounded-md text-white text-sm"
                 >
-                  <Download />
+                  <Download size={18} />
                   Download SPARKBIT
                 </a>
               </div>
