@@ -33,7 +33,6 @@ import { EventItem, UserItem } from "@/types/types"
 import { useUser } from "@clerk/nextjs"
 import { v4 as uuidv4 } from "uuid"
 import { SelfieCapture } from "./selfie-capture"
-// import { CustomImageWithOverlays } from "@/components/blocks/image-overlays"
 
 interface SeenDropItem {
   id: string
@@ -183,7 +182,7 @@ export default function CreateSeenDrop() {
 
       // 4. Save SPARKBIT to DB
       const data = {
-        name,
+        name: dbUser?.firstName || name,
         message: prompt,
         imageUrl: uploadOriginalResult.secure_url || "",
         imageOverlayedUrl: uploadResult.secure_url || "",

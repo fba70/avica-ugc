@@ -26,6 +26,7 @@ export interface SeenDropItem {
   imageUrl?: string
   imageOverlayedUrl?: string
   videoUrl?: string
+  videoOverlayedUrl?: string
   eventId: string
   createdAt: Date
   type?: string

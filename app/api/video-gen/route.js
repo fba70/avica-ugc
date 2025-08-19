@@ -138,7 +138,7 @@ export async function POST(req) {
     input: {
       prompt: composedPrompt,
       image: ugcUrl,
-      aspect_ratio: "4:3",
+      aspect_ratio: "16:9",
       duration: 5,
     },
   })

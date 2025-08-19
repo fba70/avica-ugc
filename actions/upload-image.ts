@@ -20,7 +20,7 @@ const dataURLtoFile = (dataurl: string): File => {
 export const imageUploadCloudinary = async (
   image: string,
   overlayFlag: boolean
-): Promise<{ error?: string; secure_url?: string }> => {
+): Promise<{ error?: string; secure_url?: string; public_id?: string }> => {
   const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`
 
   // Transformation example for overlay - does not work for now
@@ -53,6 +53,7 @@ export const imageUploadCloudinary = async (
   formData.append("api_key", secret)
   formData.append("public_id", uuidv4())
 
+  // !!! Transformations would NOT work this way, so the flag should be false always in this code
   if (overlayFlag) {
     formData.append("transformation", transformations)
   }

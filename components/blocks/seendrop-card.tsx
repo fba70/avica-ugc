@@ -9,6 +9,9 @@ import { SquarePlay, LoaderCircle, Download } from "lucide-react"
 import axios from "axios"
 import { toast } from "sonner"
 import { videoUploadCloudinary } from "@/actions/upload-video"
+import { imageUploadCloudinary } from "@/actions/upload-image"
+import { createTransformedVideo } from "@/actions/add-video-layout"
+import { createOverlays } from "@/lib/createOverlays"
 import { v4 as uuidv4 } from "uuid"
 import {
   Dialog,
@@ -18,10 +21,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useUser, SignUpButton } from "@clerk/nextjs"
+// import { createTransformedVideo } from "@/actions/add-video-layout"
 
 interface UploadResults {
   secure_url?: string
   error?: string
+  public_id?: string
 }
 
 export default function SeenDropCard({
@@ -40,6 +45,8 @@ export default function SeenDropCard({
   const [loadingVideo, setLoadingVideo] = useState(false)
   const [videoSeenDrop, setSetVideoSeenDrop] = useState<SeenDropItem>()
   const [openDialog, setOpenDialog] = useState(false)
+
+  // console.log("SeenDropCard props:", seenDropInfo)
 
   // Fetch user from DB based on clerk session
   useEffect(() => {
@@ -77,7 +84,7 @@ export default function SeenDropCard({
       }
 
       // 2. Define the prompt for animation
-      const defaultPrompt = "Animate the image moving the human around" // Make prompt be Event dependent
+      const defaultPrompt = "Animate the image moving the human around" // If Event prompt is not defined
 
       // 3. Generate video with Replicate
       // ugcUrl: seenDropInfo.imageOverlayedUrl || seenDropInfo.imageUrl,
@@ -85,7 +92,7 @@ export default function SeenDropCard({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ugcUrl: seenDropInfo.imageOverlayedUrl || seenDropInfo.imageUrl,
+          ugcUrl: seenDropInfo.imageUrl || seenDropInfo.imageOverlayedUrl,
           prompt: event?.promptVideo || defaultPrompt,
         }),
       })
@@ -101,8 +108,6 @@ export default function SeenDropCard({
       // 4. Save video to Cloudinary
       let uploaded: UploadResults = {}
 
-      // const overlayImage = "https://res.cloudinary.com/dzaz7erch/image/upload/v1755520654/OverlayImage_wpbcpd.jpg"
-
       try {
         uploaded = await videoUploadCloudinary(videoData.output)
         if (!uploaded || typeof uploaded.secure_url !== "string") {
@@ -117,13 +122,71 @@ export default function SeenDropCard({
         return
       }
 
-      // 5. Save videoURL to new DB SD
+      console.log("Original video:", uploaded)
+
+      // 5. Create overlay image
+      let overlayImage
+      try {
+        overlayImage = await createOverlays({
+          text: `SPARKBITS for ${dbUser?.firstName || "Unknown user"}`,
+          overlayColorCode: "#7E7E7E",
+          logoImage: event?.brandLogoUrl || "",
+        })
+      } catch (err) {
+        toast.error("Failed to prepare overlays")
+        setLoadingVideo(false)
+        console.log("Overlay creation error:", err)
+        return
+      }
+      toast.success("Overlay prepared successfully!")
+
+      // 6.   Upload overlay image to Cloudinary
+      const overlayFlag = false
+      const uploadOverlay = await imageUploadCloudinary(
+        overlayImage,
+        overlayFlag
+      )
+
+      if (uploadOverlay.error) {
+        toast.error("Failed to upload overlays!")
+        setLoadingVideo(false)
+        return
+      }
+      toast.success("Overlay prepared successfully!")
+
+      console.log("Overlay image:", uploadOverlay)
+
+      // 7. Create video with the overlay and store it in Cloudinary with new url
+      let transformedVideo
+      try {
+        transformedVideo = await createTransformedVideo(
+          uploaded.public_id as string,
+          uploadOverlay.public_id as string
+        )
+
+        if (!transformedVideo || transformedVideo.error) {
+          toast.error("Failed to create transformed video!")
+          setLoadingVideo(false)
+          return
+        }
+        toast.success("Transformed video created successfully!")
+      } catch (err) {
+        toast.error("Error creating transformed video!")
+        console.log("Video with overlay creation error:", err)
+        setLoadingVideo(false)
+        return
+      }
+
+      console.log("Transformed video:", transformedVideo)
+
+      // 8. Save videoURL to new DB SD
       const videoDSData = {
         name: dbUser?.firstName || "",
         message: defaultPrompt,
         imageUrl: "",
         imageOverlayedUrl: "",
         videoUrl: uploaded.secure_url || "",
+        videoOverlayedUrl: transformedVideo.secure_url || "",
         eventId: seenDropInfo.eventId,
         userId: dbUser?.id || "",
         claimToken: claimToken || "",
@@ -144,7 +207,7 @@ export default function SeenDropCard({
         return
       }
 
-      // 6. Update counts in event and product instance
+      // 9. Update counts in event and product instance
       try {
         await axios.post(`/api/counter?eventId=${event?.id}&flag=video`)
         toast.success("Counts are updated successfully")
@@ -179,7 +242,10 @@ export default function SeenDropCard({
       {seenDropInfo.type === "video" && (
         <div className="flex items-center justify-center h-[270px] w-[360px]">
           <video controls loop height={270} width={360} className="">
-            <source src={seenDropInfo.videoUrl} type="video/mp4" />
+            <source
+              src={seenDropInfo.videoOverlayedUrl || seenDropInfo.videoUrl}
+              type="video/mp4"
+            />
           </video>
         </div>
       )}
@@ -209,7 +275,7 @@ export default function SeenDropCard({
           <div>
             <a
               download
-              href={seenDropInfo.videoUrl}
+              href={seenDropInfo.videoOverlayedUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white text-sm bg-blue-600"
