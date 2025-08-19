@@ -47,6 +47,7 @@ interface EditEventFormProps {
     qrcodeUrl?: string
     brandLogoUrl?: string
     description?: string
+    overlayColorCode?: string
     prompt?: string
     promptVideo?: string
     limitImages?: number
@@ -77,6 +78,7 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
       qrcodeUrl: event.qrcodeUrl || "",
       brandLogoUrl: event.brandLogoUrl || "",
       description: event.description || "",
+      overlayColorCode: event.overlayColorCode || "#7E7E7E",
       prompt: event.prompt || "",
       promptVideo: event.promptVideo || "",
       startDate: event.startDate ? new Date(event.startDate) : undefined,
@@ -142,6 +144,7 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
         imageUrl: values.imageUrl,
         brandLogoUrl: values.brandLogoUrl,
         description: values.description,
+        overlayColorCode: values.overlayColorCode,
         prompt: values.prompt,
         promptVideo: values.promptVideo,
         limitImages: values.limitImages,
@@ -482,6 +485,26 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
                           />
                         </PopoverContent>
                       </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="overlayColorCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Overlay color code:</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="color"
+                        disabled={isPending}
+                        className="w-16 h-10 p-1"
+                        value={field.value || "#7E7E7E"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

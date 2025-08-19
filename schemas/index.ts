@@ -11,6 +11,7 @@ export const EventSchema = z.object({
   promptVideo: z.string().optional(),
   userId: z.string().optional(),
   pageName: z.string().optional(),
+  overlayColorCode: z.string().optional().default("#7E7E7E"),
   limitImages: z.number().optional(),
   limitVideos: z.number().optional(),
   imagesCount: z.number().optional(),

@@ -71,6 +71,7 @@ export const CreateEventForm = ({
       qrcodeUrl: "",
       brandLogoUrl: "",
       description: "",
+      overlayColorCode: "#7E7E7E",
       limitImages: 100,
       limitVideos: 20,
       imagesCount: 100,
@@ -120,6 +121,7 @@ export const CreateEventForm = ({
             imageUrl: values.imageUrl,
             brandLogoUrl: values.brandLogoUrl,
             description: values.description,
+            overlayColorCode: values.overlayColorCode,
             prompt: values.prompt,
             promptVideo: values.promptVideo,
             limitImages: values.limitImages,
@@ -467,6 +469,26 @@ export const CreateEventForm = ({
                           />
                         </PopoverContent>
                       </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="overlayColorCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Overlay color code:</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="color"
+                        disabled={isPending}
+                        className="w-16 h-10 p-1"
+                        value={field.value || "#7E7E7E"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

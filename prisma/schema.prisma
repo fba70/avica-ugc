@@ -18,6 +18,7 @@ model Event {
   description         String?         @default("")
   prompt              String?         @default("")
   promptVideo         String?         @default("")
+  overlayColorCode    String?         @default("#7E7E7E")
   pageName            String?         @unique  @default(cuid())
 
   status              String          @default("active")

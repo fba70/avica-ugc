@@ -9,6 +9,7 @@ export interface EventItem {
   description?: string
   prompt?: string
   promptVideo?: string
+  overlayColorCode?: string
   limitImages?: number
   limitVideos?: number
   imagesCount?: number

@@ -20,8 +20,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { TextLoop } from "@/components/motion-primitives/text-loop"
 import { useUser, SignUpButton } from "@clerk/nextjs"
-// import { createTransformedVideo } from "@/actions/add-video-layout"
 
 interface UploadResults {
   secure_url?: string
@@ -122,7 +122,7 @@ export default function SeenDropCard({
         return
       }
 
-      console.log("Original video:", uploaded)
+      // console.log("Original video:", uploaded)
 
       // 5. Create overlay image
       let overlayImage
@@ -154,7 +154,7 @@ export default function SeenDropCard({
       }
       toast.success("Overlay prepared successfully!")
 
-      console.log("Overlay image:", uploadOverlay)
+      // console.log("Overlay image:", uploadOverlay)
 
       // 7. Create video with the overlay and store it in Cloudinary with new url
       let transformedVideo
@@ -177,7 +177,7 @@ export default function SeenDropCard({
         return
       }
 
-      console.log("Transformed video:", transformedVideo)
+      // console.log("Transformed video:", transformedVideo)
 
       // 8. Save videoURL to new DB SD
       const videoDSData = {
@@ -322,11 +322,21 @@ export default function SeenDropCard({
       </div>
 
       {loadingVideo && (
-        <div className="flex flex-row items-center justify-center gap-4">
-          <LoaderCircle className="animate-spin w-12 h-12 text-green-500 mt-4 mb-4" />
-          <p className="text-sm text-white">
-            Please wait! Video SPARKBIT is generated
-          </p>
+        <div className="flex flex-row items-center justify-center gap-6 w-[340px] bg-gray-500 p-6 mt-6 rounded-lg">
+          <LoaderCircle className="animate-spin w-10 h-10 text-green-500" />
+          <TextLoop className="text-sm text-white">
+            <span>Yes, yes, we already started ...</span>
+            <span>Everything works just fine ...</span>
+            <span>You know, it takes a while ...</span>
+            <span>We are on schedule, no worries ...</span>
+            <span>Almost there ...</span>
+            <span>Just 5 seconds ...</span>
+            <span>4 ...</span>
+            <span>3 ...</span>
+            <span>2 ...</span>
+            <span>1 ...</span>
+            <span>It is coming, I promise ...</span>
+          </TextLoop>
         </div>
       )}
     </div>

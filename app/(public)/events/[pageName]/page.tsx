@@ -269,14 +269,16 @@ export default function Event() {
       </div>
 
       <div className="flex flex-col items-center justify-center gap-6">
-        <Button
-          variant="secondary"
-          onClick={() => setFlip(!flip)}
-          className="w-[150px]"
-        >
-          <ArrowLeftRight />
-          {!flip ? "QR code" : "Event card"}
-        </Button>
+        {user?.publicMetadata.userRole === "partner" && (
+          <Button
+            variant="secondary"
+            onClick={() => setFlip(!flip)}
+            className="w-[150px]"
+          >
+            <ArrowLeftRight />
+            {!flip ? "QR code" : "Event card"}
+          </Button>
+        )}
 
         {user?.publicMetadata.userRole === "partner" && (
           <EditEventForm event={event} onSuccess={handleEventCreated} />
