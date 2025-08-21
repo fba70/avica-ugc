@@ -55,6 +55,8 @@ export interface ProductInstanceItem {
   limitVideos: number
   imagesCount: number
   videosCount: number
+  stripePaymentLinkPriceId: string
+  stripeSessionId?: string
   product: {
     id: string
     name: string
@@ -63,6 +65,7 @@ export interface ProductInstanceItem {
     recurrenceType: string
     priceRecurring: number
     priceOneoff: number
+    stripePaymentLinkPriceId: string
   }
 }
 
@@ -79,4 +82,5 @@ export interface ProductItem {
   limitImages: number
   limitVideos: number
   createdAt: string
+  stripePaymentLinkPriceId: string
 }

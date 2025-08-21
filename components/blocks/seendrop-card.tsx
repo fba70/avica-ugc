@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog"
 import { TextLoop } from "@/components/motion-primitives/text-loop"
 import { useUser, SignUpButton } from "@clerk/nextjs"
+import ReactPlayer from "react-player"
 
 interface UploadResults {
   secure_url?: string
@@ -79,6 +80,24 @@ export default function SeenDropCard({
       // 1. Check event video count
       if ((event?.videosCount ?? 0) <= 0) {
         toast.error("No more video SPARKBITS left for this event!")
+        setLoadingVideo(false)
+        return
+      }
+
+      // Event date and status check
+      const now = new Date()
+      const startDate = event?.startDate ? new Date(event.startDate) : null
+      const endDate = event?.endDate ? new Date(event.endDate) : null
+      if (
+        !startDate ||
+        !endDate ||
+        now < startDate ||
+        now > endDate ||
+        event?.status !== "active"
+      ) {
+        toast.error(
+          "SPARKBITS can not be created outside of event's start and end dates"
+        )
         setLoadingVideo(false)
         return
       }
@@ -241,12 +260,19 @@ export default function SeenDropCard({
 
       {seenDropInfo.type === "video" && (
         <div className="flex items-center justify-center h-[270px] w-[360px]">
-          <video controls loop height={270} width={360} className="">
-            <source
-              src={seenDropInfo.videoOverlayedUrl || seenDropInfo.videoUrl}
-              type="video/mp4"
-            />
-          </video>
+          <ReactPlayer
+            src={seenDropInfo.videoOverlayedUrl || seenDropInfo.videoUrl}
+            controls={true}
+            playing={false}
+            muted={true}
+            loop={true}
+            width={360}
+            height={270}
+            style={{
+              background: "transparent",
+              aspectRatio: "16/9",
+            }}
+          />
         </div>
       )}
 
@@ -345,124 +371,13 @@ export default function SeenDropCard({
 
 /*
 {seenDropInfo.type === "video" && (
-        <div className="relative h-[270px] w-[360px] bg-purple-950">
-          <p className="px-4 py-1 text-lg">{seenDropInfo.name}</p>
-          <video controls loop height={300} width={360} className="">
-            <source src={seenDropInfo.videoUrl} type="video/mp4" />
+        <div className="flex items-center justify-center h-[270px] w-[360px]">
+          <video controls loop height={270} width={360} className="">
+            <source
+              src={seenDropInfo.videoOverlayedUrl || seenDropInfo.videoUrl}
+              type="video/mp4"
+            />
           </video>
-          <div className="flex flex-row items-center justify-between px-4 mt-17">
-            <div className="relative h-[42px] w-[200px]">
-              <Image
-                src={event?.brandLogoUrl || "/Logo_AVICA.png"}
-                alt="Picture of the author"
-                className="object-contain object-left"
-                fill
-              />
-            </div>
-            <div className="relative h-[42px] w-[48px]">
-              <Image
-                src={"/Logo_AVICA.png"}
-                alt="Picture of the author"
-                className="object-contain object-center"
-                fill
-              />
-            </div>
-          </div>
         </div>
       )}
-*/
-
-/*
-const handleGenerateVideo = async () => {
-    setLoadingVideo(true)
-
-    if ((event?.videosCount ?? 0) <= 0) {
-      toast.error("No more video SPARKBITS left for this event!")
-      return
-    }
-
-    // 1. Define the prompt for animation
-    const prompt = "Animate the image moving the human around" // Make prompt be Event dependent
-
-    // 2. Generate video with Replicate
-    const response = await fetch("/api/video-gen", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ugcUrl: seenDropInfo.imageUrl,
-        prompt: prompt,
-      }),
-    })
-
-    const videoData = await response.json()
-    // console.log("Generated video URL:", videoData.output)
-
-    if (response.status !== 201) {
-      console.log("Video generation error")
-      toast.error("Video generation failed!")
-      setLoadingVideo(false)
-      return
-    }
-
-    toast.success("Video generated successfully!")
-
-    // 3. Save video to Cloudinary
-    let uploaded: UploadResults = {}
-
-    try {
-      uploaded = await videoUploadCloudinary(videoData.output)
-      // console.log("Cloudinary upload result:", uploaded)
-
-      if (!uploaded || typeof uploaded.secure_url !== "string") {
-        console.log("Cloudinary upload failed")
-        toast.error("Cloudinary upload failed!")
-        return
-      }
-    } catch (err) {
-      toast.error("Video upload failed!")
-      console.error("Cloudinary upload error:", err)
-    }
-
-    // 4. Save videoURL to new DB SD
-    const videoDSData = {
-      name: dbUser?.firstName || "",
-      message: prompt,
-      imageUrl: "",
-      imageOverlayedUrl: "",
-      videoUrl: uploaded.secure_url || "",
-      eventId: seenDropInfo.eventId,
-      userId: dbUser?.id || "",
-      claimToken: claimToken || "",
-      type: "video",
-    }
-
-    axios
-      .post("/api/seendrops", videoDSData)
-      .then((res) => {
-        setSetVideoSeenDrop(res.data)
-        toast.success("SPARKBIT saved successfully!")
-        console.log("New SPARKBIT created:", videoSeenDrop)
-
-        onSeenDropCreated?.() // Notify parent component about the new SPARKBIT
-      })
-      .catch((err) => {
-        toast.error("SPARKBIT can not be saved successfully!")
-        console.error(err)
-      })
-
-    setLoadingVideo(false)
-
-    // 5. Update counts in event and product instance
-    axios
-      .post(`/api/counter?eventId=${event?.id}&flag=video`)
-      .then(() => {
-        toast.success("Counts are updated successfully")
-      })
-      .catch((err) => {
-        toast.error(`Error updating counts: ${err.message}`)
-        // console.error(err)
-      })
-  }
 */

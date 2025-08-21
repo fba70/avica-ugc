@@ -1,23 +1,18 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import { useUser } from "@clerk/nextjs"
 import axios from "axios"
 import { toast } from "sonner"
-import { UserItem, ProductItem, ProductInstanceItem } from "@/types/types"
+import { UserItem, ProductItem } from "@/types/types"
 import { Button } from "@/components/ui/button"
 import { Receipt } from "lucide-react"
+import { createCheckoutSession } from "@/actions/stripe"
 
 export default function Partner() {
-  const router = useRouter()
-
   const { isSignedIn, user, isLoaded } = useUser()
   const [dbUser, setDbUser] = useState<UserItem>()
   const [myProducts, setMyProducts] = useState<ProductItem[]>()
-  const [productInstance, setProductInstance] =
-    useState<ProductInstanceItem | null>(null)
-  const [paymentOk, setPaymentOk] = useState(false)
   const [loadingProducts, setLoadingProducts] = useState(false)
   const [loadingUser, setLoadingUser] = useState(false)
 
@@ -63,45 +58,20 @@ export default function Partner() {
   const currentProducts = myProducts?.slice(startIdx, startIdx + CARDS_PER_PAGE)
 
   const handlePurchase = async (productId: string) => {
-    // 1. Instantiate product for the user with "unpaid status"
     if (!dbUser) {
       toast.error("User data is not available")
       return
     }
 
-    try {
-      const response = await axios.post(
-        `/api/product-instances?userId=${dbUser.id}&productId=${productId}`
-      )
-      setProductInstance(response.data)
-    } catch (error) {
-      toast.error("Failed to create product instance")
-      console.log("Error creating product instance:", error)
-      return
+    const result = await createCheckoutSession({ productId, userId: dbUser.id })
+
+    if (result?.url) {
+      // Redirect user to Stripe Checkout
+      window.location.assign(result.url)
+    } else {
+      console.error(result?.error || "An unknown error occurred.")
+      toast.error("Failed to create checkout session")
     }
-
-    // 2. Process the payment logic and get payment status
-    // TBD
-    setPaymentOk(true) // Simulating payment success for now
-
-    // 3. If payment status OK - update the product instance status to "paid"
-    if (paymentOk && productInstance) {
-      try {
-        const updatedInstance = await axios.patch(`/api/product-instances`, {
-          userId: dbUser.id,
-          productInstanceId: productInstance.id,
-          status: "paid",
-        })
-        setProductInstance(updatedInstance.data)
-        toast.success("Product purchased successfully!")
-      } catch (error) {
-        toast.error("Failed to update product instance status")
-        console.log("Error updating product instance:", error)
-      }
-    }
-
-    // 4. Navigate to admin page
-    router.push("/admin")
   }
 
   if (!isLoaded || loadingUser) {
@@ -206,3 +176,39 @@ export default function Partner() {
     </section>
   )
 }
+
+/*
+try {
+      const response = await axios.post(
+        `/api/product-instances?userId=${dbUser.id}&productId=${productId}`
+      )
+      setProductInstance(response.data)
+    } catch (error) {
+      toast.error("Failed to create product instance")
+      console.log("Error creating product instance:", error)
+      return
+    }
+
+    // 2. Process the payment logic and get payment status
+    // TBD
+    setPaymentOk(true) // Simulating payment success for now
+
+    // 3. If payment status OK - update the product instance status to "paid"
+    if (paymentOk && productInstance) {
+      try {
+        const updatedInstance = await axios.patch(`/api/product-instances`, {
+          userId: dbUser.id,
+          productInstanceId: productInstance.id,
+          status: "paid",
+        })
+        setProductInstance(updatedInstance.data)
+        toast.success("Product purchased successfully!")
+      } catch (error) {
+        toast.error("Failed to update product instance status")
+        console.log("Error updating product instance:", error)
+      }
+    }
+
+    // 4. Navigate to admin page
+    router.push("/admin")
+*/

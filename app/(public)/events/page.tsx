@@ -46,7 +46,11 @@ export default function Events() {
     axios
       .get("/api/events")
       .then((res) => {
-        setEvents(res.data)
+        // Filter only active events
+        const activeEvents = (res.data as EventItem[]).filter(
+          (event) => event.status === "active"
+        )
+        setEvents(activeEvents)
         setLoading(false)
       })
       .catch(() => {

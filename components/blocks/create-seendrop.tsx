@@ -32,7 +32,7 @@ import { createImageWithOverlays } from "@/lib/createImageWithOverlays"
 import { EventItem, UserItem } from "@/types/types"
 import { useUser } from "@clerk/nextjs"
 import { v4 as uuidv4 } from "uuid"
-import { SelfieCapture } from "./selfie-capture"
+import { SelfieCapture } from "@/components/blocks/selfie-capture"
 
 interface SeenDropItem {
   id: string
@@ -252,6 +252,27 @@ export default function CreateSeenDrop() {
     if ((event?.imagesCount ?? 0) <= 0) {
       setError("Sorry, no more SPARKBITS can be generated for this event")
       toast.error("No more SPARKBITS left for this event!")
+      setGeneratingImage(false)
+      return
+    }
+
+    // Event date and status check
+    const now = new Date()
+    const startDate = event?.startDate ? new Date(event.startDate) : null
+    const endDate = event?.endDate ? new Date(event.endDate) : null
+    if (
+      !startDate ||
+      !endDate ||
+      now < startDate ||
+      now > endDate ||
+      event?.status !== "active"
+    ) {
+      setError(
+        "SPARKBITS can not be created outside of event's start and end dates"
+      )
+      toast.error(
+        "SPARKBITS can not be created outside of event's start and end dates"
+      )
       setGeneratingImage(false)
       return
     }

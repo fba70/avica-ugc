@@ -69,4 +69,6 @@ export const ProductInstancesSchema = z.object({
   limitVideos: z.number().optional(),
   imagesCount: z.number().optional(),
   videosCount: z.number().optional(),
+  stripePaymentLinkPriceId: z.string().optional(),
+  stripeSessionId: z.string().optional(),
 })

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
-// import { ProductInstancesSchema } from "@/schemas"
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -64,6 +63,7 @@ export async function POST(req: NextRequest) {
         limitVideos: product.limitVideos,
         imagesCount: product.limitImages,
         videosCount: product.limitVideos,
+        stripePaymentLinkPriceId: product.stripePaymentLinkPriceId,
         paidStatus: "unpaid",
       },
     })

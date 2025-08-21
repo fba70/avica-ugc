@@ -83,6 +83,7 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
       promptVideo: event.promptVideo || "",
       startDate: event.startDate ? new Date(event.startDate) : undefined,
       endDate: event.endDate ? new Date(event.endDate) : undefined,
+      status: event.status || "active",
     },
   })
 

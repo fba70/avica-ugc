@@ -91,7 +91,9 @@ model Product {
   
   priceRecurring      Float?          @default(0.0)
   priceOneoff         Float?          @default(0.0)
-  
+
+  stripePaymentLinkPriceId String?
+
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
 
@@ -110,7 +112,12 @@ model ProductInstance {
   limitVideos         Int?            @default(0)
   imagesCount         Int?            @default(0)
   videosCount         Int?            @default(0)
-  
+
+  priceRecurring      Float?
+  priceOneoff         Float?
+  stripePaymentLinkPriceId String?
+  stripeSessionId     String?
+
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
 
