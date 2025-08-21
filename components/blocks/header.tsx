@@ -49,6 +49,7 @@ export default function Header() {
   const [showRoleDialog, setShowRoleDialog] = useState(false)
   const [pendingUserData, setPendingUserData] = useState<PendingUserData>()
 
+  // Hardcoded free trial product ID
   const freeTrialProductId = "ba63139f-7b0e-4b81-b318-fb0b7a3f8a22"
 
   useEffect(() => {
@@ -79,9 +80,11 @@ export default function Header() {
   // Handler for user role selection
   const handleRoleSelect = (role: "user" | "partner") => {
     if (!pendingUserData) return
+
     const userData = { ...pendingUserData, role }
     setShowRoleDialog(false)
     setLoadingUser(true)
+
     axios
       .post("/api/user", userData)
       .then(() => axios.get(`/api/user?externalId=${user?.id}`))

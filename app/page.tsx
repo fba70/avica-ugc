@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion"
 import { Image as SDImage } from "lucide-react"
 import ReactPlayer from "react-player"
+import { CookieConsentBanner } from "@/components/blocks/cookie-banner"
 
 export default function Home() {
   const router = useRouter()
@@ -554,12 +555,8 @@ export default function Home() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+
+      <CookieConsentBanner />
     </section>
   )
 }
-
-/*
-        <span className="bg-gradient-to-br from-cyan-500 via-purple-500 to-orange-300 bg-clip-text text-transparent">
-          SPARKBITS
-        </span>
-*/

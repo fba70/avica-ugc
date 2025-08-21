@@ -1,3 +1,7 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import axios from "axios"
 import {
   Card,
   CardContent,
@@ -11,28 +15,110 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { Button } from "@/components/ui/button"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-
-const chartData = [
-  { name: "Jan", users: 560 },
-  { name: "Feb", users: 458 },
-  { name: "Mar", users: 602 },
-  { name: "Apr", users: 695 },
-  { name: "May", users: 235 },
-  { name: "Jun", users: 425 },
-  { name: "Jul", users: 548 },
-]
+import { EventItem, SeenDropItem } from "@/types/types"
 
 const chartConfig = {
   users: {
     label: "Users",
-    color: "fuchsia",
+    color: "orange",
   },
 } satisfies ChartConfig
 
-export default function MonthlyUsers() {
+type ChartDataItem = {
+  name: string
+  users: number
+}
+
+export default function MonthlyUsers({ userId }: { userId: string }) {
+  const [chartData, setChartData] = useState<ChartDataItem[]>([])
+  const [loading, setLoading] = useState(false)
+  const [page, setPage] = useState(0)
+  const pageSize = 5
+
+  useEffect(() => {
+    if (!userId) return
+    setLoading(true)
+    axios
+      .get("/api/events", { params: { userId } })
+      .then(async (res) => {
+        const events = res.data as EventItem[]
+        if (!events.length) {
+          setChartData([])
+          setLoading(false)
+          return
+        }
+
+        // Fetch all seendrops for these events
+        const allSeenDrops: SeenDropItem[] = []
+        await Promise.all(
+          events.map(async (event) => {
+            const dropsRes = await axios.get("/api/seendrops", {
+              params: { eventId: event.id },
+            })
+            allSeenDrops.push(...(dropsRes.data as SeenDropItem[]))
+          })
+        )
+
+        // Group unique userIds by month
+        const monthUserMap = new Map<string, Set<string>>()
+        allSeenDrops.forEach((drop) => {
+          if (!drop.userId) return
+          const date = new Date(drop.createdAt)
+          const month = date
+            .toLocaleString("en-US", { month: "short" })
+            .toUpperCase()
+          const year = date.getFullYear().toString().slice(-2)
+          const key = `${month}-${year}`
+          if (!monthUserMap.has(key)) {
+            monthUserMap.set(key, new Set<string>())
+          }
+          monthUserMap.get(key)!.add(drop.userId)
+        })
+
+        // Convert to array and sort by month/year
+        const months = [
+          "JAN",
+          "FEB",
+          "MAR",
+          "APR",
+          "MAY",
+          "JUN",
+          "JUL",
+          "AUG",
+          "SEP",
+          "OCT",
+          "NOV",
+          "DEC",
+        ]
+        const data: ChartDataItem[] = Array.from(monthUserMap.entries())
+          .map(([name, usersSet]) => ({
+            name,
+            users: usersSet.size,
+          }))
+          .sort((a, b) => {
+            const [aMonth, aYear] = a.name.split("-")
+            const [bMonth, bYear] = b.name.split("-")
+            if (aYear !== bYear) return Number(aYear) - Number(bYear)
+            return months.indexOf(aMonth) - months.indexOf(bMonth)
+          })
+        setChartData(data)
+        setPage(0)
+      })
+      .catch(() => setChartData([]))
+      .finally(() => setLoading(false))
+  }, [userId])
+
+  useEffect(() => {
+    setPage(0)
+  }, [chartData])
+
+  const pageCount = Math.ceil(chartData.length / pageSize)
+  const paginatedData = chartData.slice(page * pageSize, (page + 1) * pageSize)
+
   return (
-    <>
+    <div className="flex flex-col items-center justify-center gap-6">
       <Card className="bg-secondary w-[420px] shadow-md">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold text-center">
@@ -41,32 +127,58 @@ export default function MonthlyUsers() {
           <CardDescription className="text-center"></CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center">
-          <ChartContainer config={chartConfig} className="h-[300px] w-[400px]">
-            <BarChart
-              accessibilityLayer
-              data={chartData}
-              margin={{ top: 0, right: 0, left: -25, bottom: 20 }}
+          {loading ? (
+            <div className="text-gray-500">Loading data...</div>
+          ) : (
+            <ChartContainer
+              config={chartConfig}
+              className="h-[300px] w-[400px]"
             >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="name"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                angle={-90}
-                textAnchor="end"
-                dy={10}
-              />
-              <YAxis />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dashed" />}
-              />
-              <Bar dataKey="users" fill="fuchsia" radius={4} />
-            </BarChart>
-          </ChartContainer>
+              <BarChart
+                accessibilityLayer
+                data={paginatedData}
+                margin={{ top: 0, right: 0, left: -25, bottom: 20 }}
+              >
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="name"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                />
+                <YAxis />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="dashed" />}
+                />
+                <Bar dataKey="users" fill="orange" radius={4} />
+              </BarChart>
+            </ChartContainer>
+          )}
         </CardContent>
       </Card>
-    </>
+
+      {!loading && pageCount > 1 && (
+        <div className="flex justify-center gap-2 mt-4">
+          <Button
+            className="text-gray-300 disabled:text-gray-300"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0}
+          >
+            Prev
+          </Button>
+          <span className="px-2 py-1">
+            {page + 1} / {pageCount}
+          </span>
+          <Button
+            className="text-gray-300 disabled:text-gray-300"
+            onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+            disabled={page >= pageCount - 1}
+          >
+            Next
+          </Button>
+        </div>
+      )}
+    </div>
   )
 }

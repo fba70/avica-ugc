@@ -14,8 +14,7 @@ import { toast } from "sonner"
 import { CreateEventForm } from "@/components/forms/create-event"
 import EventsCount from "@/components/charts/events-counts"
 import SDDailyStats from "@/components/charts/sd-daily-stats"
-import MonthlyImages from "@/components/charts/monthly-images"
-import MonthlyVideos from "@/components/charts/monthly-videos"
+import MonthlyImagesVideos from "@/components/charts/monthly-images"
 import MonthlyUsers from "@/components/charts/monthly-users"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
@@ -359,16 +358,14 @@ export default function Partner() {
               Events Statistics
             </div>
 
-            <div className="flex flex-row items-center justify-center gap-8 flex-wrap mt-6">
-              <EventsCount />
+            <div className="flex flex-row items-center justify-center gap-10 flex-wrap mt-8">
+              {dbUser?.id && <EventsCount userId={dbUser.id} />}
 
-              <SDDailyStats />
+              {dbUser?.id && <SDDailyStats userId={dbUser.id} />}
 
-              <MonthlyImages />
+              {dbUser?.id && <MonthlyImagesVideos userId={dbUser.id} />}
 
-              <MonthlyVideos />
-
-              <MonthlyUsers />
+              {dbUser?.id && <MonthlyUsers userId={dbUser?.id} />}
             </div>
           </div>
         </TabsContent>

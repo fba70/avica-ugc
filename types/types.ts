@@ -31,6 +31,7 @@ export interface SeenDropItem {
   eventId: string
   createdAt: Date
   type?: string
+  userId?: string
 }
 
 export interface UserItem {
