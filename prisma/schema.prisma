@@ -52,6 +52,7 @@ model SeenDrop {
   userId              String?
   claimToken          String?
   type                String?         @default("image")
+  status              String?         @default("active")
 
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
@@ -68,6 +69,7 @@ model User {
   email               String          @unique
   role                String          @default("user")
   pageName            String?         @unique @default(cuid())
+  status              String?         @default("active")
 
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt

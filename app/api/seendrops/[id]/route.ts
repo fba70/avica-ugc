@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
 
-export async function PATCH(req: NextRequest) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const data = await req.json()
-  const id = data.id
+  const id = params.id
 
   if (!id) {
     return NextResponse.json({ error: "SPARKBIT ID required" }, { status: 400 })

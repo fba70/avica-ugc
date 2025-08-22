@@ -88,7 +88,12 @@ export default function EventCard({
             </p>
           </div>
 
-          <p className="mx-auto text-base text-white mt-4 w-[320px] text-center">
+          <p
+            className={`
+    mx-auto text-base mt-4 w-[320px] text-center
+    ${cardInfo.status === "active" ? "text-green-500" : cardInfo.status === "inactive" ? "text-orange-500" : "text-white"}
+  `}
+          >
             <span className="text-gray-400 mr-2">Event status: </span>
             {cardInfo.status || "active"}
           </p>

@@ -45,6 +45,7 @@ export const SeenDropSchema = z.object({
   userId: z.string(),
   claimToken: z.string().optional(),
   type: z.string().optional(),
+  status: z.string().optional(),
 })
 
 export const UsersSchema = z.object({
@@ -54,6 +55,7 @@ export const UsersSchema = z.object({
   role: z.enum(["user", "partner"]).default("user"),
   externalId: z.string(),
   pageName: z.string().optional(),
+  type: z.string().optional(),
 })
 
 export const PageNameSchema = z.object({

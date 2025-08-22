@@ -33,7 +33,7 @@ export const ShareSeenDrop = ({ url }: { url: string }) => {
         <Button>
           {" "}
           <Share size={16} />
-          SHARE!
+          SHARE
         </Button>
       </DialogTrigger>
       <DialogContent className="flex align-center justify-center">

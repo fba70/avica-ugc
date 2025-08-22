@@ -383,12 +383,30 @@ export const CreateEventForm = ({
                         onValueChange={field.onChange}
                         disabled={isPending}
                       >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger
+                          className={`
+                          w-full
+                          ${
+                            form.watch("status") === "active"
+                              ? "text-green-500"
+                              : form.watch("status") === "inactive"
+                                ? "text-orange-500"
+                                : ""
+                          }
+                        `}
+                        >
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
+                          <SelectItem value="active" className="text-green-500">
+                            Active
+                          </SelectItem>
+                          <SelectItem
+                            value="inactive"
+                            className="text-orange-500"
+                          >
+                            Inactive
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>

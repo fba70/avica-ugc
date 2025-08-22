@@ -190,6 +190,7 @@ export default function CreateSeenDrop() {
         userId: dbUser?.id || freeUserId,
         claimToken: claimToken || "",
         type: "image",
+        status: "active",
       }
       try {
         const res = await axios.post("/api/seendrops", data)

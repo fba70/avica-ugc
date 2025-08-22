@@ -372,24 +372,6 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
 
               <FormField
                 control={form.control}
-                name="limitImages"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Images count limit:</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder="100"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
                 name="status"
                 render={({ field }) => (
                   <FormItem>
@@ -400,12 +382,30 @@ export const EditEventForm = ({ event, onSuccess }: EditEventFormProps) => {
                         onValueChange={field.onChange}
                         disabled={isPending}
                       >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger
+                          className={`
+                          w-full
+                          ${
+                            form.watch("status") === "active"
+                              ? "text-green-500"
+                              : form.watch("status") === "inactive"
+                                ? "text-orange-500"
+                                : ""
+                          }
+                        `}
+                        >
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="inactive">Inactive</SelectItem>
+                          <SelectItem value="active" className="text-green-500">
+                            Active
+                          </SelectItem>
+                          <SelectItem
+                            value="inactive"
+                            className="text-orange-500"
+                          >
+                            Inactive
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </FormControl>

@@ -121,7 +121,11 @@ export default function Event() {
     axios
       .get(`/api/seendrops?eventId=${event?.id}`)
       .then((res) => {
-        setSeenDrops(res.data)
+        // Only keep seendrops with status "active"
+        const activeSeenDrops = Array.isArray(res.data)
+          ? res.data.filter((item: SeenDropItem) => item.status === "active")
+          : []
+        setSeenDrops(activeSeenDrops)
         setLoading(false)
       })
       .catch(() => {

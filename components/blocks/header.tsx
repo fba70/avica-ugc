@@ -49,7 +49,7 @@ export default function Header() {
   const [showRoleDialog, setShowRoleDialog] = useState(false)
   const [pendingUserData, setPendingUserData] = useState<PendingUserData>()
 
-  // Hardcoded free trial product ID
+  // !!! Hardcoded free trial product ID
   const freeTrialProductId = "ba63139f-7b0e-4b81-b318-fb0b7a3f8a22"
 
   useEffect(() => {
@@ -68,6 +68,7 @@ export default function Header() {
                 user?.primaryEmailAddress?.emailAddress || "No email provided",
               externalId: user?.id || "No external ID",
               pageName: user?.id || uuidv4(),
+              status: "active",
             }
             setPendingUserData(userData)
             setShowRoleDialog(true)
@@ -129,7 +130,7 @@ export default function Header() {
     }
   }, [user, dbUser])
 
-  // console.log("User:", user)
+  console.log("User:", user)
   // console.log("DB User:", dbUser)
 
   return (

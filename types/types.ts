@@ -32,6 +32,7 @@ export interface SeenDropItem {
   createdAt: Date
   type?: string
   userId?: string
+  status?: string
 }
 
 export interface UserItem {
@@ -43,6 +44,7 @@ export interface UserItem {
   lastName?: string
   createdAt: Date
   pageName?: string
+  status?: string
 }
 
 export interface ProductInstanceItem {

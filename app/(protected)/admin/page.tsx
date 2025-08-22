@@ -262,22 +262,25 @@ export default function Partner() {
         <TabsList className="gap-4 ">
           <TabsTrigger
             value="events"
-            className="lg:text-2xl text-sm text-white"
+            className="lg:text-2xl text-sm text-white data-[state=active]:text-white data-[state=active]:font-bold"
           >
             EVENTS
           </TabsTrigger>
-          <TabsTrigger value="stats" className="lg:text-2xl text-sm text-white">
+          <TabsTrigger
+            value="stats"
+            className="lg:text-2xl text-sm text-white data-[state=active]:text-white data-[state=active]:font-bold"
+          >
             STATISTICS
           </TabsTrigger>
           <TabsTrigger
             value="purchases"
-            className="lg:text-2xl text-sm text-white"
+            className="lg:text-2xl text-sm text-white data-[state=active]:text-white data-[state=active]:font-bold"
           >
             PURCHASES
           </TabsTrigger>
           <TabsTrigger
             value="payments"
-            className="lg:text-2xl text-sm text-white"
+            className="lg:text-2xl text-sm text-white data-[state=active]:text-white data-[state=active]:font-bold"
           >
             PAYMENTS
           </TabsTrigger>
@@ -355,7 +358,7 @@ export default function Partner() {
         <TabsContent value="stats">
           <div className="w-full flex flex-col items-center lg:justify-between justify-center gap-6 my-8">
             <div className="text-center text-2xl font-bold text-white">
-              Events Statistics
+              Account Statistics
             </div>
 
             <div className="flex flex-row items-center justify-center gap-10 flex-wrap mt-8">

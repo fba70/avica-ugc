@@ -5,7 +5,7 @@ import Image from "next/image"
 import { ShareSeenDrop } from "@/components/blocks/share-seendrop"
 import { SeenDropItem, UserItem, EventItem } from "@/types/types"
 import { Button } from "../ui/button"
-import { SquarePlay, LoaderCircle, Download } from "lucide-react"
+import { SquarePlay, LoaderCircle, Download, Trash2 } from "lucide-react"
 import axios from "axios"
 import { toast } from "sonner"
 import { videoUploadCloudinary } from "@/actions/upload-video"
@@ -210,6 +210,7 @@ export default function SeenDropCard({
         userId: dbUser?.id || "",
         claimToken: claimToken || "",
         type: "video",
+        status: "active",
       }
 
       try {
@@ -242,6 +243,20 @@ export default function SeenDropCard({
       console.error(err)
     } finally {
       setLoadingVideo(false)
+    }
+  }
+
+  const handleDeleteSeenDrop = async () => {
+    try {
+      const res = await axios.patch(`/api/seendrops/${seenDropInfo.id}`, {
+        status: "deleted",
+      })
+      toast.success("SPARKBIT deleted!")
+      console.log("Deleted SPARKBIT status:", res.data.status)
+      onSeenDropCreated?.() // Refresh or update parent if needed
+    } catch (err) {
+      toast.error("Failed to delete SPARKBIT!")
+      console.error(err)
     }
   }
 
@@ -280,6 +295,7 @@ export default function SeenDropCard({
         {seenDropInfo.imageOverlayedUrl && (
           <ShareSeenDrop url={seenDropInfo.imageOverlayedUrl} />
         )}
+
         {seenDropInfo.videoUrl && <ShareSeenDrop url={seenDropInfo.videoUrl} />}
 
         {seenDropInfo.imageOverlayedUrl && (
@@ -289,10 +305,10 @@ export default function SeenDropCard({
               href={seenDropInfo.imageOverlayedUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white text-sm bg-blue-600"
+              className="flex items-center justify-center gap-2 px-2 py-2 rounded-lg text-white text-sm bg-blue-600"
             >
               <Download size={16} />
-              Download
+              DOWNLOAD
             </a>
           </div>
         )}
@@ -304,10 +320,10 @@ export default function SeenDropCard({
               href={seenDropInfo.videoOverlayedUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white text-sm bg-blue-600"
+              className="flex items-center justify-center gap-2 px-2 py-2 rounded-lg text-white text-sm bg-blue-600"
             >
               <Download size={16} />
-              Download
+              DOWNLOAD
             </a>
           </div>
         )}
@@ -317,7 +333,7 @@ export default function SeenDropCard({
             {isSignedIn && user ? (
               <Button onClick={handleGenerateVideo}>
                 <SquarePlay size={16} />
-                ANIMATE!
+                ANIMATE
               </Button>
             ) : (
               <>
@@ -344,6 +360,14 @@ export default function SeenDropCard({
               </>
             )}
           </>
+        )}
+
+        {dbUser?.role === "user" && (
+          <div>
+            <Button onClick={handleDeleteSeenDrop}>
+              <Trash2 />
+            </Button>
+          </div>
         )}
       </div>
 

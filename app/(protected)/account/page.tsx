@@ -10,6 +10,7 @@ import SeenDropCard from "@/components/blocks/seendrop-card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
+import DeleteAccountDialog from "@/components/blocks/delete-account"
 
 export default function Account() {
   const { isSignedIn, user, isLoaded } = useUser()
@@ -79,14 +80,18 @@ export default function Account() {
     }
   }, [user])
 
-  // Fetch SPARKBITS of the user
+  // Fetch active SPARKBITS of the user
   const fetchMySeenDrops = useCallback(() => {
     if (dbUser && dbUser.id) {
       setLoadingSeenDrops(true)
       axios
         .get(`/api/seendrops?userId=${dbUser.id}`)
         .then((res) => {
-          setMySeenDrops(res.data)
+          // Only keep seendrops with status "active"
+          const activeSeenDrops = Array.isArray(res.data)
+            ? res.data.filter((item: SeenDropItem) => item.status === "active")
+            : []
+          setMySeenDrops(activeSeenDrops)
           setPage(1)
         })
         .catch(() => {
@@ -154,9 +159,12 @@ export default function Account() {
             Here are your SPARKBITS, {user.fullName}!
           </div>
 
-          <p>
-            User role: <span className="uppercase">{dbUser?.role}</span>
-          </p>
+          <div className="flex felx-row items-center justify-center gap-6">
+            <p>
+              User role: <span className="uppercase">{dbUser?.role}</span>
+            </p>
+            {dbUser?.id && <DeleteAccountDialog userId={dbUser.id} />}
+          </div>
         </div>
 
         <Separator className="mt-12 mb-12 bg-gray-400" />
