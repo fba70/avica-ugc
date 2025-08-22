@@ -3,10 +3,10 @@ import db from "@/lib/db"
 import { UsersSchema } from "@/schemas"
 
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const data = await req.json()
+  const data = await request.json()
   const { id } = await params
 
   if (!id) {
