@@ -74,3 +74,18 @@ export const ProductInstancesSchema = z.object({
   stripePaymentLinkPriceId: z.string().optional(),
   stripeSessionId: z.string().optional(),
 })
+
+export const PaymentsSchema = z.object({
+  userId: z.string(),
+  productInstanceId: z.string(),
+  sessionId: z.string(),
+  amountTotal: z.number(),
+  currency: z.string().optional(),
+  customerEmail: z.string().email().optional(),
+  customerName: z.string().optional(),
+  customerCountry: z.string().optional(),
+  paymentStatus: z.string().optional(),
+  status: z.string().optional(),
+  successUrl: z.string().optional(),
+  cancelUrl: z.string().optional(),
+})

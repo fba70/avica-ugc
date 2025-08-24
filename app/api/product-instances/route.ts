@@ -2,31 +2,69 @@ import { NextRequest, NextResponse } from "next/server"
 import db from "@/lib/db"
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const userId = searchParams.get("userId")
+  try {
+    const { searchParams } = new URL(req.url)
+    const userId = searchParams.get("userId")
+    const productId = searchParams.get("productId")
+    const stripeSessionId = searchParams.get("stripeSessionId")
 
-  if (userId) {
-    // Return product instances of the user
-    const productInstances = await db.productInstance.findMany({
-      where: { userId },
-      include: { product: true },
-      orderBy: { createdAt: "desc" },
-    })
-
-    if (!productInstances || productInstances.length === 0) {
-      return NextResponse.json(
-        { error: "Product instances are not found" },
-        { status: 404 }
-      )
+    // Fetch by stripeSessionId if provided
+    if (stripeSessionId) {
+      const productInstance = await db.productInstance.findFirst({
+        where: { stripeSessionId },
+        include: { product: true },
+      })
+      if (!productInstance) {
+        return NextResponse.json(
+          { error: "Product instance not found" },
+          { status: 404 }
+        )
+      }
+      return NextResponse.json(productInstance)
     }
-    return NextResponse.json(productInstances)
-  } else {
-    // Return all product instances
-    const productInstances = await db.productInstance.findMany({
-      include: { product: true },
-      orderBy: { createdAt: "desc" },
-    })
-    return NextResponse.json(productInstances)
+
+    // Fetch by userId only
+    if (userId) {
+      const productInstances = await db.productInstance.findMany({
+        where: { userId },
+        include: { product: true },
+      })
+      if (!productInstances.length) {
+        return NextResponse.json(
+          { error: "No product instances found for this user" },
+          { status: 404 }
+        )
+      }
+      return NextResponse.json(productInstances)
+    }
+
+    // Fetch by productId only
+    if (productId) {
+      const productInstances = await db.productInstance.findMany({
+        where: { productId },
+        include: { product: true },
+      })
+      if (!productInstances.length) {
+        return NextResponse.json(
+          { error: "No product instances found for this product" },
+          { status: 404 }
+        )
+      }
+      return NextResponse.json(productInstances)
+    }
+
+    return NextResponse.json(
+      { error: "Missing required parameters" },
+      { status: 400 }
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error: "Failed to fetch product instance",
+        details: (error as Error).message,
+      },
+      { status: 500 }
+    )
   }
 }
 

@@ -32,6 +32,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PageNameSchema } from "@/schemas"
 import AccountPurchases from "@/components/blocks/account-purchases"
+import AccountPayments from "@/components/blocks/account-payments"
 
 export default function Partner() {
   const router = useRouter()
@@ -385,11 +386,11 @@ export default function Partner() {
 
         <TabsContent value="payments">
           <div className="w-full flex flex-col items-center lg:justify-between justify-center gap-6 my-8">
-            <div className="text-center text-2xl font-bold text-white">
-              Account Payments
-            </div>
-
-            <p></p>
+            {dbUser?.id ? (
+              <AccountPayments userId={dbUser.id} />
+            ) : (
+              <p>No user payments data is found</p>
+            )}
           </div>
         </TabsContent>
       </Tabs>

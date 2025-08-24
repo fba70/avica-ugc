@@ -12,25 +12,28 @@ export const config = {
   ],
 }
 
-const aj = arcjet({
-  key: process.env.ARCJET_KEY!,
-  rules: [
-    // Protect against common attacks with Arcjet Shield
-    shield({
-      mode: "LIVE",
-    }),
-  ],
-})
+let aj: ReturnType<typeof arcjet>
+if (process.env.ARCJET_ENV === "production") {
+  aj = arcjet({
+    key: process.env.ARCJET_KEY!,
+    rules: [
+      shield({
+        mode: "LIVE",
+      }),
+    ],
+  })
+}
 
 const isProtectedRoute = createRouteMatcher(["/api/private"])
 
 // Arcjet runs first to protect all routes defined in the matcher config above.
 // Then if the request is allowed, Clerk runs
 export default clerkMiddleware(async (auth, req) => {
-  const decision = await aj.protect(req)
-
-  if (decision.isDenied()) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+  if (aj) {
+    const decision = await aj.protect(req)
+    if (decision.isDenied()) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
   }
 
   if (isProtectedRoute(req)) {

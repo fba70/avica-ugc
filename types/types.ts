@@ -86,3 +86,20 @@ export interface ProductItem {
   createdAt: string
   stripePaymentLinkPriceId: string
 }
+
+export interface PaymentItem {
+  id: string
+  userId: string
+  productInstanceId: string
+  sessionId: string
+  amountTotal: number
+  currency: string
+  customerEmail: string
+  customerName: string
+  customerCountry: string
+  paymentStatus: string
+  status: string
+  successUrl: string
+  cancelUrl: string
+  createdAt: string
+}

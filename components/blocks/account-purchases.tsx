@@ -41,13 +41,15 @@ export default function AccountPurchases({ userId }: AccountPurchasesProps) {
     ? purchases.filter((item) => item.status === "active")
     : purchases
 
-  const CARDS_PER_PAGE = 6
+  const CARDS_PER_PAGE = 3
   const totalPages = Math.ceil(filteredPurchases.length / CARDS_PER_PAGE)
   const startIdx = (page - 1) * CARDS_PER_PAGE
   const currentPurchases = filteredPurchases.slice(
     startIdx,
     startIdx + CARDS_PER_PAGE
   )
+
+  console.log("Current Purchases:", currentPurchases)
 
   const activePurchases = purchases.filter((item) => item.status === "active")
   const totalImagesCount = activePurchases.reduce(

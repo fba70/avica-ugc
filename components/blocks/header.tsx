@@ -130,7 +130,7 @@ export default function Header() {
     }
   }, [user, dbUser])
 
-  console.log("User:", user)
+  // console.log("User:", user)
   // console.log("DB User:", dbUser)
 
   return (
